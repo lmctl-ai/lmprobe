@@ -26,8 +26,9 @@ The public manual is published at:
 
 https://lmctl.com/lmprobe
 
-The static site in this repository is dependency-free and can be opened from
-`index.html` or served with any static file server.
+The static site in this repository is dependency-free and is designed to be served
+under the `/lmprobe/` path prefix (as on `https://lmctl.com/lmprobe`), not from a
+top-level root.
 
 ## Repository contents
 
