@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lmprobe Manual</title>
+    <meta
+      name="description"
+      content="A practical manual and tutorial site for the lmprobe structural code-search CLI."
+    />
+    <link rel="stylesheet" href="/lmprobe/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#manual">Skip to manual</a>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Manual navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">lm</div>
+          <div>
+            <strong>lmprobe</strong>
+            <span>Manual</span>
+          </div>
+        </div>
+        <nav class="toc">
+          <a href="#start">Start</a>
+          <a href="#install">Install</a>
+          <a href="#search">Search</a>
+          <a href="#graphs">Graphs</a>
+          <a href="#history">History</a>
+          <a href="#mutations">Safe changes</a>
+          <a href="#formats">Formats</a>
+          <a href="#graphql">GraphQL</a>
+          <a href="#secrets">Secrets</a>
+          <a href="#recipes">Recipes</a>
+          <a href="#reference">Reference</a>
+        </nav>
+      </aside>
+
+      <main id="manual" class="content">
+        <header id="start" class="intro">
+          <div class="intro-copy">
+            <p class="eyebrow">AST-aware code search for agents and developers</p>
+            <h1>Find code evidence, map relationships, and return structured results.</h1>
+            <p>
+              lmprobe is a one-shot CLI for structural search, symbol context,
+              history, impact graphs, safe mutations, GraphQL composition, and
+              evidence-first security scans.
+            </p>
+            <div class="intro-actions" aria-label="Primary manual sections">
+              <a href="#recipes" class="button primary">Open recipes</a>
+              <a href="#reference" class="button">Command map</a>
+            </div>
+          </div>
+          <img
+            class="flow-art"
+            src="/lmprobe/assets/lmprobe-flow.svg"
+            alt="lmprobe converts repository input into search, graph, history, mutation, and scanner envelopes."
+          />
+        </header>
+
+        <section class="quick-panel" aria-label="Quick command examples">
+          <div>
+            <span class="label">Search a symbol</span>
+            <code>lmprobe def --body handle_request src/service.ts</code>
+          </div>
+          <div>
+            <span class="label">Map impact</span>
+            <code>lmprobe --format mermaid impact UserService --depth 3 .</code>
+          </div>
+          <div>
+            <span class="label">Compose queries</span>
+            <code>lmprobe query @investigate.graphql --var name='"User"'</code>
+          </div>
+        </section>
+
+        <section id="install" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 1</p>
+            <h2>Install And First Run</h2>
+            <p>
+              Install once from npm, then run one-off or scripted inspections
+              against any repository path.
+            </p>
+          </div>
+          <div class="grid two">
+            <article class="card">
+              <h3>Install the CLI</h3>
+              <pre><code>npm install -g @lmctl-ai/lmprobe
+lmprobe --help</code></pre>
+              <p>
+                The npm package exposes the same command surface as the manual.
+                The homepage is <a href="https://lmctl.com/lmprobe">lmctl.com/lmprobe</a>.
+              </p>
+            </article>
+            <article class="card">
+              <h3>First run from an installed CLI</h3>
+              <pre><code>lmprobe --version
+lmprobe --format json search --name HandleRequest .</code></pre>
+              <p>
+                Start with a read-only search. Add <code>query</code> and mutation
+                commands as your workflow needs grow.
+              </p>
+            </article>
+          </div>
+          <div class="callout">
+            <strong>Exit model:</strong> <code>0</code> means matched,
+            <code>1</code> means no clean match, and <code>2</code> means a
+            diagnostic error or safety refusal.
+          </div>
+        </section>
+
+        <section id="search" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 2</p>
+            <h2>Search, Definitions, References, Find, And Grep</h2>
+            <p>
+              Use structural verbs when the question is about code shape or
+              symbols. Use <code>find</code> and <code>grep</code> for path and
+              raw text scans.
+            </p>
+          </div>
+          <div class="command-table">
+            <div>
+              <strong>search</strong>
+              <span>AST patterns, declaration outlines, name filters.</span>
+              <code>lmprobe search -p 'fn $NAME() { $$$ }' -l rust .</code>
+            </div>
+            <div>
+              <strong>def</strong>
+              <span>Exact symbol definitions, optionally with body/context.</span>
+              <code>lmprobe --format json def --body LoginService src</code>
+            </div>
+            <div>
+              <strong>ref</strong>
+              <span>Identifier references, excluding comments and strings by default.</span>
+              <code>lmprobe ref LoginService .</code>
+            </div>
+            <div>
+              <strong>find</strong>
+              <span>Path-regex matches across one or more roots.</span>
+              <code>lmprobe find '\.(rs|ts|tsx)$' --path crates --path tests</code>
+            </div>
+            <div>
+              <strong>grep</strong>
+              <span>Line-oriented regex, with source and structural context.</span>
+              <code>lmprobe --format json grep -C 3 --parents 'login|signin' .</code>
+            </div>
+            <div>
+              <strong>discover</strong>
+              <span>Project-marker map for monorepos and package roots.</span>
+              <code>lmprobe discover --top-level-only .</code>
+            </div>
+          </div>
+        </section>
+
+        <section id="graphs" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 3</p>
+            <h2>Graph And Context Commands</h2>
+            <p>
+              Relationship verbs answer questions about callers, callees,
+              imports, exports, decorators, inheritance, impact, and symbol
+              context.
+            </p>
+          </div>
+          <div class="grid three">
+            <article class="card compact">
+              <h3>Call relationships</h3>
+              <pre><code>lmprobe callers Pattern .
+lmprobe callees run .</code></pre>
+            </article>
+            <article class="card compact">
+              <h3>Module edges</h3>
+              <pre><code>lmprobe imports react .
+lmprobe exports useState .</code></pre>
+            </article>
+            <article class="card compact">
+              <h3>Impact graph</h3>
+              <pre><code>lmprobe --format mermaid impact Pattern --depth 3 .</code></pre>
+            </article>
+          </div>
+          <article class="wide-card">
+            <h3>One-shot symbol context</h3>
+            <p>
+              <code>context</code> bundles the first definition, one-hop
+              callers/callees, imports from the defining file, recent history,
+              TODO markers, and a file outline.
+            </p>
+            <pre><code>lmprobe --format json context --around 3 UserService .
+lmprobe --format json context --usage UserService src/app.ts --parents
+lmprobe --format json context src/app.ts:42</code></pre>
+          </article>
+        </section>
+
+        <section id="history" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 4</p>
+            <h2>History And Change Evidence</h2>
+            <p>
+              History commands use Git evidence to explain where a symbol came
+              from, how a file changed, and which files tend to move together.
+            </p>
+          </div>
+          <div class="timeline">
+            <div>
+              <span>Blame</span>
+              <code>lmprobe history blame Pattern .</code>
+            </div>
+            <div>
+              <span>Introduced</span>
+              <code>lmprobe history introduced Pattern .</code>
+            </div>
+            <div>
+              <span>Diff</span>
+              <code>lmprobe history diff 'auth|login' --since 30d .</code>
+            </div>
+            <div>
+              <span>Co-change</span>
+              <code>lmprobe history co-change src/auth.ts --top 10 .</code>
+            </div>
+            <div>
+              <span>AST diff</span>
+              <code>lmprobe ast-diff --from HEAD~1 --to HEAD src/service.ts</code>
+            </div>
+          </div>
+        </section>
+
+        <section id="mutations" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 5</p>
+            <h2>Safe Mutations</h2>
+            <p>
+              Mutation verbs are deliberately conservative. Start with dry-run
+              output, keep worktrees clean, and inspect generated patches before
+              applying changes.
+            </p>
+          </div>
+          <div class="grid two">
+            <article class="card">
+              <h3>Trace a runtime path</h3>
+              <pre><code>lmprobe trace 'fn handle_$NAME' . \
+  --exec 'cargo test' \
+  --worktree</code></pre>
+              <p>
+                Worktree mode isolates instrumentation and rolls it back after
+                the run.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Preview a rewrite</h3>
+              <pre><code>lmprobe fix -p 'old_api($X)' -r 'new_api($X)' src
+lmprobe fix -p 'old_api($X)' -r 'new_api($X)' src --apply</code></pre>
+              <p>
+                Apply mode refuses unsafe working trees unless explicitly
+                forced.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="formats" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 6</p>
+            <h2>Output Formats</h2>
+            <p>
+              Choose human-readable markdown, machine-readable envelopes, CI
+              annotations, or graph renderers.
+            </p>
+          </div>
+          <div class="format-grid">
+            <div><strong>auto</strong><span>TTY markdown, pipe NDJSON.</span></div>
+            <div><strong>json</strong><span>Pretty full envelope for jq.</span></div>
+            <div><strong>ndjson</strong><span>One item per line plus summary.</span></div>
+            <div><strong>sarif</strong><span>Static-analysis upload format.</span></div>
+            <div><strong>github</strong><span>Actions annotations.</span></div>
+            <div><strong>mermaid</strong><span>PR-friendly graph diagrams.</span></div>
+            <div><strong>dot</strong><span>Graphviz output.</span></div>
+          </div>
+          <pre><code>lmprobe --format json search --name Pattern . | jq '.hits | length'
+lmprobe --format github grep 'TODO|FIXME' .
+lmprobe --format dot impact Pattern --depth 2 . &gt; impact.dot</code></pre>
+        </section>
+
+        <section id="graphql" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 7</p>
+            <h2>GraphQL Composition</h2>
+            <p>
+              <code>lmprobe query</code> runs an in-process GraphQL document.
+              Use it when one investigation needs multiple evidence streams.
+            </p>
+          </div>
+          <article class="code-feature">
+            <div>
+              <h3>Batch search, context, and raw evidence</h3>
+              <p>
+                Aliases keep the result organized while every field still uses
+                the same underlying CLI envelopes and exit semantics.
+              </p>
+            </div>
+            <pre><code>{
+  defs: def(name: "UserService", path: ".") {
+    hits { name filePath lineStart }
+    exitStatus
+  }
+  env: grep(pattern: "process\\.env", path: "apps/web", paths: ["packages/shared"]) {
+    hits { filePath lineNumber lineContent }
+    warnings { code message hint }
+    exitStatus
+  }
+  packages: grepDirsWith(
+    markerPattern: "(^|[\\\\/])package\\.json$",
+    pattern: "login",
+    path: ".",
+    parents: true
+  ) {
+    hits { filePath lineNumber lineContent parents { kind name } }
+    exitStatus
+  }
+}</code></pre>
+          </article>
+          <div class="callout">
+            Variables are JSON-parsed: <code>lmprobe query @q.graphql --var name='"User"'</code>.
+          </div>
+        </section>
+
+        <section id="secrets" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 8</p>
+            <h2>Secrets And Provider Evidence</h2>
+            <p>
+              The secrets scanner is gitleaks-compatible and can add semantic
+              evidence about provider SDK calls and source reads without
+              claiming a vulnerability by itself.
+            </p>
+          </div>
+          <div class="grid two">
+            <article class="card">
+              <h3>Filesystem scan</h3>
+              <pre><code>lmprobe secrets .
+lmprobe --format json secrets --ast-fp-cut annotate .</code></pre>
+            </article>
+            <article class="card">
+              <h3>Provider recipes</h3>
+              <pre><code>lmprobe secrets-recipes list --provider aws
+lmprobe query --recipe secrets/aws/python --all-shapes</code></pre>
+            </article>
+          </div>
+          <p class="note">
+            Treat scanner output as evidence for review. Confirm findings with
+            project context and rotation policy before taking action.
+          </p>
+        </section>
+
+        <section id="recipes" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 9</p>
+            <h2>Recipes By Scenario</h2>
+            <p>
+              Filter recipes by keyword or scan the cards directly. Commands
+              assume you are at the repository root.
+            </p>
+          </div>
+          <label class="recipe-filter">
+            <span>Filter recipes</span>
+            <input id="recipeSearch" type="search" placeholder="login, impact, secrets, graph..." />
+          </label>
+          <div class="recipe-grid" id="recipeGrid">
+            <article class="recipe-card" data-tags="login auth grep context">
+              <h3>Find login paths with local context</h3>
+              <pre><code>lmprobe --format json grep -C 3 'login|signin|authenticate' apps/web</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="package monorepo graphql grepDirsWith">
+              <h3>Search only packages with markers</h3>
+              <pre><code>lmprobe query '{
+  grepDirsWith(markerPattern: "(^|[\\\\/])package\\.json$", pattern: "login", path: ".") {
+    hits { filePath lineNumber lineContent }
+    exitStatus
+  }
+}'</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="definition body source">
+              <h3>Open the exact implementation</h3>
+              <pre><code>lmprobe --format json def --body --around 4 handle_request src</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="impact graph mermaid pr">
+              <h3>Render impact for a pull request</h3>
+              <pre><code>lmprobe --format mermaid impact BillingClient --depth 3 .</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="history blame introduced">
+              <h3>Find when a symbol changed</h3>
+              <pre><code>lmprobe history blame --semantic UserRepository .
+lmprobe history introduced UserRepository .</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="secrets provider scanner">
+              <h3>Collect provider evidence</h3>
+              <pre><code>lmprobe secrets-recipes list --language python
+lmprobe query --recipe secrets/aws/python --all-shapes</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="ci github annotations">
+              <h3>Emit CI annotations</h3>
+              <pre><code>lmprobe --format github grep 'TODO|FIXME|HACK' .</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="safe mutation fix dry-run">
+              <h3>Preview a mechanical rewrite</h3>
+              <pre><code>lmprobe fix -p 'old_fn($X)' -r 'new_fn($X)' src</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="reference" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Chapter 10</p>
+            <h2>Command Reference Map</h2>
+            <p>
+              A compact map of the major surfaces covered by this manual.
+            </p>
+          </div>
+          <div class="reference-list">
+            <div><strong>Search</strong><span>search, def, ref, find, grep, discover, list-kinds</span></div>
+            <div><strong>Graph</strong><span>callers, callsites, callees, imports, exports, decorations, supertypes, subtypes, overrides, impact, context</span></div>
+            <div><strong>History</strong><span>history blame, introduced, commit, diff, churn, co-change, todos, evolution, ast-diff, diff-context</span></div>
+            <div><strong>Mutation</strong><span>trace, fix, GraphQL fix/trace/untrace</span></div>
+            <div><strong>Security</strong><span>secrets scan, secrets-recipes, secrets-sources, source/provider GraphQL recipes</span></div>
+            <div><strong>Composition</strong><span>query, aliases, variables, introspection, selected fields</span></div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>
+            This static manual is based on public and agent-facing lmprobe
+            documentation and focuses on practical command usage.
+          </p>
+        </footer>
+      </main>
+    </div>
+    <script src="/lmprobe/app.js"></script>
+  </body>
+</html>
