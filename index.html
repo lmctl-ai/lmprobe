@@ -78,8 +78,8 @@
             <p class="chapter-kicker">Chapter 1</p>
             <h2>Install And First Run</h2>
             <p>
-              Install once from npm, then run one-off or scripted inspections
-              against any repository path.
+              Install once from npm for repeated agent loops, then run one-off or
+              scripted inspections against any repository path.
             </p>
           </div>
           <div class="grid two">
@@ -89,6 +89,9 @@
 lmprobe --help</code></pre>
               <p>
                 The npm package exposes the same command surface as the manual.
+                Repeated runs are fastest with <code>npm install -g @lmctl-ai/lmprobe</code>;
+                use <code>npx</code> only for one-off execution because it
+                re-resolves each time and can add seconds per invocation.
                 The homepage is <a href="https://lmctl.com/lmprobe">lmctl.com/lmprobe</a>.
               </p>
             </article>
@@ -122,8 +125,8 @@ lmprobe --format json search --name HandleRequest .</code></pre>
           <div class="command-table">
             <div>
               <strong>search</strong>
-              <span>AST patterns, declaration outlines, name filters.</span>
-              <code>lmprobe search -p 'fn $NAME() { $$$ }' -l rust .</code>
+              <span>AST patterns, name filters, full bodies by default.</span>
+              <code>lmprobe --format json search --name LoginService --body .</code>
             </div>
             <div>
               <strong>def</strong>
@@ -160,7 +163,9 @@ lmprobe --format json search --name HandleRequest .</code></pre>
             <p>
               Relationship verbs answer questions about callers, callees,
               imports, exports, decorators, inheritance, impact, and symbol
-              context.
+              context. These verbs are call/symbol graph focused and currently do
+              not model framework dependency wiring (for example Angular
+              providers/modules or Spring autowire/scope annotations).
             </p>
           </div>
           <div class="grid three">
@@ -189,6 +194,12 @@ lmprobe exports useState .</code></pre>
             <pre><code>lmprobe --format json context --around 3 UserService .
 lmprobe --format json context --usage UserService src/app.ts --parents
 lmprobe --format json context src/app.ts:42</code></pre>
+            <p class="note">
+              For framework DI/module registration paths, use <code>ref</code> and
+              <code>grep --parents --body</code> as fallback evidence (for
+              example <code>SessionSyncInterceptor</code>) before switching to
+              graph verbs for call-surface follow-up.
+            </p>
           </article>
         </section>
 
@@ -289,6 +300,19 @@ lmprobe --format dot impact Pattern --depth 2 . &gt; impact.dot</code></pre>
               <code>lmprobe query</code> runs an in-process GraphQL document.
               Use it when one investigation needs multiple evidence streams.
             </p>
+            <p>
+              Naming is surface-native: CLI JSON uses snake_case fields and
+              lowercase status strings (for example <code>line_start</code>,
+              <code>line_number</code>, <code>exit_status: "matched"</code>),
+              while GraphQL uses camelCase keys and uppercase enum-style values
+              (<code>lineStart</code>, <code>lineNumber</code>,
+              <code>exitStatus: "MATCHED"</code>). The meaning is compatible,
+              but field names are not normalized across both surfaces. Note:
+              line-like anchors are spread across CLI families
+              (<code>line_number</code>, <code>line_start</code>,
+              <code>start_line</code>) and map to GraphQL line fields by
+              semantics on each output shape.
+            </p>
           </div>
           <article class="code-feature">
             <div>
@@ -349,6 +373,15 @@ lmprobe query --recipe secrets/aws/python --all-shapes</code></pre>
           <p class="note">
             Treat scanner output as evidence for review. Confirm findings with
             project context and rotation policy before taking action.
+          </p>
+          <p class="note">
+            Rule compatibility stays unchanged by default. Teams with repeated
+            i18n/locale false positives can use an opt-in
+            <code>--config</code> overlay that adds path allowlists (for example
+            <code>assets/i18n/**</code>, <code>locales/**</code>,
+            <code>translations/**</code>) and keeps all other secret scanners
+            enabled. Keep decoded-only natural-language translation hits
+            low-confidence unless corroborated by additional context.
           </p>
         </section>
 
