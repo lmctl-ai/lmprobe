@@ -68,6 +68,10 @@
             <code>lmprobe --format mermaid impact UserService --depth 3 .</code>
           </div>
           <div>
+            <span class="label">Review PR signals</span>
+            <code>lmprobe pr-triage --since all https://github.com/owner/repo/pull/123</code>
+          </div>
+          <div>
             <span class="label">Compose queries</span>
             <code>lmprobe query @investigate.graphql --var name='"User"'</code>
           </div>
@@ -193,7 +197,7 @@ lmprobe exports useState .</code></pre>
             </p>
             <pre><code>lmprobe --format json context --around 3 UserService .
 lmprobe --format json context --usage UserService src/app.ts --parents
-lmprobe --format json context src/app.ts:42</code></pre>
+lmprobe --format json context --import-aware UserService src/app.ts</code></pre>
             <p class="note">
               For framework DI/module registration paths, use <code>ref</code> and
               <code>grep --parents --body</code> as fallback evidence (for
@@ -223,7 +227,7 @@ lmprobe --format json context src/app.ts:42</code></pre>
             </div>
             <div>
               <span>Diff</span>
-              <code>lmprobe history diff 'auth|login' --since 30d .</code>
+              <code>lmprobe history diff -p 'auth|login' --since 30d .</code>
             </div>
             <div>
               <span>Co-change</span>
@@ -367,6 +371,7 @@ lmprobe --format json secrets --ast-fp-cut annotate .</code></pre>
             <article class="card">
               <h3>Provider recipes</h3>
               <pre><code>lmprobe secrets-recipes list --provider aws
+lmprobe secrets-sources list --provider aws
 lmprobe query --recipe secrets/aws/python --all-shapes</code></pre>
             </article>
           </div>
@@ -416,9 +421,26 @@ lmprobe query --recipe secrets/aws/python --all-shapes</code></pre>
               <h3>Open the exact implementation</h3>
               <pre><code>lmprobe --format json def --body --around 4 handle_request src</code></pre>
             </article>
+            <article class="recipe-card" data-tags="review pr triage">
+              <h3>Collect PR evidence</h3>
+              <pre><code>lmprobe pr-triage --since all https://github.com/owner/repo/pull/123
+lmprobe --format json pr-triage --compact https://github.com/owner/repo/pull/123</code></pre>
+            </article>
             <article class="recipe-card" data-tags="impact graph mermaid pr">
               <h3>Render impact for a pull request</h3>
               <pre><code>lmprobe --format mermaid impact BillingClient --depth 3 .</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="scanner resource async crypto">
+              <h3>Review resource and crypto risks</h3>
+              <pre><code>lmprobe resource-sites . --acquire 'os.Open|File::open' --release 'Close|drop'
+lmprobe async-leaks . --call stop
+lmprobe crypto-sites . --algorithm sha1 --fips-check</code></pre>
+            </article>
+            <article class="recipe-card" data-tags="scanner secrets routes">
+              <h3>Inspect scanner family evidence</h3>
+              <pre><code>lmprobe config-keys package.json pyproject.toml
+lmprobe guard-sites . --sensitive 'Delete|exec' --guard 'auth'
+lmprobe route-anchors .</code></pre>
             </article>
             <article class="recipe-card" data-tags="history blame introduced">
               <h3>Find when a symbol changed</h3>
@@ -452,10 +474,12 @@ lmprobe query --recipe secrets/aws/python --all-shapes</code></pre>
           <div class="reference-list">
             <div><strong>Search</strong><span>search, def, ref, find, grep, discover, list-kinds</span></div>
             <div><strong>Graph</strong><span>callers, callsites, callees, imports, exports, decorations, supertypes, subtypes, overrides, impact, context</span></div>
+            <div><strong>Review</strong><span>pr-triage</span></div>
+            <div><strong>Scanners</strong><span>resource-sites, async-leaks, crypto-sites, config-keys, guard-sites, openapi-facts, route-anchors, http-client-calls, py-slice-candidates</span></div>
             <div><strong>History</strong><span>history blame, introduced, commit, diff, churn, co-change, todos, evolution, ast-diff, diff-context</span></div>
-            <div><strong>Mutation</strong><span>trace, fix, GraphQL fix/trace/untrace</span></div>
-            <div><strong>Security</strong><span>secrets scan, secrets-recipes, secrets-sources, source/provider GraphQL recipes</span></div>
-            <div><strong>Composition</strong><span>query, aliases, variables, introspection, selected fields</span></div>
+            <div><strong>Mutation</strong><span>trace, fix, GraphQL mutations (fix, trace, untrace)</span></div>
+            <div><strong>Security</strong><span>secrets, secrets-recipes, secrets-sources, source/provider GraphQL recipes</span></div>
+            <div><strong>Composition</strong><span>query, serve, aliases, variables, introspection, selected fields</span></div>
           </div>
         </section>
 
