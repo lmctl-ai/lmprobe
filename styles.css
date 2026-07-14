@@ -176,7 +176,7 @@ h3 {
 
 h1 {
   max-width: 13ch;
-  font-size: clamp(2.6rem, 7vw, 5.8rem);
+  font-size: clamp(2.4rem, 5vw, 4rem);
 }
 
 h2 {
@@ -234,6 +234,7 @@ h3 {
 .showcase-panel {
   display: grid;
   gap: 0.7rem;
+  min-width: 0;
   padding: 1rem;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -246,6 +247,13 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.showcase-panel pre,
+.evidence-grid pre,
+.recipe-card pre {
+  min-width: 0;
+  overflow-x: auto;
 }
 
 .security-callout {
