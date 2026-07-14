@@ -175,12 +175,12 @@ h3 {
 }
 
 h1 {
-  max-width: 13ch;
-  font-size: clamp(2.4rem, 5vw, 4rem);
+  max-width: 22ch;
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: clamp(1.55rem, 2.7vw, 2.5rem);
 }
 
 h3 {
