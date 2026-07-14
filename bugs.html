@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lmprobe Bug Showcase</title>
+    <meta
+      name="description"
+      content="Synthetic, sanitized examples showing how lmprobe finds bug-shaped code evidence."
+    />
+    <link rel="stylesheet" href="/lmprobe/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#showcase">Skip to showcase</a>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Showcase navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">lm</div>
+          <div>
+            <strong>lmprobe</strong>
+            <span>Bug showcase</span>
+          </div>
+        </div>
+        <nav class="toc">
+          <a href="/lmprobe/">Manual</a>
+          <a href="#n-plus-one">N+1 scan</a>
+          <a href="#narrowing">Narrowing scan</a>
+          <a href="#workflow">Workflow</a>
+        </nav>
+      </aside>
+
+      <main id="showcase" class="content">
+        <header class="intro showcase-intro">
+          <div class="intro-copy">
+            <p class="eyebrow">Sanitized bug-finding examples</p>
+            <h1>Use code evidence to find real bug classes.</h1>
+            <p>
+              These examples are synthetic and fully sanitized. They are based on
+              bug patterns that lmprobe can surface, but they do not include real
+              proprietary code, product names, company names, repository paths,
+              service endpoints, credentials, or customer data.
+            </p>
+            <div class="intro-actions">
+              <a href="#n-plus-one" class="button primary">Inspect N+1 pattern</a>
+              <a href="/lmprobe/" class="button">Back to manual</a>
+            </div>
+          </div>
+          <div class="showcase-panel" aria-label="Evidence envelope example">
+            <span class="label">Evidence first</span>
+            <pre><code>{
+  "schema": "lmprobe.grep.v1",
+  "exit_status": "matched",
+  "hits": [
+    {
+      "file_path": "src/services/ScheduleService.java",
+      "line_number": 7,
+      "line_content": "dailyRepository.findByDate(day);"
+    }
+  ],
+  "warnings": []
+}</code></pre>
+          </div>
+        </header>
+
+        <section id="n-plus-one" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Case 1</p>
+            <h2>Find Reads Inside Loops</h2>
+            <p>
+              A database read inside a per-item loop often turns one request into
+              many serial round trips. lmprobe can collect the two evidence
+              streams an agent needs: read calls and loop ranges.
+            </p>
+          </div>
+
+          <div class="grid two">
+            <article class="card">
+              <h3>Synthetic vulnerable code</h3>
+              <pre><code>class ScheduleService {
+  List&lt;Summary&gt; build(List&lt;Day&gt; days) {
+    List&lt;Summary&gt; summaries = new ArrayList&lt;&gt;();
+
+    for (Day day : days) {
+      Summary summary = dailyRepository.findByDate(day);
+      summaries.add(summary);
+    }
+
+    return summaries;
+  }
+}</code></pre>
+              <p>
+                The repository call is inside the loop. The usual fix is to
+                batch the read before the loop, then index the results in memory.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>lmprobe evidence recipe</h3>
+              <pre><code>lmprobe --format json grep --parents \
+  '\w*(Repository|Service)\.(get|find|load|fetch|read|select)[A-Za-z]*\(' \
+  -G '**/src/main/java/**/*.java' .
+
+lmprobe --format json grep --parents '\b(for|while)\s*\(' \
+  -G '**/src/main/java/**/*.java' .
+
+lmprobe --format json search -p 'for ($T $V : $C) { $$$B }' \
+  -l java src/services/ScheduleService.java</code></pre>
+              <p>
+                Join the read-call line numbers to loop spans. A hit whose line
+                falls inside a loop span is a candidate N+1-by-iteration bug.
+              </p>
+            </article>
+          </div>
+
+          <article class="wide-card">
+            <h3>What the agent cites</h3>
+            <div class="evidence-grid">
+              <pre><code>{
+  "file_path": "src/services/ScheduleService.java",
+  "line_number": 6,
+  "line_content": "for (Day day : days) {",
+  "parents": [
+    {
+      "kind": "method_declaration",
+      "name": "build",
+      "line_start": 2,
+      "line_end": 11
+    }
+  ]
+}</code></pre>
+              <pre><code>{
+  "file_path": "src/services/ScheduleService.java",
+  "line_number": 7,
+  "line_content": "dailyRepository.findByDate(day);",
+  "parents": [
+    {
+      "kind": "method_declaration",
+      "name": "build",
+      "line_start": 2,
+      "line_end": 11
+    }
+  ]
+}</code></pre>
+            </div>
+          </article>
+        </section>
+
+        <section id="narrowing" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Case 2</p>
+            <h2>Find Integer Narrowing Hazards</h2>
+            <p>
+              lmprobe can also search for suspicious casts around time, duration,
+              count, or identifier values, then return exact file and line
+              evidence for review.
+            </p>
+          </div>
+
+          <div class="grid two">
+            <article class="card">
+              <h3>Synthetic vulnerable code</h3>
+              <pre><code>long elapsedMillis = endMillis - startMillis;
+short bucketCount = (short) (elapsedMillis / bucketMillis);
+
+if (bucketCount &gt; MAX_BUCKETS) {
+  return limit(bucketCount);
+}</code></pre>
+              <p>
+                The cast may silently wrap a wider value. The safer pattern is to
+                keep the wide type, range-check, then convert only if valid.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>lmprobe search</h3>
+              <pre><code>lmprobe --format json grep \
+  '\(short\)[^;]*([Tt]ime|[Dd]uration|[Cc]ount|[Mm]illis)' \
+  src</code></pre>
+              <p>
+                The output is structured, so an agent can rank candidates,
+                cite exact lines, and keep warnings separate from matches.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="workflow" class="chapter">
+          <div class="chapter-head">
+            <p class="chapter-kicker">Agent workflow</p>
+            <h2>Bug Hunts Need Repeatable Evidence</h2>
+            <p>
+              lmprobe is useful when the question is larger than one file:
+              collect candidate sites, keep parse warnings visible, cite exact
+              lines, then hand the result to a human or repair agent.
+            </p>
+          </div>
+
+          <div class="reference-list">
+            <div>
+              <strong>Scan</strong>
+              <span>Use <code>grep</code>, <code>search</code>, and GraphQL composition to collect candidates.</span>
+            </div>
+            <div>
+              <strong>Rank</strong>
+              <span>Prefer candidates with loop containment, risky casts, repeated reads, or high fan-out.</span>
+            </div>
+            <div>
+              <strong>Cite</strong>
+              <span>Return the file path, line number, line content, schema, exit status, and warnings.</span>
+            </div>
+            <div>
+              <strong>Fix</strong>
+              <span>Use the evidence to plan a small patch, then verify the behavior with project tests.</span>
+            </div>
+          </div>
+
+          <div class="callout security-callout">
+            <strong>Sanitization note:</strong> this page intentionally uses only
+            generic examples and synthetic paths. It does not reveal real
+            repositories, companies, products, endpoints, credentials, or source
+            code.
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>
+            For command details, return to the <a href="/lmprobe/">lmprobe manual</a>.
+          </p>
+        </footer>
+      </main>
+    </div>
+    <script src="/lmprobe/app.js"></script>
+  </body>
+</html>
