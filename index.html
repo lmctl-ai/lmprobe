@@ -151,7 +151,7 @@ lmprobe --format json search --name HandleRequest .</code></pre>
             </div>
             <div>
               <strong>grep</strong>
-              <span>Line-oriented regex, with source and structural context.</span>
+              <span>Line-oriented regex, with context and partial-read warnings.</span>
               <code>lmprobe --format json grep -C 3 --parents 'login|signin' .</code>
             </div>
             <div>
@@ -318,6 +318,10 @@ lmprobe --format dot impact Pattern --depth 2 . &gt; impact.dot</code></pre>
               (<code>line_number</code>, <code>line_start</code>,
               <code>start_line</code>) and map to GraphQL line fields by
               semantics on each output shape.
+              For <code>grep</code>, inspect <code>warnings</code> for
+              <code>FILE_READ_FAILED</code> or <code>WALK_ENTRY_ERROR</code>;
+              hits from readable files remain useful, but those warnings mean
+              the scan was partial.
             </p>
           </div>
           <article class="code-feature">
