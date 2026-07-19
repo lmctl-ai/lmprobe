@@ -318,11 +318,13 @@ lmprobe --format dot impact Pattern --depth 2 . &gt; impact.dot</code></pre>
               (<code>line_number</code>, <code>line_start</code>,
               <code>start_line</code>) and map to GraphQL line fields by
               semantics on each output shape.
-              For <code>grep</code>, inspect <code>warnings</code> for
-              <code>FILE_READ_FAILED</code> or <code>WALK_ENTRY_ERROR</code>;
-              hits from readable files remain useful, but those warnings mean
-              the scan was partial. Partial <code>grep</code> runs report
-              <code>partial: true</code> and exit with code <code>3</code>;
+              Inspect <code>warnings</code> for coverage diagnostics such as
+              <code>FILE_METADATA_FAILED</code>, <code>FILE_TOO_LARGE</code>,
+              <code>FILE_READ_FAILED</code>, <code>WALK_ERROR</code>, or
+              <code>WALK_ENTRY_ERROR</code>; hits from readable files remain
+              useful, but those warnings mean the scan was partial. Partial
+              runs report <code>partial: true</code> where supported and exit
+              with code <code>3</code>;
               <code>exit_status</code> stays in the stable
               <code>matched</code>/<code>no_match</code>/<code>error</code>
               enum.
