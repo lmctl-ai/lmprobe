@@ -322,8 +322,10 @@ lmprobe --format dot impact Pattern --depth 2 . &gt; impact.dot</code></pre>
               <code>FILE_READ_FAILED</code> or <code>WALK_ENTRY_ERROR</code>;
               hits from readable files remain useful, but those warnings mean
               the scan was partial. Partial <code>grep</code> runs report
-              <code>exit_status: "partial"</code> and exit with code
-              <code>3</code>.
+              <code>partial: true</code> and exit with code <code>3</code>;
+              <code>exit_status</code> stays in the stable
+              <code>matched</code>/<code>no_match</code>/<code>error</code>
+              enum.
             </p>
           </div>
           <article class="code-feature">
