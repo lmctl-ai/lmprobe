@@ -1,22 +1,39 @@
-# Attribution
+# Attribution — fork of ast-grep
 
-lmprobe is a Rust CLI distributed as packaged binaries through npm. Its
-implementation is not included in this public documentation repository.
+This repository (`lmctl-ai/lmprobe`) is a hard fork of [ast-grep](https://github.com/ast-grep/ast-grep), forked on 2026-05-02 at upstream commit `b61e95f4`.
 
-The private lmprobe implementation is a hard fork of
-[ast-grep](https://github.com/ast-grep/ast-grep), forked on 2026-05-02 at
-upstream commit `b61e95f4`.
+## What was kept from upstream
 
-The following implementation components retain ast-grep lineage in the private
-source tree:
+The following crates are **forks** of upstream ast-grep crates of the same name:
 
-| Component | Upstream origin | Purpose |
+| Crate (this repo) | Upstream origin | Purpose |
 |---|---|---|
-| `ast-grep-core` lineage | [ast-grep `crates/core`](https://github.com/ast-grep/ast-grep/tree/main/crates/core) | AST pattern engine |
-| `ast-grep-config` lineage | [ast-grep `crates/config`](https://github.com/ast-grep/ast-grep/tree/main/crates/config) | Rule and scan configuration types |
-| `ast-grep-language` lineage | [ast-grep `crates/language`](https://github.com/ast-grep/ast-grep/tree/main/crates/language) | Tree-sitter language registry |
+| `crates/core` | [ast-grep/ast-grep — `crates/core`](https://github.com/ast-grep/ast-grep/tree/main/crates/core) | AST pattern engine |
+| `crates/config` | [ast-grep/ast-grep — `crates/config`](https://github.com/ast-grep/ast-grep/tree/main/crates/config) | Rule / scan configuration types |
+| `crates/language` | [ast-grep/ast-grep — `crates/language`](https://github.com/ast-grep/ast-grep/tree/main/crates/language) | Tree-sitter language registry |
 
-Original ast-grep authors retain copyright on pre-fork code. lmprobe-original
-work is copyright 2026 Lattice Systems LLC.
+These keep their original `ast-grep-{core,config,language}` package names. They are **not** the published crates of the same name on crates.io; they are local-path workspace dependencies of `crates/lmprobe`. Do not attempt to publish them under those names.
 
-This repository contains documentation and static site assets only.
+Original ast-grep authors retain copyright on pre-fork code in those three crates. See `LICENSE` for the dual copyright lines (Herrington Darkholme — ast-grep upstream; Lattice Systems LLC — lmprobe).
+
+## What is lmprobe-original
+
+The `crates/lmprobe` crate and the other `crates/lmprobe-*` crates are the **lmprobe-original work**, copyright 2026 Lattice Systems LLC. This public repository starts from a source snapshot; the earlier development history is not included. `crates/lmprobe/CHANGELOG.md` documents the implementation phases.
+
+`durable-memory/` is the project design and implementation memory plus AI-agent test cases.
+
+## What was dropped from upstream
+
+The following ast-grep crates / directories were not carried over:
+
+- `crates/cli` (the `sg`/`ast-grep` CLI binary — lmprobe ships its own CLI in `crates/lmprobe/src/main.rs`)
+- `crates/dynamic`, `crates/lsp`, `crates/napi`, `crates/pyo3`, `crates/wasm`, `crates/tools`
+- `npm/`, `xtask/`, `benches/`, `website/`, `schemas/`, `fixtures/`
+- Top-level CHANGELOG (preserved at `crates/lmprobe/CHANGELOG.md`)
+- `.github/` workflows (lmprobe has its own workflows under `.github/workflows/`)
+
+## Hard fork posture
+
+There is **no plan to merge upstream changes** from ast-grep into this repository. The forked crates evolve under lmprobe's release cadence; if upstream ast-grep ships a fix relevant to lmprobe, it will be applied as a patch with explicit attribution rather than via an automated merge.
+
+If you are building a competing tool on top of upstream ast-grep, use the published `ast-grep-core` etc. from crates.io directly — not this repo's forks.
