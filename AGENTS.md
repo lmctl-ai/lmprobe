@@ -27,3 +27,5 @@ Start at [durable-memory/commands/index.md](durable-memory/commands/index.md) fo
 Normal checks: `cargo fmt --all -- --check`, `cargo check -p lmprobe --locked`, `cargo clippy -p lmprobe --locked --all-targets`, `cargo test -p lmprobe -p lmprobe-engine --locked`.
 When CLI options or help text move: `UPDATE_GOLDENS=1 cargo test -p lmprobe --release --test smoke`.
 Use `--features serve` for daemon changes.
+
+- **Smoke goldens need full history**: two `context_*` goldens embed commit hashes of this repository. Run `--test smoke` on a full (non-shallow) clone and never rewrite `main`.

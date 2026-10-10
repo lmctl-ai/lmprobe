@@ -37,4 +37,4 @@ The smoke harness asserts every struct is constructible. Add fixture-based asser
 
 ## Fixtures
 
-`fixtures/` holds small in-tree cpp files used by smoke tests. Keep them ≤ 5 files, ≤ 30 lines each — the deep-tier corpus lives at `~/search/qa1/repos/cpp/` (workspace-external).
+`fixtures/` holds small in-tree cpp files used by smoke tests. Keep them ≤ 5 files, ≤ 30 lines each — the deep-tier corpus lives at `$LMPROBE_QA_CORPUS/cpp/` (workspace-external).

@@ -82,7 +82,7 @@ advanced expression files, and outfile mutation/alias protections.
 
 `cargo test -p lmprobe --locked` runs unit tests and many focused integration
 suites, not just smoke. Deep/performance tests are explicitly ignored by default.
-Some smoke/deep/performance cases require the external `~/search/qa1/repos`
+Some smoke/deep/performance cases require the external `$LMPROBE_QA_CORPUS`
 corpus and may skip when absent; a green run alone does not prove those cases
 ran. Timing gates run alone with `--test-threads=1`. See [testing](../16_testing.md).
 
@@ -90,8 +90,6 @@ CLI example tests parse commands without running their operations. This is
 intentional for mutation, network, and daemon examples. Practical tests need
 fixtures, isolated Git repos and XDG_CACHE_HOME, and appropriate language runtimes.
 
-For internal local availability, build `cargo build -p lmprobe --locked --release`.
-The local command uses `~/.local/bin/lmprobe` pointing to this checkout's
-`target/release/lmprobe`; rebuild to refresh it. The previously installed npm
-launcher remains at `~/.nvm/versions/node/v24.18.0/bin/lmprobe`. Production
+For local use, build `cargo build -p lmprobe --locked --release` and link or copy
+`target/release/lmprobe` onto your `PATH`; rebuild to refresh it. Production
 publishing is separate and must not be triggered by local verification.

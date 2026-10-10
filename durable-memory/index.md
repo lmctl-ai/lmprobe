@@ -1,5 +1,7 @@
 # lmprobe Development Memory Index
 
+> Terms such as "Lead", "Coder" and "Reviewer" (and lettered "arbitration" items) in these notes and in code comments name the AI-agent roles used while developing lmprobe; they record design decisions and need no action from contributors.
+
 Last updated: 2026-10-06
 
 `durable-memory/` is the project development, design, and implementation

@@ -37,3 +37,7 @@ The following ast-grep crates / directories were not carried over:
 There is **no plan to merge upstream changes** from ast-grep into this repository. The forked crates evolve under lmprobe's release cadence; if upstream ast-grep ships a fix relevant to lmprobe, it will be applied as a patch with explicit attribution rather than via an automated merge.
 
 If you are building a competing tool on top of upstream ast-grep, use the published `ast-grep-core` etc. from crates.io directly — not this repo's forks.
+
+## Third-party data
+
+`crates/lmprobe-secrets/tests/fixtures/gitleaks-default.toml` is a vendored copy of the default rule set of [gitleaks](https://github.com/gitleaks/gitleaks), used as a parity fixture for lmprobe's secret scanner. gitleaks is licensed under the MIT License, Copyright (c) 2019 Zachary Rice; its license text is at https://github.com/gitleaks/gitleaks/blob/master/LICENSE.
