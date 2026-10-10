@@ -1,0 +1,9 @@
+### Evolution of `Execute`
+- **2015-11-17T20:01:58+00:00**: Austin Riendeau (SIGNATURE_CHANGE) [Commit: 3f605993]
+  ```SIGNATURE_CHANGE
+  func (c *Command) Execute() error  { ... }
+  ```
+- **2013-11-01T22:36:24+00:00**: spf13 (INTRODUCED) [Commit: 79bdde5f]
+  ```INTRODUCED
+  func (c *Command) Execute() (err error)  { ... }
+  ```

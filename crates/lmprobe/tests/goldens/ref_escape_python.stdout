@@ -1,0 +1,4 @@
+./src/markupsafe/__init__.py:48: def escape_silent(s: t.Any | None, /) -> Markup:
+./tests/test_markupsafe.py:178: assert escape_silent(None) == Markup()
+./tests/test_markupsafe.py:180: assert escape_silent("<foo>") == Markup("&lt;foo&gt;")
+./tests/test_markupsafe.py:8: from markupsafe import escape_silent

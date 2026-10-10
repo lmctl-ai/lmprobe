@@ -1,0 +1,6 @@
+
+#### File: ./command.go
+- **ExecuteContext** (method_declaration)
+```Go
+func (c *Command) ExecuteContext(ctx context.Context) error  { ... }
+```

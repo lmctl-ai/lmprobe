@@ -1,0 +1,760 @@
+# Provider semantic sink database for lmprobe-secrets.
+# Joins to gitleaks rule IDs from the gitleaks MIT project.
+
+schema_version = 1
+title = "lmprobe provider semantic sink database"
+
+[[providers]]
+id = "aws"
+description = "Amazon Web Services"
+rule_ids = [
+  "aws-access-token",
+  "aws-amazon-bedrock-api-key-long-lived",
+  "aws-amazon-bedrock-api-key-short-lived",
+]
+credential_kind = "key-secret-pair"
+sdk_urls = [
+  "https://boto3.amazonaws.com/",
+  "https://docs.aws.amazon.com/sdk-for-javascript/",
+  "https://docs.aws.amazon.com/sdk-for-go/",
+  "https://docs.aws.amazon.com/sdk-for-java/",
+]
+fast_path_tokens = [
+  "boto3",
+  "aws_secret_access_key",
+  "S3Client",
+  "fromStatic",
+  "NewStaticCredentials",
+  "AwsBasicCredentials",
+  "BasicAWSCredentials",
+]
+
+[[providers.languages]]
+language = "python"
+sdk = "boto3-v1"
+sink_node_kinds = ["call"]
+positive_test = '''boto3.client("s3", aws_secret_access_key=secret)'''
+negative_test = '''boto3.client("s3")'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "boto3.client"
+kwargs = ["aws_access_key_id", "aws_secret_access_key", "aws_session_token"]
+import_hints = ["boto3"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "boto3.Session"
+kwargs = ["aws_access_key_id", "aws_secret_access_key", "aws_session_token"]
+import_hints = ["boto3"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "aws-sdk-js-v3"
+sink_node_kinds = ["call_expression", "new_expression", "object"]
+positive_test = '''new S3Client({ credentials: { accessKeyId: id, secretAccessKey: secret } })'''
+negative_test = '''new S3Client({ region: "us-east-1" })'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "fromStatic"
+object_keys = ["accessKeyId", "secretAccessKey", "sessionToken"]
+import_hints = ["@aws-sdk/credential-providers"]
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "S3Client"
+object_paths = ["credentials.accessKeyId", "credentials.secretAccessKey", "credentials.sessionToken"]
+import_hints = ["@aws-sdk/client-s3"]
+
+[[providers.languages]]
+language = "go"
+sdk = "aws-sdk-go-v2"
+sink_node_kinds = ["call_expression", "composite_literal", "keyed_element"]
+positive_test = '''credentials.NewStaticCredentialsProvider(id, secret, "")'''
+negative_test = '''config.LoadDefaultConfig(ctx)'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "credentials.NewStaticCredentialsProvider"
+positional_indices = [0, 1, 2]
+import_hints = ["github.com/aws/aws-sdk-go-v2/credentials"]
+
+[[providers.languages.call_shapes]]
+kind = "struct"
+struct_type = "aws.Credentials"
+struct_fields = ["AccessKeyID", "SecretAccessKey", "SessionToken"]
+import_hints = ["github.com/aws/aws-sdk-go-v2/aws"]
+
+[[providers.languages]]
+language = "java"
+sdk = "aws-sdk-java-v2"
+sink_node_kinds = ["object_creation_expression", "method_invocation"]
+positive_test = '''AwsBasicCredentials.create(id, secret);'''
+negative_test = '''DefaultCredentialsProvider.create();'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "AwsBasicCredentials.create"
+positional_indices = [0, 1]
+import_hints = ["software.amazon.awssdk.auth.credentials"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "StaticCredentialsProvider.create"
+nested_callees = ["AwsBasicCredentials.create"]
+import_hints = ["software.amazon.awssdk.auth.credentials"]
+
+[[providers.languages]]
+language = "java"
+sdk = "aws-sdk-java-v1"
+sink_node_kinds = ["object_creation_expression"]
+positive_test = '''new BasicAWSCredentials(id, secret);'''
+negative_test = '''new DefaultAWSCredentialsProviderChain();'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "BasicAWSCredentials"
+positional_indices = [0, 1]
+import_hints = ["com.amazonaws.auth"]
+
+[[providers]]
+id = "stripe"
+description = "Stripe"
+rule_ids = ["stripe-access-token"]
+credential_kind = "api-key"
+sdk_urls = [
+  "https://github.com/stripe/stripe-python",
+  "https://github.com/stripe/stripe-node",
+  "https://github.com/stripe/stripe-go",
+  "https://github.com/stripe/stripe-java",
+]
+fast_path_tokens = ["stripe", "Stripe", "api_key", "stripe.Key", "NewClient"]
+
+[[providers.languages]]
+language = "python"
+sdk = "stripe-python-current"
+sink_node_kinds = ["assignment", "call"]
+positive_test = '''stripe.api_key = key'''
+negative_test = '''stripe.api_version = "2024-01-01"'''
+
+[[providers.languages.call_shapes]]
+kind = "assignment"
+assignment_target = "stripe.api_key"
+import_hints = ["stripe"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "stripe.Client"
+kwargs = ["api_key"]
+import_hints = ["stripe"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "stripe-node-current"
+sink_node_kinds = ["call_expression", "new_expression"]
+positive_test = '''const stripe = require("stripe")(key)'''
+negative_test = '''const port = 8080'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "stripe"
+positional_indices = [0]
+import_hints = ["stripe"]
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "Stripe"
+positional_indices = [0]
+import_hints = ["stripe"]
+
+[[providers.languages]]
+language = "go"
+sdk = "stripe-go-v85"
+sink_node_kinds = ["assignment_statement", "call_expression"]
+positive_test = '''sc := stripe.NewClient(apiKey)'''
+negative_test = '''stripe.APIVersion = "2024-01-01"'''
+
+[[providers.languages.call_shapes]]
+kind = "assignment"
+assignment_target = "stripe.Key"
+import_hints = ["github.com/stripe/stripe-go"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "stripe.NewClient"
+positional_indices = [0]
+import_hints = ["github.com/stripe/stripe-go/v85"]
+
+[[providers.languages]]
+language = "java"
+sdk = "stripe-java-current"
+sink_node_kinds = ["assignment_expression", "object_creation_expression"]
+positive_test = '''Stripe.apiKey = key;'''
+negative_test = '''Stripe.apiVersion = "2024-01-01";'''
+
+[[providers.languages.call_shapes]]
+kind = "assignment"
+assignment_target = "Stripe.apiKey"
+import_hints = ["com.stripe.Stripe"]
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "StripeClient"
+positional_indices = [0]
+import_hints = ["com.stripe.StripeClient"]
+
+[[providers]]
+id = "github"
+description = "GitHub"
+rule_ids = [
+  "github-app-token",
+  "github-fine-grained-pat",
+  "github-oauth",
+  "github-pat",
+  "github-refresh-token",
+]
+credential_kind = "bearer-token"
+sdk_urls = [
+  "https://pygithub.readthedocs.io/",
+  "https://github.com/octokit/octokit.js",
+  "https://github.com/google/go-github",
+  "https://github.com/hub4j/github-api",
+]
+fast_path_tokens = ["Github", "Octokit", "oauth2.Token", "withOAuthToken", "withJwtToken"]
+
+[[providers.languages]]
+language = "python"
+sdk = "pygithub-current"
+sink_node_kinds = ["call"]
+positive_test = '''Github(token)'''
+negative_test = '''Github()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "Github"
+positional_indices = [0]
+import_hints = ["github"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "Auth.Token"
+positional_indices = [0]
+import_hints = ["github.Auth"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "octokit-js-current"
+sink_node_kinds = ["new_expression", "call_expression"]
+positive_test = '''new Octokit({ auth: token })'''
+negative_test = '''new Octokit({ userAgent: "x" })'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "Octokit"
+object_keys = ["auth"]
+import_hints = ["octokit", "@octokit/rest"]
+
+[[providers.languages]]
+language = "go"
+sdk = "go-github-current"
+sink_node_kinds = ["call_expression", "composite_literal"]
+positive_test = '''oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})'''
+negative_test = '''github.NewClient(nil)'''
+
+[[providers.languages.call_shapes]]
+kind = "struct"
+struct_type = "oauth2.Token"
+struct_fields = ["AccessToken"]
+import_hints = ["golang.org/x/oauth2"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "oauth2.StaticTokenSource"
+positional_indices = [0]
+import_hints = ["golang.org/x/oauth2"]
+
+[[providers.languages]]
+language = "java"
+sdk = "github-api-java-current"
+sink_node_kinds = ["method_invocation"]
+positive_test = '''new GitHubBuilder().withOAuthToken(token).build();'''
+negative_test = '''new GitHubBuilder().build();'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "withOAuthToken"
+positional_indices = [0]
+import_hints = ["org.kohsuke.github"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "withJwtToken"
+positional_indices = [0]
+import_hints = ["org.kohsuke.github"]
+
+[[providers]]
+id = "slack"
+description = "Slack"
+rule_ids = [
+  "slack-app-token",
+  "slack-bot-token",
+  "slack-config-access-token",
+  "slack-config-refresh-token",
+  "slack-legacy-bot-token",
+  "slack-legacy-token",
+  "slack-legacy-workspace-token",
+  "slack-user-token",
+  "slack-webhook-url",
+]
+credential_kind = "bearer-token"
+sdk_urls = [
+  "https://slack.dev/python-slack-sdk/",
+  "https://slack.dev/node-slack-sdk/web-api",
+  "https://github.com/slack-go/slack",
+  "https://slack.dev/java-slack-sdk/",
+]
+fast_path_tokens = ["WebClient", "slack.New", "Slack.getInstance", "token="]
+
+[[providers.languages]]
+language = "python"
+sdk = "slack-sdk-python-v3"
+sink_node_kinds = ["call"]
+positive_test = '''WebClient(token=token)'''
+negative_test = '''WebClient(timeout=30)'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "WebClient"
+kwargs = ["token"]
+import_hints = ["slack_sdk"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "slack-web-api-js-current"
+sink_node_kinds = ["new_expression"]
+positive_test = '''new WebClient(token)'''
+negative_test = '''new WebClient()'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "WebClient"
+positional_indices = [0]
+import_hints = ["@slack/web-api"]
+
+[[providers.languages]]
+language = "go"
+sdk = "slack-go-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''slack.New(token)'''
+negative_test = '''slack.New()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "slack.New"
+positional_indices = [0]
+import_hints = ["github.com/slack-go/slack"]
+
+[[providers.languages]]
+language = "java"
+sdk = "slack-api-client-java-current"
+sink_node_kinds = ["method_invocation"]
+positive_test = '''Slack.getInstance().methods(token);'''
+negative_test = '''Slack.getInstance();'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "methods"
+positional_indices = [0]
+import_hints = ["com.slack.api.Slack"]
+
+[[providers]]
+id = "twilio"
+description = "Twilio"
+rule_ids = ["twilio-api-key"]
+credential_kind = "key-secret-pair"
+sdk_urls = [
+  "https://github.com/twilio/twilio-python",
+  "https://github.com/twilio/twilio-node",
+  "https://github.com/twilio/twilio-go",
+  "https://github.com/twilio/twilio-java",
+]
+fast_path_tokens = ["twilio", "Twilio.init", "Client(", "NewRestClientWithParams", "auth_token"]
+
+[[providers.languages]]
+language = "python"
+sdk = "twilio-python-v9"
+sink_node_kinds = ["call"]
+positive_test = '''Client(account_sid, auth_token)'''
+negative_test = '''Client()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "Client"
+positional_indices = [0, 1]
+import_hints = ["twilio.rest"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "twilio-node-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''twilio(accountSid, authToken)'''
+negative_test = '''twilio()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "twilio"
+positional_indices = [0, 1]
+import_hints = ["twilio"]
+
+[[providers.languages]]
+language = "go"
+sdk = "twilio-go-current"
+sink_node_kinds = ["call_expression", "composite_literal"]
+positive_test = '''twilio.NewRestClientWithParams(twilio.ClientParams{Username: sid, Password: token})'''
+negative_test = '''twilio.NewRestClient()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "twilio.NewRestClientWithParams"
+object_keys = ["Username", "Password"]
+import_hints = ["github.com/twilio/twilio-go"]
+
+[[providers.languages]]
+language = "java"
+sdk = "twilio-java-current"
+sink_node_kinds = ["method_invocation"]
+positive_test = '''Twilio.init(accountSid, authToken);'''
+negative_test = '''Twilio.destroy();'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "Twilio.init"
+positional_indices = [0, 1]
+import_hints = ["com.twilio.Twilio"]
+
+[[providers]]
+id = "sendgrid"
+description = "SendGrid"
+rule_ids = ["sendgrid-api-token"]
+credential_kind = "api-key"
+sdk_urls = [
+  "https://github.com/sendgrid/sendgrid-python",
+  "https://github.com/sendgrid/sendgrid-nodejs",
+  "https://pkg.go.dev/github.com/sendgrid/sendgrid-go/v4",
+  "https://github.com/sendgrid/sendgrid-java",
+]
+fast_path_tokens = ["SendGridAPIClient", "setApiKey", "NewSendClient", "GetRequest", "SendGrid("]
+
+[[providers.languages]]
+language = "python"
+sdk = "sendgrid-python-current"
+sink_node_kinds = ["call"]
+positive_test = '''SendGridAPIClient(api_key)'''
+negative_test = '''SendGridAPIClient()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "SendGridAPIClient"
+positional_indices = [0]
+import_hints = ["sendgrid"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "sendgrid-nodejs-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''sgMail.setApiKey(apiKey)'''
+negative_test = '''sgMail.setSubstitutionWrappers("{{", "}}")'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "setApiKey"
+positional_indices = [0]
+import_hints = ["@sendgrid/mail"]
+
+[[providers.languages]]
+language = "go"
+sdk = "sendgrid-go-v4"
+sink_node_kinds = ["call_expression"]
+positive_test = '''client := sendgrid.NewSendClient(apiKey)'''
+negative_test = '''sendgrid.MakeRequest(request)'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "sendgrid.NewSendClient"
+positional_indices = [0]
+import_hints = ["github.com/sendgrid/sendgrid-go/v4"]
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "sendgrid.GetRequest"
+positional_indices = [0]
+import_hints = ["github.com/sendgrid/sendgrid-go/v4"]
+
+[[providers.languages]]
+language = "java"
+sdk = "sendgrid-java-current"
+sink_node_kinds = ["object_creation_expression"]
+positive_test = '''new SendGrid(apiKey);'''
+negative_test = '''new Email("a@example.com");'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "SendGrid"
+positional_indices = [0]
+import_hints = ["com.sendgrid.SendGrid"]
+
+[[providers]]
+id = "openai"
+description = "OpenAI"
+rule_ids = ["openai-api-key"]
+credential_kind = "api-key"
+sdk_urls = [
+  "https://github.com/openai/openai-python",
+  "https://github.com/openai/openai-node",
+  "https://github.com/openai/openai-go",
+  "https://github.com/openai/openai-java",
+]
+fast_path_tokens = ["OpenAI", "api_key", "apiKey", "WithAPIKey", "OpenAIOkHttpClient"]
+
+[[providers.languages]]
+language = "python"
+sdk = "openai-python-v1"
+sink_node_kinds = ["call"]
+positive_test = '''OpenAI(api_key=api_key)'''
+negative_test = '''OpenAI()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "OpenAI"
+kwargs = ["api_key"]
+import_hints = ["openai"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "openai-node-v4"
+sink_node_kinds = ["new_expression"]
+positive_test = '''new OpenAI({ apiKey: apiKey })'''
+negative_test = '''new OpenAI()'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "OpenAI"
+object_keys = ["apiKey"]
+import_hints = ["openai"]
+
+[[providers.languages]]
+language = "go"
+sdk = "openai-go-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''option.WithAPIKey(apiKey)'''
+negative_test = '''openai.NewClient()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "option.WithAPIKey"
+positional_indices = [0]
+import_hints = ["github.com/openai/openai-go/option"]
+
+[[providers.languages]]
+language = "java"
+sdk = "openai-java-current"
+sink_node_kinds = ["method_invocation"]
+positive_test = '''OpenAIOkHttpClient.builder().apiKey(apiKey).build();'''
+negative_test = '''OpenAIOkHttpClient.builder().build();'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "apiKey"
+positional_indices = [0]
+import_hints = ["com.openai.client.okhttp.OpenAIOkHttpClient"]
+
+[[providers]]
+id = "gitlab"
+description = "GitLab"
+rule_ids = [
+  "gitlab-deploy-token",
+  "gitlab-oauth-app-secret",
+  "gitlab-pat",
+  "gitlab-pat-routable",
+]
+credential_kind = "bearer-token"
+sdk_urls = [
+  "https://python-gitlab.readthedocs.io/",
+  "https://github.com/jdalrymple/gitbeaker",
+  "https://github.com/xanzy/go-gitlab",
+  "https://github.com/gitlab4j/gitlab4j-api",
+]
+fast_path_tokens = ["gitlab", "Gitlab", "GitLabApi", "NewClient", "private_token"]
+
+[[providers.languages]]
+language = "python"
+sdk = "python-gitlab-current"
+sink_node_kinds = ["call"]
+positive_test = '''gitlab.Gitlab(url, private_token=token)'''
+negative_test = '''gitlab.Gitlab(url)'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "gitlab.Gitlab"
+kwargs = ["private_token", "oauth_token"]
+import_hints = ["gitlab"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "gitbeaker-rest-current"
+sink_node_kinds = ["new_expression"]
+positive_test = '''new Gitlab({ token: token })'''
+negative_test = '''new Gitlab({ host: "https://gitlab.com" })'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "Gitlab"
+object_keys = ["token", "oauthToken"]
+import_hints = ["@gitbeaker/rest"]
+
+[[providers.languages]]
+language = "go"
+sdk = "go-gitlab-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''gitlab.NewClient(token)'''
+negative_test = '''gitlab.NewClient()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "gitlab.NewClient"
+positional_indices = [0]
+import_hints = ["github.com/xanzy/go-gitlab"]
+
+[[providers.languages]]
+language = "java"
+sdk = "gitlab4j-api-current"
+sink_node_kinds = ["object_creation_expression"]
+positive_test = '''new GitLabApi(url, token);'''
+negative_test = '''new GitLabApi();'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "GitLabApi"
+positional_indices = [1]
+import_hints = ["org.gitlab4j.api.GitLabApi"]
+
+[[providers]]
+id = "cloudflare"
+description = "Cloudflare"
+rule_ids = [
+  "cloudflare-api-key",
+  "cloudflare-global-api-key",
+  "cloudflare-origin-ca-key",
+]
+credential_kind = "api-key"
+sdk_urls = [
+  "https://github.com/cloudflare/cloudflare-python",
+  "https://github.com/cloudflare/cloudflare-typescript",
+  "https://github.com/cloudflare/cloudflare-go",
+]
+fast_path_tokens = ["Cloudflare", "cloudflare", "api_token", "apiToken", "NewWithAPIToken"]
+
+[[providers.languages]]
+language = "python"
+sdk = "cloudflare-python-current"
+sink_node_kinds = ["call"]
+positive_test = '''Cloudflare(api_token=token)'''
+negative_test = '''Cloudflare()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "Cloudflare"
+kwargs = ["api_token", "api_key"]
+import_hints = ["cloudflare"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "cloudflare-typescript-current"
+sink_node_kinds = ["new_expression"]
+positive_test = '''new Cloudflare({ apiToken: token })'''
+negative_test = '''new Cloudflare()'''
+
+[[providers.languages.call_shapes]]
+kind = "new"
+callee = "Cloudflare"
+object_keys = ["apiToken", "apiKey"]
+import_hints = ["cloudflare"]
+
+[[providers.languages]]
+language = "go"
+sdk = "cloudflare-go-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''cloudflare.NewWithAPIToken(token)'''
+negative_test = '''cloudflare.New()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "cloudflare.NewWithAPIToken"
+positional_indices = [0]
+import_hints = ["github.com/cloudflare/cloudflare-go"]
+
+[[providers]]
+id = "datadog"
+description = "Datadog"
+rule_ids = ["datadog-access-token"]
+credential_kind = "key-secret-pair"
+sdk_urls = [
+  "https://github.com/DataDog/datadog-api-client-python",
+  "https://github.com/DataDog/datadog-api-client-typescript",
+  "https://github.com/DataDog/datadog-api-client-go",
+  "https://github.com/DataDog/datadog-api-client-java",
+]
+fast_path_tokens = ["datadog", "Datadog", "apiKeyAuth", "AddDefaultHeader", "setApiKey"]
+
+[[providers.languages]]
+language = "python"
+sdk = "datadog-api-client-python-current"
+sink_node_kinds = ["call"]
+positive_test = '''Configuration(api_key=api_key)'''
+negative_test = '''Configuration()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "Configuration"
+kwargs = ["api_key"]
+import_hints = ["datadog_api_client"]
+
+[[providers.languages]]
+language = "javascript"
+sdk = "datadog-api-client-typescript-current"
+sink_node_kinds = ["call_expression"]
+positive_test = '''client.createConfiguration({ authMethods: { apiKeyAuth: apiKey } })'''
+negative_test = '''client.createConfiguration()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "client.createConfiguration"
+object_paths = ["authMethods.apiKeyAuth", "authMethods.appKeyAuth"]
+import_hints = ["@datadog/datadog-api-client"]
+
+[[providers.languages]]
+language = "go"
+sdk = "datadog-api-client-go-v2"
+sink_node_kinds = ["call_expression"]
+positive_test = '''configuration.AddDefaultHeader("DD-API-KEY", apiKey)'''
+negative_test = '''datadog.NewConfiguration()'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "AddDefaultHeader"
+positional_indices = [1]
+import_hints = ["github.com/DataDog/datadog-api-client-go/v2/api/datadog"]
+
+[[providers.languages]]
+language = "java"
+sdk = "datadog-api-client-java-current"
+sink_node_kinds = ["method_invocation"]
+positive_test = '''apiClient.setApiKey(apiKey);'''
+negative_test = '''new ApiClient();'''
+
+[[providers.languages.call_shapes]]
+kind = "call"
+callee = "setApiKey"
+positional_indices = [0]
+import_hints = ["com.datadog.api.client"]

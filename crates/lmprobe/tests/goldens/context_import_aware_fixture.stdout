@@ -1,0 +1,57 @@
+{
+  "schema": "lmprobe.context.v1",
+  "symbol": "ImportedThing",
+  "depth": 1,
+  "definition": {
+    "name": "ImportedThing",
+    "kind": "interface_declaration",
+    "lang": "TypeScript",
+    "file_path": "tests/fixtures/import_aware/model.ts",
+    "line_start": 1,
+    "content": "interface ImportedThing  { ... }"
+  },
+  "callers": [],
+  "callees": [],
+  "imports": [
+    {
+      "name": "ImportedThing",
+      "kind": "relative_import",
+      "lang": "ts",
+      "file_path": "tests/fixtures/import_aware/page.ts",
+      "line_start": 1,
+      "content": "import { ImportedThing } from \"./model\";"
+    }
+  ],
+  "recent_history": [
+    {
+      "commit_hash": "7dffa3936bd73066bf9b37d804a98ec1038c725a",
+      "author": "Mike Ma",
+      "timestamp": "2026-05-05T10:08:05+00:00",
+      "change_type": "INTRODUCED",
+      "file_path": "crates/lmprobe/tests/fixtures/import_aware/model.ts",
+      "line_start": 1,
+      "line_end": 3,
+      "excerpt": "interface ImportedThing  { ... }"
+    }
+  ],
+  "todos_inline": [],
+  "file_outline": [
+    {
+      "name": "ImportedThing",
+      "kind": "interface_declaration",
+      "lang": "TypeScript",
+      "file_path": "tests/fixtures/import_aware/model.ts",
+      "line_start": 1,
+      "content": "interface ImportedThing  { ... }"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "IMPORT_AWARE_CONTEXT",
+      "message": "resolved definition through one relative import/re-export hop",
+      "hint": null,
+      "lang": null
+    }
+  ],
+  "exit_status": "matched"
+}

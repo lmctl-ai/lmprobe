@@ -1,0 +1,22 @@
+[package]
+name = "lmprobe-secrets"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lattice Systems LLC"]
+license = "MIT"
+description = "lmprobe secrets foundation crate: gitleaks-compatible rule model, regex compatibility, and redaction-safe secret types"
+
+[dependencies]
+aho-corasick = "1.1"
+ast-grep-core = { workspace = true }
+ast-grep-language = { workspace = true }
+base64 = "0.22"
+lmprobe-types = { path = "../lmprobe-types", version = "0.1.0" }
+regex = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
+toml = "0.8"
+
+[dev-dependencies]
+serde_json = "1.0"
+tempfile = "3.10"

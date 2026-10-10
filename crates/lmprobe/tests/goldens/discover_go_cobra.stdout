@@ -1,0 +1,12 @@
+---
+Name: github.com/spf13/cobra
+Type: Go
+Version: 1.15
+Path: .
+Deps: 4
+---
+Name: .
+Type: Make
+Version: 0.0.0
+Path: .
+Deps: 0

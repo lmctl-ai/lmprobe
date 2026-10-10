@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "lmprobe AWS read-only request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["service", "operation"],
+  "properties": {
+    "schema": {"const": "lmprobe.aws.request.v1", "default": "lmprobe.aws.request.v1"},
+    "service": {"type": "string", "minLength": 1},
+    "operation": {"type": "string", "minLength": 1},
+    "parameters": {"type": "object", "default": {}},
+    "profile": {"type": ["string", "null"], "minLength": 1},
+    "region": {"type": ["string", "null"], "minLength": 1},
+    "select": {"type": ["string", "null"], "pattern": "^(?:/(?:[^~]|~[01])*)?$"},
+    "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 300, "default": 60},
+    "pagination": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_items": {"type": ["integer", "null"], "minimum": 1, "maximum": 10000},
+        "page_size": {"type": ["integer", "null"], "minimum": 1, "maximum": 10000},
+        "starting_token": {"type": ["string", "null"], "minLength": 1},
+        "first_page": {"type": "boolean", "default": false}
+      },
+      "allOf": [{
+        "if": {"properties": {"first_page": {"const": true}}, "required": ["first_page"]},
+        "then": {
+          "properties": {
+            "max_items": {"type": "null"},
+            "page_size": {"type": "null"},
+            "starting_token": {"type": "null"}
+          }
+        }
+      }]
+    }
+  },
+  "$comment": "Runtime exact operation allowlist and native AWS API parameter models remain authoritative. Pagination controls require a cataloged paginator."
+}

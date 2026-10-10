@@ -1,0 +1,10 @@
+
+#### File: ./tests/test_markupsafe.py
+- **escape_silent** (call_site)
+```Python
+escape_silent(None)
+```
+- **escape_silent** (call_site)
+```Python
+escape_silent("<foo>")
+```

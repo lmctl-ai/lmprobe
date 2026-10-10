@@ -1,0 +1,168 @@
+
+#### File: ./active_help.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./active_help_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./args.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./args_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./bash_completions.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./bash_completionsV2.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./bash_completionsV2_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./bash_completions_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./cobra.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./command.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./command_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./command_win.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./completions.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./completions_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/man_docs.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/man_docs_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/man_examples_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/md_docs.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/rest_docs.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/yaml_docs.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./doc/yaml_docs_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./fish_completions.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./fish_completions_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./flag_groups.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./powershell_completions.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./powershell_completions_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./zsh_completions.go
+- **fmt** (import)
+```Go
+"fmt"
+```
+
+#### File: ./zsh_completions_test.go
+- **fmt** (import)
+```Go
+"fmt"
+```

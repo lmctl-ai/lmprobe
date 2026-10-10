@@ -1,0 +1,13 @@
+
+#### File: ./src/markupsafe/__init__.py
+- **escape_silent** (function_definition)
+```Python
+def escape_silent(s: t.Any | None, /) -> Markup:
+     { ... }
+```
+
+#### File: ./tests/test_markupsafe.py
+- **escape_silent** (import_from_statement)
+```Python
+from markupsafe import escape_silent
+```

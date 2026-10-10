@@ -1,0 +1,10 @@
+
+#### File: ./command_test.go
+- **ExecuteContext** (call_site)
+```Go
+root.ExecuteContext(ctx)
+```
+- **ExecuteContext** (call_site)
+```Go
+root.ExecuteContext(context.Background())
+```

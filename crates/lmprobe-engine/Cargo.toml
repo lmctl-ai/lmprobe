@@ -1,0 +1,35 @@
+[package]
+name = "lmprobe-engine"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lattice Systems LLC"]
+license = "MIT"
+description = "lmprobe foundation crate: language-agnostic + dispatch-driven sensors (search, def, callers, history, etc.)"
+
+[dependencies]
+ast-grep-core = { workspace = true }
+ast-grep-config = { workspace = true }
+ast-grep-language = { workspace = true }
+lmprobe-types = { path = "../lmprobe-types", version = "0.1.0" }
+lmprobe-lang-core = { path = "../lmprobe-lang-core", version = "0.1.0" }
+lmprobe-registry = { path = "../lmprobe-registry", version = "0.1.0" }
+lmprobe-secrets = { path = "../lmprobe-secrets", version = "0.1.0" }
+ignore = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = { workspace = true }
+regex = "1.10"
+chrono = { version = "0.4", features = ["serde"] }
+git2 = "0.19"
+rusqlite = { version = "0.32", features = ["bundled"] }
+async-graphql = { version = "7.0", features = ["chrono"] }
+toml = "0.8"
+infer = "0.16"
+
+[features]
+default = []
+linux-portable-vendored = [
+  "git2/vendored-libgit2",
+  "git2/vendored-openssl",
+]

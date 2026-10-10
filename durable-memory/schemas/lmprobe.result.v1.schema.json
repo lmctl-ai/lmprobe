@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "lmprobe program result v1",
+  "type": "object",
+  "required": ["schema", "source_schema", "status", "payload_format", "payload", "metadata", "diagnostics"],
+  "properties": {
+    "schema": {"const": "lmprobe.result.v1"},
+    "source_schema": {"type": "string", "pattern": "^lmprobe\\..+\\.v[0-9]+$"},
+    "status": {"enum": ["ok", "no_match", "partial", "error"]},
+    "payload_format": {"enum": ["list", "rows", "hierarchical"]},
+    "payload": {"type": "object"},
+    "metadata": {"type": "object"},
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["code", "message"],
+        "properties": {
+          "code": {"type": "string"}, "message": {"type": "string"},
+          "hint": {"type": ["string", "null"]}, "lang": {"type": ["string", "null"]}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"payload_format": {"const": "list"}}},
+      "then": {"properties": {"payload": {
+        "type": "object", "required": ["items"], "additionalProperties": false,
+        "properties": {"items": {"type": "array", "items": {"type": ["string", "number", "boolean", "null"]}}}
+      }}}
+    },
+    {
+      "if": {"properties": {"payload_format": {"const": "rows"}}},
+      "then": {"properties": {"payload": {
+        "type": "object", "required": ["columns", "rows"], "additionalProperties": false,
+        "properties": {
+          "columns": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+          "rows": {"type": "array", "items": {"type": "object"}}
+        }
+      }}}
+    },
+    {
+      "if": {"properties": {"payload_format": {"const": "hierarchical"}}},
+      "then": {"properties": {"payload": {
+        "type": "object", "required": ["data"], "additionalProperties": false,
+        "properties": {"data": {}}
+      }}}
+    }
+  ]
+}

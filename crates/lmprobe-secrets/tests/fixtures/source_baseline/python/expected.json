@@ -1,0 +1,438 @@
+{
+  "ast_files_parsed": 0,
+  "canonical_findings": [
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 1,
+            "end_line": 7,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 1,
+            "start_line": 7
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line_number": 7,
+      "provider_id": "aws",
+      "redacted_secret": "REDACTED",
+      "sdk": "stdlib-env"
+    },
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 1,
+            "end_line": 10,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 1,
+            "start_line": 10
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line_number": 10,
+      "provider_id": "stripe",
+      "redacted_secret": "REDACTED",
+      "sdk": "stdlib-env"
+    },
+    {
+      "credential_kind": "key-secret-pair",
+      "detector": "gitleaks-rule",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 1,
+            "end_line": 13,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 1,
+            "start_line": 13
+          }
+        },
+        {
+          "detector": "gitleaks-rule",
+          "location": {
+            "end_column": 63,
+            "end_line": 12,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 1,
+            "start_line": 12
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line_number": 13,
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/python/boto3-v1/0",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "sdk": "boto3-v1"
+    },
+    {
+      "credential_kind": "api-key",
+      "detector": "symbol-reachability",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 1,
+            "end_line": 16,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 1,
+            "start_line": 16
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line_number": 16,
+      "provider_id": "stripe",
+      "provider_rule_ids": [
+        "stripe-access-token"
+      ],
+      "provider_shape_id": "stripe/python/stripe-python-current/0",
+      "redacted_secret": "REDACTED",
+      "sdk": "stripe-python-current"
+    },
+    {
+      "detector": "gitleaks-rule",
+      "evidence": [
+        {
+          "detector": "gitleaks-rule",
+          "location": {
+            "end_column": 58,
+            "end_line": 18,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 19,
+            "start_line": 18
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line_number": 18,
+      "redacted_secret": "REDACTED",
+      "rule_id": "github-pat"
+    },
+    {
+      "detector": "symbol-reachability",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 1,
+            "end_line": 19,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+            "start_column": 1,
+            "start_line": 19
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line_number": 19,
+      "redacted_secret": "REDACTED"
+    }
+  ],
+  "confirmed_flows": [
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 14,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "source",
+          "line": 6,
+          "symbol": "aws_secret"
+        },
+        {
+          "column": 14,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "definition",
+          "line": 6,
+          "symbol": "aws_secret"
+        },
+        {
+          "column": 14,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "import",
+          "line": 6,
+          "symbol": "aws"
+        },
+        {
+          "column": 1,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "sink",
+          "line": 7,
+          "symbol": "aws_secret"
+        }
+      ],
+      "intermediate_vars": [
+        "aws_secret"
+      ],
+      "provider_id": "aws",
+      "sink": {
+        "arg_name": "aws_secret_access_key",
+        "arg_position": 1,
+        "callee_text": "boto3.client",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 7,
+        "sink_kind": "credential-kwarg"
+      },
+      "source": {
+        "column": 14,
+        "env_var_name": "AWS_SECRET_ACCESS_KEY",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 6,
+        "provider_id": "aws",
+        "sdk": "stdlib-env",
+        "source_category": "env",
+        "source_id": "env-aws",
+        "variable": "aws_secret"
+      }
+    },
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 14,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "source",
+          "line": 9,
+          "symbol": "stripe_key"
+        },
+        {
+          "column": 14,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "definition",
+          "line": 9,
+          "symbol": "stripe_key"
+        },
+        {
+          "column": 14,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "import",
+          "line": 9,
+          "symbol": "stripe"
+        },
+        {
+          "column": 1,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "kind": "sink",
+          "line": 10,
+          "symbol": "stripe_key"
+        }
+      ],
+      "intermediate_vars": [
+        "stripe_key"
+      ],
+      "provider_id": "stripe",
+      "sink": {
+        "arg_name": "api_key",
+        "arg_position": null,
+        "callee_text": "stripe.api_key",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 10,
+        "sink_kind": "attribute-assignment"
+      },
+      "source": {
+        "column": 14,
+        "env_var_name": "STRIPE_API_KEY",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 9,
+        "provider_id": "stripe",
+        "sdk": "stdlib-env",
+        "source_category": "env",
+        "source_id": "env-stripe",
+        "variable": "stripe_key"
+      }
+    }
+  ],
+  "exit_status": "matched",
+  "findings": [
+    {
+      "ast_context": "test-or-generated-path",
+      "confidence": "rule-compatible-low",
+      "description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+      "detector": "gitleaks-rule",
+      "end_column": 63,
+      "end_line": 12,
+      "entropy": 5.021928094887364,
+      "evidence": [
+        {
+          "end_column": 63,
+          "end_line": 12,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "start_column": 1,
+          "start_line": 12
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "fingerprint": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py:generic-api-key:12",
+      "line_number": 12,
+      "match_text": "REDACTED",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "source_mode": "filesystem-gitleaks-compat",
+      "start_column": 1,
+      "start_line": 12,
+      "tags": []
+    },
+    {
+      "ast_context": "test-or-generated-path",
+      "confidence": "rule-compatible-low",
+      "description": "Uncovered a GitHub Personal Access Token, potentially leading to unauthorized repository access and sensitive content exposure.",
+      "detector": "gitleaks-rule",
+      "end_column": 58,
+      "end_line": 18,
+      "entropy": 4.78418371977919,
+      "evidence": [
+        {
+          "end_column": 58,
+          "end_line": 18,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+          "start_column": 19,
+          "start_line": 18
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "fingerprint": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py:github-pat:18",
+      "line_number": 18,
+      "match_text": "REDACTED",
+      "redacted_secret": "REDACTED",
+      "rule_id": "github-pat",
+      "source_mode": "filesystem-gitleaks-compat",
+      "start_column": 19,
+      "start_line": 18,
+      "tags": []
+    }
+  ],
+  "schema": "lmprobe.secrets.v1",
+  "semantic_findings": [
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "key-secret-pair",
+      "detector": "symbol-reachability",
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/python/boto3-v1/0",
+      "sdk": "boto3-v1",
+      "sink": {
+        "arg_name": "aws_secret_access_key",
+        "arg_position": 1,
+        "callee_text": "boto3.client",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 13,
+        "sink_kind": "credential-kwarg"
+      },
+      "source": {
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 12,
+        "literal": "REDACTED",
+        "variable": "aws_secret_literal"
+      }
+    },
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "api-key",
+      "detector": "symbol-reachability",
+      "provider_id": "stripe",
+      "provider_rule_ids": [
+        "stripe-access-token"
+      ],
+      "provider_shape_id": "stripe/python/stripe-python-current/0",
+      "sdk": "stripe-python-current",
+      "sink": {
+        "arg_name": "api_key",
+        "arg_position": null,
+        "callee_text": "stripe.api_key",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 16,
+        "sink_kind": "attribute-assignment"
+      },
+      "source": {
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 15,
+        "literal": "REDACTED",
+        "variable": "stripe_literal"
+      }
+    },
+    {
+      "confidence": "bounded-symbol-flow",
+      "detector": "symbol-reachability",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 0,
+        "callee_text": "client.login",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 19,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+        "line": 18,
+        "literal": "REDACTED",
+        "variable": "fallback_token"
+      }
+    }
+  ],
+  "sink_catalog_version": "2026-05-p4-v1",
+  "sink_evidence": [],
+  "source_evidence": [
+    {
+      "column": 14,
+      "env_var_name": "AWS_SECRET_ACCESS_KEY",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line": 6,
+      "provider_id": "aws",
+      "sdk": "stdlib-env",
+      "source_category": "env",
+      "source_id": "env-aws",
+      "variable": "aws_secret"
+    },
+    {
+      "column": 14,
+      "env_var_name": "STRIPE_API_KEY",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/python/boto3_env_app.py",
+      "line": 9,
+      "provider_id": "stripe",
+      "sdk": "stdlib-env",
+      "source_category": "env",
+      "source_id": "env-stripe",
+      "variable": "stripe_key"
+    }
+  ],
+  "summary": {
+    "canonical": 6,
+    "confirmed_flows": 2,
+    "layer1": 2,
+    "sink_evidence": 0,
+    "source_evidence": 2,
+    "suppressed": 0,
+    "symbol_reachability": 3
+  },
+  "suppressed": [],
+  "warnings": []
+}

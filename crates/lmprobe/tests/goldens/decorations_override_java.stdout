@@ -1,0 +1,60 @@
+
+#### File: ./junit-jupiter-extensions/src/main/java/com/example/cartesian/CartesianProductContext.java
+- **Override** (decoration)
+```Java
+@Override
+```
+- **Override** (decoration)
+```Java
+@Override
+```
+
+#### File: ./junit-jupiter-extensions/src/main/java/com/example/cartesian/CartesianProductProvider.java
+- **Override** (decoration)
+```Java
+@Override
+```
+- **Override** (decoration)
+```Java
+@Override
+```
+
+#### File: ./junit-jupiter-extensions/src/main/java/com/example/cartesian/CartesianProductResolver.java
+- **Override** (decoration)
+```Java
+@Override
+```
+- **Override** (decoration)
+```Java
+@Override
+```
+
+#### File: ./junit-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java
+- **Override** (decoration)
+```Java
+@Override
+```
+- **Override** (decoration)
+```Java
+@Override
+```
+
+#### File: ./junit-modular-world/src/main/ice.cream/ice/cream/Machine.java
+- **Override** (decoration)
+```Java
+@Override
+```
+- **Override** (decoration)
+```Java
+@Override
+```
+- **Override** (decoration)
+```Java
+@Override
+```
+
+#### File: ./junit-modular-world/src/main/ice.cream/ice/cream/Scoop.java
+- **Override** (decoration)
+```Java
+@Override
+```

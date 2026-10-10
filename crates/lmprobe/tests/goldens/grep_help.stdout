@@ -1,0 +1,121 @@
+Search file contents with a regular expression
+
+Usage: lmprobe grep [OPTIONS] <PATTERN> [PATH]
+
+Arguments:
+  <PATTERN>
+
+
+  [PATH]
+          Single compatibility path. When omitted, `grep` defaults to `.` unless one or more `--path <PATH>` flags are set
+
+Options:
+      --path <PATH>
+          Additional scan roots (repeatable); defaults to . when no paths are given
+
+      --parents
+          Attach enclosing structural declaration chain metadata to JSON/NDJSON hits
+
+      --body
+          Attach innermost enclosing structural body metadata/content to JSON/NDJSON hits
+
+      --inside-kind <INSIDE_KIND>
+          Filter hits to those inside one of the listed AST ancestor kinds (comma-separated `tree-sitter` kind names)
+
+  -n, --line-number
+          Compatibility flag; line numbers are already included
+
+      --role
+          Attach a mechanical local role classification to JSON/NDJSON hits
+
+      --quick-projects
+          Narrow scans to npm roots or directories with at least five Perl files
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+Common options:
+      --exit-zero-on-no-match
+          Return exit 0 instead of 1 when no results match
+
+      --no-cache
+          Bypass history cache where supported
+
+      --workspace <WORKSPACE>
+          Read across repositories listed in a roots: YAML file; mutations refuse this mode
+
+  -l, --lang <LANG>
+          Force the parser language; use --type to filter files by extension
+
+  -G, --globs <GLOBS>
+          Include file globs (repeatable or comma-separated; prefix ! to exclude)
+
+      --exclude-glob <EXCLUDE_GLOBS>
+          Exclude file globs (repeatable or comma-separated)
+
+      --no-ignore
+          Include files excluded by .gitignore and .ignore
+
+      --no-default-excludes
+          Include dependency, build, VCS, and cache directories
+
+  -j, --threads <THREADS>
+          Worker thread count (default: num_cpus)
+
+  -A, --after <AFTER>
+          Lines after grep/ref hits; grep JSON includes structured context
+
+  -B, --before <BEFORE>
+          Lines before grep/ref hits; grep JSON includes structured context
+
+  -C, --context <CONTEXT>
+          Lines around grep/ref hits; grep JSON includes structured context
+
+  -q, --quiet
+          Suppress non-error stderr (warnings stay in the envelope)
+
+  -v, --verbose
+          Also print incidental and non-error JSON diagnostics to stderr
+
+      --limit <LIMIT>
+          Cap the primary result list; composite sub-lists may need their own limit
+
+      --max-filesize <MAX_FILESIZE>
+          Skip larger files (bytes); report FILE_TOO_LARGE
+
+          [default: 5242880]
+
+  -i, --ignore-case
+          Case-insensitive matching for textual filters (grep, name)
+
+  -t, --type <TYPE>
+          Filter files by language extension without forcing a parser
+
+      --json
+          Emit one versioned program JSON result, including errors
+
+      --outfile <FILE>
+          Atomically write program JSON to this file; stdout is quiet on success
+
+      --infile <FILE>
+          Load a full GraphQL document (implies query and program JSON); - reads stdin
+
+          [aliases: --intfile]
+
+      --format <FORMAT>
+          Output format (auto: markdown in a terminal, NDJSON when piped)
+
+          Possible values:
+          - auto:     Pick at runtime: TTY → markdown, pipe → ndjson
+          - markdown
+          - json
+          - ndjson:   Newline-delimited JSON: one item per line + a final summary
+          - sarif:    SARIF 2.1.0 — GitHub Advanced Security can ingest this directly
+          - github:   GitHub Actions annotations
+          - mermaid:  Mermaid graph (graph commands only)
+          - dot:      Graphviz DOT graph (graph commands only)
+
+Example:
+  lmprobe grep 'TODO|FIXME' --path src --path tests
+
+PATTERN is positional. Use | for alternation; --parents/--body add AST context.

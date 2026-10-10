@@ -1,0 +1,46 @@
+[workspace]
+members = ["crates/*", "xtask"]
+# Phase 5A.6 — `crates/lmprobe-lang-<X>/` dirs exist as seeded
+# empty placeholders (just `.gitkeep`) so per-Coder agent sessions
+# can be spawned with `sessiondir = .../crates/lmprobe-lang-<X>`.
+# Cargo's `members = ["crates/*"]` glob would otherwise fail to
+# load each empty dir as a workspace member; `exclude` skips them.
+# `cargo xtask new-lang <X>` removes the entry from this list when
+# it scaffolds the crate.
+exclude = [
+]
+default-members = ["crates/*"]
+resolver = "2"
+
+[profile.release]
+lto = true
+
+[workspace.package]
+version = "0.43.0"
+authors = [
+  "Lattice Systems LLC (lmprobe — see crates/lmprobe)",
+  "Herrington Darkholme <2883231+HerringtonDarkholme@users.noreply.github.com> (ast-grep upstream — see crates/{core,config,language})",
+]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/lmctl-ai/lmprobe"
+homepage = "https://github.com/lmctl-ai/lmprobe"
+documentation = "https://github.com/lmctl-ai/lmprobe"
+readme = "README.md"
+rust-version = "1.79"
+
+[workspace.dependencies]
+ast-grep-core = { path = "crates/core", version = "0.43.0", default-features = false }
+ast-grep-config = { path = "crates/config", version = "0.43.0" }
+ast-grep-language = { path = "crates/language", version = "0.43.0" }
+
+bit-set = { version = "0.10.0" }
+ignore = { version = "0.4.22" }
+regex = { version = "1.10.4" }
+serde = { version = "1.0.200", features = ["derive"] }
+serde_yaml = "0.9.33"
+tree-sitter = { version = "0.26.3" }
+thiserror = "2.0.0"
+schemars = "1.0.0"
+anyhow = "1.0.82"
+dashmap = "6.0.0"

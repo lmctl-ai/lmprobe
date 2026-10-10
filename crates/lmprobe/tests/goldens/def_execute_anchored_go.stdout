@@ -1,0 +1,6 @@
+
+#### File: ./command.go
+- **Execute** (method_declaration)
+```Go
+func (c *Command) Execute() error  { ... }
+```

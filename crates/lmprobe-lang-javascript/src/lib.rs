@@ -1,0 +1,208 @@
+//! `lmprobe-lang-javascript` — D5 capability impls for JavaScript.
+//!
+//! Phase 5B.26 extraction. Mirrors the trait impls that previously
+//! lived in `lmprobe-lang-core::langs` as the shared `Js*` structs
+//! (shared across JavaScript / TypeScript / Tsx). Each impl struct
+//! is reachable from the registry's per-language dispatch arms
+//! (`SgLang::JavaScript => &lmprobe_lang_javascript::JavaScript*`).
+//!
+//! Structs exported (per the registry's expected naming):
+//! - `JavaScriptExtractor` — bespoke: walks `lexical_declaration` /
+//!   `variable_declaration` to the inner `variable_declarator`'s
+//!   `name` field (captures `export const Foo = <arrow>` patterns
+//!   that the generic field("name") fallback misses); falls through
+//!   to field("name") → child(0) for fn/class declarations.
+//! - `JavaScriptCallGrammar` — delegates to `StandardCallGrammar`
+//!   (`name(args)` / `obj.name(args)`).
+//! - `JavaScriptImportGrammar` — ES module imports + CommonJS
+//!   `require()`, ES module exports + `module.exports`.
+//! - `JavaScriptInheritanceGrammar` — `class X extends Y` patterns,
+//!   TS `override` method patterns.
+//! - `JavaScriptDecorationGrammar` — `@name` / `@name($$$)`.
+//! - `JavaScriptTraceTemplate` — `console.error("[TRACE] var =", $var);`.
+//! - `JavaScriptKindTaxonomy` — portable-kind ↔ JS tree-sitter-kind map.
+//! - `JavaScriptTopLevelKinds` — empty (JS isn't a data lang).
+//!
+//! Trait API constraint (W4): structs implement only the
+//! `lmprobe-lang-core` traits + `ast-grep-core` types. No
+//! `lmprobe-types` envelope refs — keeps async-graphql out of
+//! per-language builds.
+
+#![allow(dead_code)]
+
+use lmprobe_lang_core::langs::{
+  CallGrammar, DecorationGrammar, ImportGrammar, InheritanceGrammar, KindTaxonomy, NameExtractor,
+  PortableKind, SgNode, StandardCallGrammar, TopLevelKinds, TraceTemplate,
+};
+
+// ──────────────────────────── helpers ─────────────────────────────
+//
+// `clean` is replicated from lang-core rather than re-exported.
+// TypeScript and Tsx will each get their own copy when extracted.
+// Per-lang crates stay self-contained.
+
+fn clean(s: &str) -> String {
+  s.trim().trim_matches(|c| c == '"' || c == '\'').to_string()
+}
+
+// ──────────────────────────── name extractor ──────────────────────
+
+/// JS: `lexical_declaration` and `variable_declaration` wrap a
+/// `variable_declarator` whose `name` field holds the binder. Modern
+/// codebases ship most named exports as `export const Foo =
+/// <arrow>` so the generic field("name") fallback (which sees the
+/// `let`/`const` keyword via child(0)) misses them. Walk to the
+/// declarator's `name` field; for fn/class declarations, fall
+/// through to the generic path.
+pub struct JavaScriptExtractor;
+impl NameExtractor for JavaScriptExtractor {
+  fn extract<'a>(&self, node: &SgNode<'a>) -> Option<String> {
+    let k = node.kind();
+    if k == "lexical_declaration" || k == "variable_declaration" {
+      for c in node.children() {
+        if c.kind() == "variable_declarator" {
+          if let Some(name) = c.field("name") {
+            let s = clean(&name.text());
+            if !s.is_empty() {
+              return Some(s);
+            }
+          }
+        }
+      }
+    }
+    if let Some(name) = node.field("name") {
+      let s = clean(&name.text());
+      if !s.is_empty() {
+        return Some(s);
+      }
+    }
+    node
+      .child(0)
+      .map(|n| clean(&n.text()))
+      .filter(|s| !s.is_empty())
+  }
+}
+
+// ──────────────────────────── call grammar ────────────────────────
+
+/// JavaScript uses standard `name(args)` / `obj.name(args)` shapes;
+/// defer to `StandardCallGrammar`.
+pub struct JavaScriptCallGrammar;
+impl CallGrammar for JavaScriptCallGrammar {
+  fn call_patterns(&self, name: &str) -> Vec<String> {
+    StandardCallGrammar.call_patterns(name)
+  }
+  fn callee_decl_patterns(&self, name: &str) -> Vec<String> {
+    StandardCallGrammar.callee_decl_patterns(name)
+  }
+}
+
+// ──────────────────────────── import grammar ──────────────────────
+
+pub struct JavaScriptImportGrammar;
+impl ImportGrammar for JavaScriptImportGrammar {
+  fn import_patterns(&self, name: &str) -> Vec<String> {
+    // QA TC-019: JS imports use either '"' or '\''. Emit both
+    // quote styles; ast-grep is quote-literal in pattern matching.
+    vec![
+      format!("import $$$ from \"{name}\""),
+      format!("import $$$ from '{name}'"),
+      format!("import \"{name}\""),
+      format!("import '{name}'"),
+      format!("require(\"{name}\")"),
+      format!("require('{name}')"),
+    ]
+  }
+  fn export_patterns(&self, name: &str) -> Vec<String> {
+    // Phase 6A #7: see TypeScript crate — `export $$$ from` fails
+    // to parse; use `export *` and `export { $$$ }` shapes instead.
+    vec![
+      format!("export const {name} = $RHS"),
+      format!("export let {name} = $RHS"),
+      format!("export function {name}($$$) {{ $$$ }}"),
+      format!("export class {name} {{ $$$ }}"),
+      format!("export default {name}"),
+      format!("export {{ {name} }}"),
+      format!("export {{ {name} as $ALIAS }}"),
+      format!("export * from \"{name}\""),
+      format!("export * from '{name}'"),
+      format!("export {{ $$$ }} from \"{name}\""),
+      format!("export {{ $$$ }} from '{name}'"),
+      format!("module.exports.{name} = $RHS"),
+    ]
+  }
+}
+
+// ─────────────────────────── inheritance grammar ──────────────────
+
+pub struct JavaScriptInheritanceGrammar;
+impl InheritanceGrammar for JavaScriptInheritanceGrammar {
+  fn supertype_decl_patterns(&self, name: &str) -> Vec<String> {
+    vec![
+      format!("class {name} extends $SUPER {{ $$$ }}"),
+      format!("export class {name} extends $SUPER {{ $$$ }}"),
+    ]
+  }
+  fn subtype_patterns(&self, name: &str) -> Vec<String> {
+    vec![
+      format!("class $C extends {name} {{ $$$ }}"),
+      format!("export class $C extends {name} {{ $$$ }}"),
+      format!("interface $I extends {name} {{ $$$ }}"),
+    ]
+  }
+  fn override_patterns(&self, name: &str) -> Vec<String> {
+    let _ = name;
+    Vec::new()
+  }
+}
+
+// ─────────────────────────── decoration grammar ──────────────────
+
+pub struct JavaScriptDecorationGrammar;
+impl DecorationGrammar for JavaScriptDecorationGrammar {
+  fn decoration_patterns(&self, name: &str) -> Vec<String> {
+    vec![format!("@{name}"), format!("@{name}($$$)")]
+  }
+}
+
+// ─────────────────────────── trace template ──────────────────────
+
+pub struct JavaScriptTraceTemplate;
+impl TraceTemplate for JavaScriptTraceTemplate {
+  fn template_for(&self, var: &str) -> Option<String> {
+    Some(format!("console.error(\"[TRACE] {var} =\", ${var});"))
+  }
+}
+
+// ─────────────────────────── kind taxonomy ────────────────────────
+
+pub struct JavaScriptKindTaxonomy;
+impl KindTaxonomy for JavaScriptKindTaxonomy {
+  fn kind_for(&self, p: PortableKind) -> &'static [&'static str] {
+    match p {
+      PortableKind::Function => &[
+        "function_declaration",
+        "function_expression",
+        "arrow_function",
+      ],
+      PortableKind::Method => &["method_definition"],
+      PortableKind::Class => &["class_declaration"],
+      PortableKind::Struct => &[],
+      PortableKind::Interface => &[],
+      PortableKind::Trait => &[],
+      PortableKind::Enum => &[],
+      PortableKind::TypeAlias => &[],
+      PortableKind::Const => &["lexical_declaration", "variable_declaration"],
+      PortableKind::Macro => &[],
+      PortableKind::Import => &["import_statement"],
+      PortableKind::Route => &[],
+    }
+  }
+}
+
+// ─────────────────────────── top-level kinds ──────────────────────
+
+/// JavaScript isn't a data language — empty impl. The trait defaults
+/// fire (no child kinds, no top-level enumeration).
+pub struct JavaScriptTopLevelKinds;
+impl TopLevelKinds for JavaScriptTopLevelKinds {}

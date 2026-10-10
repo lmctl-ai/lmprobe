@@ -1,0 +1,82 @@
+{
+  "schema": "lmprobe.context.v1",
+  "symbol": "User",
+  "depth": 1,
+  "definition": {
+    "name": "User",
+    "kind": "struct_item",
+    "lang": "Rust",
+    "file_path": "tests/fixtures/rust/lib.rs",
+    "line_start": 4,
+    "content": "pub struct User  { ... }"
+  },
+  "callers": [],
+  "callees": [],
+  "imports": [
+    {
+      "name": "serde::{Deserialize,",
+      "kind": "import",
+      "lang": "Rust",
+      "file_path": "tests/fixtures/rust/lib.rs",
+      "line_start": 1,
+      "content": "use serde::{Deserialize, Serialize};"
+    },
+    {
+      "name": "super::*",
+      "kind": "import",
+      "lang": "Rust",
+      "file_path": "tests/fixtures/rust/lib.rs",
+      "line_start": 11,
+      "content": "    use super::*;"
+    }
+  ],
+  "recent_history": [
+    {
+      "commit_hash": "3abd8dc6ff0c84c793cf35a6e5aad913a5ec82a4",
+      "author": "Mike Ma",
+      "timestamp": "2026-05-02T20:29:35+00:00",
+      "change_type": "INTRODUCED",
+      "file_path": "crates/lmprobe/tests/fixtures/rust/lib.rs",
+      "line_start": 4,
+      "line_end": 7,
+      "excerpt": "pub struct User  { ... }"
+    }
+  ],
+  "todos_inline": [],
+  "file_outline": [
+    {
+      "name": "use",
+      "kind": "use_declaration",
+      "lang": "Rust",
+      "file_path": "tests/fixtures/rust/lib.rs",
+      "line_start": 1,
+      "content": "use serde::{Deserialize, Serialize};"
+    },
+    {
+      "name": "User",
+      "kind": "struct_item",
+      "lang": "Rust",
+      "file_path": "tests/fixtures/rust/lib.rs",
+      "line_start": 4,
+      "content": "pub struct User  { ... }"
+    },
+    {
+      "name": "use",
+      "kind": "use_declaration",
+      "lang": "Rust",
+      "file_path": "tests/fixtures/rust/lib.rs",
+      "line_start": 11,
+      "content": "use super::*;"
+    },
+    {
+      "name": "user_roundtrip",
+      "kind": "function_item",
+      "lang": "Rust",
+      "file_path": "tests/fixtures/rust/lib.rs",
+      "line_start": 14,
+      "content": "fn user_roundtrip()  { ... }"
+    }
+  ],
+  "warnings": [],
+  "exit_status": "matched"
+}

@@ -1,0 +1,13 @@
+[package]
+name = "demo-toml"
+version = "0.1.0"
+edition = "2021"
+description = "Demo TOML for lmprobe deep verdict probe"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+
+[features]
+default = []
+extra = ["serde/rc"]

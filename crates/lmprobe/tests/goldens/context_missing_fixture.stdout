@@ -1,0 +1,21 @@
+{
+  "schema": "lmprobe.context.v1",
+  "symbol": "ZzZNotASymbolZzZ",
+  "depth": 1,
+  "definition": null,
+  "callers": [],
+  "callees": [],
+  "imports": [],
+  "recent_history": [],
+  "todos_inline": [],
+  "file_outline": [],
+  "warnings": [
+    {
+      "code": "SYMBOL_NOT_FOUND",
+      "message": "`ZzZNotASymbolZzZ` not found at HEAD; context bundle is partial",
+      "hint": null,
+      "lang": null
+    }
+  ],
+  "exit_status": "no_match"
+}

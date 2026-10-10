@@ -1,0 +1,2 @@
+tests/fixtures/lua/init.lua:10: return M
+tests/fixtures/nix/flake.nix:2: description = "minimal flake fixture";

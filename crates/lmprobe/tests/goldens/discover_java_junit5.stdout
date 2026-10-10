@@ -1,0 +1,78 @@
+---
+Name: junit-jupiter-extensions
+Type: Gradle/Groovy
+Version: 0.0.0
+Path: ./junit-jupiter-extensions
+Deps: 0
+---
+Name: junit-jupiter-starter-ant
+Type: Ant
+Version: 0.0.0
+Path: ./junit-jupiter-starter-ant
+Deps: 0
+---
+Name: junit-jupiter-starter-bazel
+Type: Bazel
+Version: 0.0.0
+Path: ./junit-jupiter-starter-bazel
+Deps: 2
+---
+Name: junit-jupiter-starter-gradle
+Type: Gradle/Groovy
+Version: 0.0.0
+Path: ./junit-jupiter-starter-gradle
+Deps: 0
+---
+Name: junit-jupiter-starter-gradle-groovy
+Type: Gradle/Groovy
+Version: 0.0.0
+Path: ./junit-jupiter-starter-gradle-groovy
+Deps: 0
+---
+Name: junit-jupiter-starter-gradle-kotlin
+Type: Gradle/Kotlin
+Version: 0.0.0
+Path: ./junit-jupiter-starter-gradle-kotlin
+Deps: 0
+---
+Name: junit-jupiter-starter-maven
+Type: Maven
+Version: 1.0-SNAPSHOT
+Path: ./junit-jupiter-starter-maven
+Deps: 2
+---
+Name: junit-jupiter-starter-maven-kotlin
+Type: Maven
+Version: 1.0-SNAPSHOT
+Path: ./junit-jupiter-starter-maven-kotlin
+Deps: 4
+---
+Name: junit-jupiter-starter-sbt
+Type: Sbt
+Version: 0.1.0-SNAPSHOT
+Path: ./junit-jupiter-starter-sbt
+Deps: 1
+---
+Name: junit-migration-gradle
+Type: Gradle/Groovy
+Version: 0.0.0
+Path: ./junit-migration-gradle
+Deps: 0
+---
+Name: junit-migration-maven
+Type: Maven
+Version: 1.0-SNAPSHOT
+Path: ./junit-migration-maven
+Deps: 5
+---
+Name: junit-multiple-engines
+Type: Gradle/Kotlin
+Version: 0.0.0
+Path: ./junit-multiple-engines
+Deps: 0
+---
+Name: buildSrc
+Type: Gradle/Kotlin
+Version: 0.0.0
+Path: ./junit-multiple-engines/buildSrc
+Deps: 0

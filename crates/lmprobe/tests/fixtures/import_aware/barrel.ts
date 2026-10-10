@@ -1,0 +1,1 @@
+export { ReExportedThing } from "./inner";

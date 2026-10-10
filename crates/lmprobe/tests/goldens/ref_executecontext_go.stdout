@@ -1,0 +1,3 @@
+./command.go:1062: func (c *Command) ExecuteContext(ctx context.Context) error {
+./command_test.go:2669: err := root.ExecuteContext(context.Background())
+./command_test.go:43: err = root.ExecuteContext(ctx)

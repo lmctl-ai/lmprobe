@@ -1,0 +1,18 @@
+---
+Name: unnamed
+Type: SetupPy
+Version: 0.0.0
+Path: .
+Deps: 0
+---
+Name: MarkupSafe
+Type: PyProject
+Version: 3.1.0.dev
+Path: .
+Deps: 1
+---
+Name: docs
+Type: Make
+Version: 0.0.0
+Path: ./docs
+Deps: 0

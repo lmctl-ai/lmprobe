@@ -1,0 +1,22 @@
+{
+  "schema": "lmprobe.query.v1",
+  "data": {
+    "def": {
+      "hits": [
+        {
+          "name": "compute_total",
+          "recentHistory": {
+            "entries": [
+              {
+                "changeType": "INTRODUCED"
+              }
+            ],
+            "exitStatus": "MATCHED"
+          }
+        }
+      ]
+    }
+  },
+  "warnings": [],
+  "exit_status": "matched"
+}

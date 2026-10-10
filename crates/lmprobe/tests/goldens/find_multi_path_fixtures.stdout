@@ -1,0 +1,2 @@
+tests/fixtures/lua/init.lua
+tests/fixtures/nix/flake.nix

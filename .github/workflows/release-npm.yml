@@ -1,0 +1,351 @@
+# Publish lmprobe to npm as @lmctl-ai/lmprobe (+ platform binary packages).
+# Production mode mirrors the full native npm matrix and publishes all platform
+# packages plus the meta package.
+#
+# Distribution model (esbuild / @ast-grep/cli pattern):
+#   @lmctl-ai/lmprobe                 -> meta package: a `bin` launcher shim +
+#                                        one optionalDependency per platform.
+#   @lmctl-ai/lmprobe-<os>-<cpu>      -> the prebuilt binary, tagged with
+#                                        `os`/`cpu` so npm installs only the
+#                                        one matching the host.
+#
+# dry_run = true  (manual default): build -> assemble -> `npm publish --dry-run`
+#                                  (nothing hits the registry). Safe anytime.
+# dry_run = false (manual only): publishes all six packages for REAL to
+#                                `latest`, then commits/tags the npm version.
+#
+# Credentials: tokenless npm OIDC trusted publishing. GitHub Actions presents
+# an OIDC token; npm verifies it against the Trusted Publisher configured for
+# each package (GitHub repo lmctl-ai/lmprobe, workflow release-npm.yml). No
+# NPM_TOKEN repository secret is used.
+#
+# BOOTSTRAP (one-time): each package name must exist before a Trusted Publisher
+# can be attached. Build/download the workflow tarball artifacts, manually
+# publish all five platform packages plus the meta package once, then configure
+# npm Trusted Publisher on all six names.
+#
+# Trigger: workflow_dispatch only. The assemble matrix runs macOS and Windows
+# runners, and a real publish is a deliberate human action: someone dispatches
+# this workflow with dry_run unchecked. Do not add push or schedule triggers.
+name: release-npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no real publish). Uncheck to publish for real."
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-npm
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: plan release
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      can_run: ${{ steps.plan.outputs.can_run }}
+      dry_run: ${{ steps.plan.outputs.dry_run }}
+      version: ${{ steps.plan.outputs.version }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Compute publish version
+        id: plan
+        env:
+          DISPATCH_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          # workflow_dispatch is the only trigger, so dry_run comes solely
+          # from the manual input; default true if somehow unset.
+          dry_run="$DISPATCH_DRY_RUN"
+          if [ "$dry_run" != "false" ]; then
+            dry_run=true
+          fi
+
+          current="$(node --input-type=module -e 'import { readFileSync } from "node:fs"; import { workspaceVersion } from "./npm/scripts/platforms.mjs"; console.log(workspaceVersion(readFileSync("Cargo.toml", "utf8")));')"
+          version="$current"
+          if npm view "@lmctl-ai/lmprobe@$current" version >/dev/null 2>&1; then
+            version="$(node -e 'const [a,b,c]=process.argv[1].split(".").map(Number); console.log(`${a}.${b}.${c+1}`)' "$current")"
+          fi
+
+          if [ "$dry_run" = "false" ]; then
+            last_tag="$(git tag --list 'v[0-9]*' --sort=-creatordate | head -n 1 || true)"
+            if [ -n "$last_tag" ]; then
+              now_ts="$(date +%s)"
+              last_ts="$(git log -1 --format=%ct "$last_tag")"
+              min_interval_seconds=$((7 * 24 * 60 * 60))
+              age_seconds=$((now_ts - last_ts))
+              if [ "$age_seconds" -lt "$min_interval_seconds" ]; then
+                next_ts=$((last_ts + min_interval_seconds))
+                next_date="$(date -u -d "@$next_ts" '+%Y-%m-%dT%H:%M:%SZ')"
+                echo "::notice::Skipping real publish: latest release tag $last_tag is less than 7 days old. Next eligible time: $next_date"
+                {
+                  echo "can_run=false"
+                  echo "dry_run=false"
+                  echo "version=$version"
+                } >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+
+              changed_release_paths="$(git diff --name-only "$last_tag"..HEAD -- Cargo.toml Cargo.lock rust-toolchain.toml crates npm scripts xtask)"
+              if [ -z "$changed_release_paths" ]; then
+                echo "::notice::Skipping real publish: no release-relevant code/package changes since $last_tag."
+                {
+                  echo "can_run=false"
+                  echo "dry_run=false"
+                  echo "version=$version"
+                } >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              echo "Release-relevant changes since $last_tag:"
+              echo "$changed_release_paths"
+            fi
+
+            missing=()
+            while IFS= read -r pkg; do
+              if ! npm view "$pkg@$current" version >/dev/null 2>&1; then
+                missing+=("$pkg")
+              fi
+            done < <(node --input-type=module -e 'import { PLATFORMS, platformPackageName } from "./npm/scripts/platforms.mjs"; console.log("@lmctl-ai/lmprobe"); for (const p of PLATFORMS) console.log(platformPackageName(p));')
+            if [ "${#missing[@]}" -gt 0 ]; then
+              echo "::notice::Manual npm bootstrap is required before OIDC publish. Missing current-version packages: ${missing[*]}"
+              {
+                echo "can_run=false"
+                echo "dry_run=false"
+                echo "version=$current"
+              } >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
+          {
+            echo "can_run=true"
+            echo "dry_run=$dry_run"
+            echo "version=$version"
+          } >> "$GITHUB_OUTPUT"
+          echo "dry_run=$dry_run version=$version"
+
+  assemble:
+    name: assemble ${{ matrix.nodeOs }}-${{ matrix.nodeCpu }}
+    needs: plan
+    if: ${{ needs.plan.outputs.can_run == 'true' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { runner: ubuntu-24.04, os: linux, nodeOs: linux, nodeCpu: x64, binary: lmprobe }
+          - { runner: ubuntu-24.04-arm, os: linux, nodeOs: linux, nodeCpu: arm64, binary: lmprobe }
+          - { runner: macos-15-intel, os: macos, nodeOs: darwin, nodeCpu: x64, binary: lmprobe }
+          - { runner: macos-15, os: macos, nodeOs: darwin, nodeCpu: arm64, binary: lmprobe }
+          - { runner: windows-2022, os: windows, nodeOs: win32, nodeCpu: x64, binary: lmprobe.exe }
+    runs-on: ${{ matrix.runner }}
+    env:
+      CARGO_TERM_COLOR: always
+      RUST_TEST_THREADS: 1
+      LMPROBE_NPM_VERSION: ${{ needs.plan.outputs.version }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "20"
+
+      - name: Stamp planned release version
+        run: node npm/scripts/set-version.mjs "${{ needs.plan.outputs.version }}"
+
+      - name: Build portable Linux release binary
+        if: matrix.os == 'linux'
+        run: |
+          docker run --rm \
+            -v "$PWD":/work \
+            -w /work \
+            -e HOST_UID="$(id -u)" \
+            -e HOST_GID="$(id -g)" \
+            ubuntu:20.04 \
+            bash scripts/ci/linux_portable_build.sh build
+
+      - name: Install macOS native dependencies
+        if: matrix.os == 'macos'
+        run: |
+          brew install pkg-config openssl@3
+          echo "OPENSSL_DIR=$(brew --prefix openssl@3)" >> "$GITHUB_ENV"
+          echo "PKG_CONFIG_PATH=$(brew --prefix openssl@3)/lib/pkgconfig" >> "$GITHUB_ENV"
+
+      - name: Install Windows native dependencies
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          vcpkg install openssl:x64-windows-static zlib:x64-windows-static libssh2:x64-windows-static
+          "VCPKGRS_DYNAMIC=0" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "OPENSSL_STATIC=1" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Build release binary
+        if: matrix.os != 'linux'
+        run: cargo build -p lmprobe --release --locked
+
+      - name: Smoke test binary (unix)
+        if: matrix.os != 'windows'
+        run: |
+          "target/release/${{ matrix.binary }}" --version
+          "target/release/${{ matrix.binary }}" --help
+
+      - name: Smoke test binary (windows)
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          & "target/release/${{ matrix.binary }}" --version
+          & "target/release/${{ matrix.binary }}" --help
+
+      - name: Assemble platform npm package
+        run: node npm/scripts/assemble-platform.mjs ${{ matrix.nodeOs }} ${{ matrix.nodeCpu }}
+
+      - name: Pack platform tarball
+        run: |
+          node -e "require('node:fs').mkdirSync(process.argv[1], { recursive: true })" "${{ github.workspace }}/npm-artifacts"
+          npm pack --pack-destination "${{ github.workspace }}/npm-artifacts"
+        working-directory: npm/dist/${{ matrix.nodeOs }}-${{ matrix.nodeCpu }}
+
+      - name: Upload platform tarball
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: npm-${{ matrix.nodeOs }}-${{ matrix.nodeCpu }}
+          path: npm-artifacts/*.tgz
+          if-no-files-found: error
+
+  publish:
+    name: publish ${{ needs.plan.outputs.dry_run == 'false' && '(REAL)' || '(dry-run)' }}
+    needs: [plan, assemble]
+    if: ${{ needs.plan.outputs.can_run == 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      DRY_RUN: ${{ needs.plan.outputs.dry_run }}
+      LMPROBE_NPM_VERSION: ${{ needs.plan.outputs.version }}
+      NPM_CONFIG_PROVENANCE: "false"
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Strip setup-node placeholder _authToken so npm uses OIDC (setup-node#1551)
+        run: |
+          set -euo pipefail
+          npmrc="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+          if [ -f "$npmrc" ]; then sed -i '/_authToken/d' "$npmrc"; fi
+
+      - name: Ensure npm supports OIDC trusted publishing (>= 11.5.1)
+        run: npm install -g npm@11 && npm -v
+
+      - name: Download platform tarballs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: npm-artifacts
+          pattern: npm-*
+          merge-multiple: true
+
+      - name: Stamp meta package version + optionalDependencies
+        run: node npm/scripts/prepare-meta.mjs
+
+      - name: Pack meta tarball
+        run: |
+          node -e "require('node:fs').mkdirSync(process.argv[1], { recursive: true })" "${{ github.workspace }}/npm-artifacts"
+          npm pack --pack-destination "${{ github.workspace }}/npm-artifacts"
+        working-directory: npm
+
+      - name: List tarballs to publish
+        run: ls -la npm-artifacts/
+
+      - name: Upload complete npm tarball set
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lmprobe-npm-tarballs
+          path: npm-artifacts/*.tgz
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish (dry-run)
+        if: ${{ env.DRY_RUN != 'false' }}
+        run: |
+          echo "DRY RUN — validating publish of all tarballs (nothing uploaded)."
+
+          publish_tgz() {
+            local tgz="$1"
+            echo "--- publishing $tgz ---"
+            npm publish "$tgz" --access public --tag latest --dry-run
+          }
+
+          for tgz in "$PWD"/npm-artifacts/*.tgz; do
+            publish_tgz "$tgz"
+          done
+
+      - name: Publish via OIDC (REAL)
+        if: ${{ env.DRY_RUN == 'false' }}
+        run: |
+          publish_tgz() {
+            local tgz="$1"
+            echo "--- publishing $tgz ---"
+            if ! npm publish "$tgz" --access public --tag latest; then
+              echo "npm publish failed for $tgz"
+              echo "Troubleshoot OIDC path: verify Trusted Publisher is configured for all six packages in npmjs.com"
+              echo "  npm packages: @lmctl-ai/lmprobe plus five @lmctl-ai/lmprobe-<os>-<cpu> packages"
+              echo "  GitHub owner/user: lmctl-ai"
+              echo "  GitHub repository: lmprobe"
+              echo "  workflow filename: release-npm.yml"
+              echo "  allowed action: npm publish"
+              echo "  this workflow does not use NPM_TOKEN"
+              exit 1
+            fi
+          }
+
+          # Platform packages first so meta package optionalDependencies resolve immediately.
+          for tgz in "$PWD"/npm-artifacts/lmctl-ai-lmprobe-*-*.tgz; do
+            publish_tgz "$tgz"
+          done
+
+          echo "--- publishing meta package ---"
+          meta_tgz=("$PWD"/npm-artifacts/lmctl-ai-lmprobe-[0-9]*.tgz)
+          publish_tgz "${meta_tgz[0]}"
+
+      - name: Record published version
+        if: ${{ env.DRY_RUN == 'false' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node npm/scripts/set-version.mjs "$LMPROBE_NPM_VERSION"
+          git add Cargo.toml Cargo.lock npm/package.json
+          if git diff --cached --quiet; then
+            echo "Version already recorded."
+          else
+            git commit -m "release: ${LMPROBE_NPM_VERSION} [skip ci]"
+          fi
+          git tag "v${LMPROBE_NPM_VERSION}" || true
+          git push origin HEAD:${{ github.ref_name }} --follow-tags

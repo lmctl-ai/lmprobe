@@ -1,0 +1,23 @@
+{
+  "schema": "lmprobe.query.v1",
+  "errors": [
+    {
+      "message": "Unknown field \"nope\" on type \"Query\".",
+      "locations": [
+        {
+          "line": 1,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "code": "GRAPHQL_ERROR",
+      "message": "Unknown field \"nope\" on type \"Query\".",
+      "hint": null,
+      "lang": null
+    }
+  ],
+  "exit_status": "error"
+}

@@ -1,0 +1,3 @@
+./src/walk.rs:15: use ignore::{WalkBuilder, WalkParallel, WalkState};
+./src/walk.rs:347: fn build_walker(&self, paths: &[PathBuf]) -> Result<WalkParallel> {
+./src/walk.rs:443: fn spawn_senders(&self, walker: WalkParallel, tx: Sender<Batch>) {

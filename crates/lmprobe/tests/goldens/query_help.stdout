@@ -1,0 +1,112 @@
+Run a GraphQL document or recipe in-process
+
+Usage: lmprobe query [OPTIONS] [QUERY]
+
+Arguments:
+  [QUERY]
+          GraphQL query source. Use `-` for stdin or `@path` for a file
+
+Options:
+      --recipe <KEY>
+          Run a generated recipe, e.g. `secrets/aws/python` or `secrets-source/env-aws/python`
+
+      --all-shapes
+          With --recipe, execute every shape under the selected key
+
+      --var <KEY=VALUE>
+          Variable KEY=VALUE (repeatable; JSON values or plain strings)
+
+      --vars-file <PATH>
+          JSON object of variables; --var entries override matching keys
+
+      --operation-name <NAME>
+          Operation name for documents containing multiple operations
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+Common options:
+      --exit-zero-on-no-match
+          Return exit 0 instead of 1 when no results match
+
+      --no-cache
+          Bypass history cache where supported
+
+      --workspace <WORKSPACE>
+          Read across repositories listed in a roots: YAML file; mutations refuse this mode
+
+  -l, --lang <LANG>
+          Force the parser language; use --type to filter files by extension
+
+  -G, --globs <GLOBS>
+          Include file globs (repeatable or comma-separated; prefix ! to exclude)
+
+      --exclude-glob <EXCLUDE_GLOBS>
+          Exclude file globs (repeatable or comma-separated)
+
+      --no-ignore
+          Include files excluded by .gitignore and .ignore
+
+      --no-default-excludes
+          Include dependency, build, VCS, and cache directories
+
+  -j, --threads <THREADS>
+          Worker thread count (default: num_cpus)
+
+  -A, --after <AFTER>
+          Lines after grep/ref hits; grep JSON includes structured context
+
+  -B, --before <BEFORE>
+          Lines before grep/ref hits; grep JSON includes structured context
+
+  -C, --context <CONTEXT>
+          Lines around grep/ref hits; grep JSON includes structured context
+
+  -q, --quiet
+          Suppress non-error stderr (warnings stay in the envelope)
+
+  -v, --verbose
+          Also print incidental and non-error JSON diagnostics to stderr
+
+      --limit <LIMIT>
+          Cap the primary result list; composite sub-lists may need their own limit
+
+      --max-filesize <MAX_FILESIZE>
+          Skip larger files (bytes); report FILE_TOO_LARGE
+
+          [default: 5242880]
+
+  -i, --ignore-case
+          Case-insensitive matching for textual filters (grep, name)
+
+  -t, --type <TYPE>
+          Filter files by language extension without forcing a parser
+
+      --json
+          Emit one versioned program JSON result, including errors
+
+      --outfile <FILE>
+          Atomically write program JSON to this file; stdout is quiet on success
+
+      --infile <FILE>
+          Load a full GraphQL document (implies query and program JSON); - reads stdin
+
+          [aliases: --intfile]
+
+      --format <FORMAT>
+          Output format (auto: markdown in a terminal, NDJSON when piped)
+
+          Possible values:
+          - auto:     Pick at runtime: TTY → markdown, pipe → ndjson
+          - markdown
+          - json
+          - ndjson:   Newline-delimited JSON: one item per line + a final summary
+          - sarif:    SARIF 2.1.0 — GitHub Advanced Security can ingest this directly
+          - github:   GitHub Actions annotations
+          - mermaid:  Mermaid graph (graph commands only)
+          - dot:      Graphviz DOT graph (graph commands only)
+
+Example:
+  lmprobe query '{ discover(path: ".") { projects { name } } }'
+
+Use - for stdin, @FILE for a document, and --var KEY=VALUE for variables.

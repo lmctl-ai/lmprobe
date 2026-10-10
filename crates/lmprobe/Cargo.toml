@@ -1,0 +1,61 @@
+[package]
+name = "lmprobe"
+version.workspace = true
+edition = "2021"
+authors.workspace = true
+
+[dependencies]
+# Phase 5A workspace split — foundation crates.
+lmprobe-types = { path = "../lmprobe-types", version = "0.1.0" }
+lmprobe-lang-core = { path = "../lmprobe-lang-core", version = "0.1.0" }
+lmprobe-registry = { path = "../lmprobe-registry", version = "0.1.0" }
+lmprobe-engine = { path = "../lmprobe-engine", version = "0.1.0" }
+lmprobe-secrets = { path = "../lmprobe-secrets", version = "0.1.0" }
+# CLI core — always required.
+ast-grep-core = { workspace = true }
+ast-grep-config = { workspace = true }
+ast-grep-language = { workspace = true }
+ignore = { workspace = true }
+anyhow = { workspace = true }
+async-trait = "0.1"
+serde = { workspace = true, features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = { workspace = true }
+clap = { version = "4.5", features = ["derive"] }
+toml = "0.8"
+regex = "1.10"
+chrono = { version = "0.4", features = ["serde"] }
+git2 = "0.19"
+rusqlite = { version = "0.32", features = ["bundled"] }
+# lmapi mode (`lmprobe --schema`, published operations): the lmapi Rust SDK.
+lmrust = { git = "https://github.com/lmctl-ai/lmrust", tag = "v0.1.1", default-features = false }
+
+# Phase 4E — GraphQL is the core surface. async-graphql + a
+# minimal current-thread tokio runtime ship in default builds for
+# the `query` subcommand. The HTTP daemon (`serve`) is opt-in.
+async-graphql = { version = "7.0", features = ["chrono"] }
+tokio = { version = "1.43", features = ["rt", "macros"] }
+# Optional: HTTP-daemon dependencies — built under `--features serve`.
+async-graphql-axum = { version = "7.2", optional = true }
+axum = { version = "0.8", optional = true }
+# Constant-time compare for the bearer-token middleware (daemon).
+subtle = { version = "2.5", optional = true }
+
+[features]
+default = []
+# Linux release packaging builds with vendored git2/OpenSSL so npm/release
+# binaries do not inherit the runner's OpenSSL/libgit2 ABI while lowering the
+# glibc floor via an older build container.
+linux-portable-vendored = [
+  "git2/vendored-libgit2",
+  "git2/vendored-openssl",
+  "lmprobe-engine/linux-portable-vendored",
+]
+# Long-running GraphQL HTTP daemon (`serve` subcommand). Adds
+# axum + the multi-threaded tokio runtime + bearer-token compare.
+serve = ["dep:async-graphql-axum", "dep:axum", "dep:subtle", "tokio/rt-multi-thread", "tokio/net"]
+
+[dev-dependencies]
+tempfile = "3.10"
+# lmapi tests: validate the published document against lmapi's cli.schema.v1 JSON Schema.
+jsonschema = { version = "0.33", default-features = false }

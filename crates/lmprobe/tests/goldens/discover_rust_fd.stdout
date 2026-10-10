@@ -1,0 +1,12 @@
+---
+Name: fd-find
+Type: Cargo
+Version: 10.4.2
+Path: .
+Deps: 17
+---
+Name: .
+Type: Make
+Version: 0.0.0
+Path: .
+Deps: 0

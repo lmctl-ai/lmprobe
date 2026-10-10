@@ -1,0 +1,136 @@
+Find paths with modification time and size; optionally filter or act
+
+Usage: lmprobe find [OPTIONS] <PATTERN> [PATH]
+
+Arguments:
+  <PATTERN>
+
+
+  [PATH]
+          Single compatibility path. When omitted, `find` defaults to `.` unless one or more `--path <PATH>` flags are set
+
+Options:
+      --path <PATH>
+          Additional scan roots (repeatable); defaults to . when no paths are given
+
+      --quick-projects
+          Narrow scans to npm roots or directories with at least five Perl files
+
+      --paths-only
+          Print raw paths for shell pipelines instead of an output envelope
+
+      --null
+          Separate --paths-only output with NUL bytes for xargs -0
+
+      --display <DISPLAY>
+          Display columns (default: name,lastmod,size); comma-separated
+
+          [default: name,lastmod,size]
+          [possible values: name, lastmod, size, type]
+
+      --older-than <OLDER_THAN>
+          Select entries last modified more than this age ago (1w, 7d, 24h)
+
+      --action <ACTION>
+          Built-in action (default: display); delete previews until --force is set
+
+          [possible values: display, delete]
+
+      --force
+          Execute --action delete; refuses directories, symlinks, or changed files
+
+      --filter <FILTER>
+          Select results with a JSON filesystem predicate (kind, has_entry, git_remote, all/any/not)
+
+      --prune <PRUNE>
+          Stop inside matching directories; they remain eligible results (JSON predicate)
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+Common options:
+      --exit-zero-on-no-match
+          Return exit 0 instead of 1 when no results match
+
+      --no-cache
+          Bypass history cache where supported
+
+      --workspace <WORKSPACE>
+          Read across repositories listed in a roots: YAML file; mutations refuse this mode
+
+  -l, --lang <LANG>
+          Force the parser language; use --type to filter files by extension
+
+  -G, --globs <GLOBS>
+          Include file globs (repeatable or comma-separated; prefix ! to exclude)
+
+      --exclude-glob <EXCLUDE_GLOBS>
+          Exclude file globs (repeatable or comma-separated)
+
+      --no-ignore
+          Include files excluded by .gitignore and .ignore
+
+      --no-default-excludes
+          Include dependency, build, VCS, and cache directories
+
+  -j, --threads <THREADS>
+          Worker thread count (default: num_cpus)
+
+  -A, --after <AFTER>
+          Lines after grep/ref hits; grep JSON includes structured context
+
+  -B, --before <BEFORE>
+          Lines before grep/ref hits; grep JSON includes structured context
+
+  -C, --context <CONTEXT>
+          Lines around grep/ref hits; grep JSON includes structured context
+
+  -q, --quiet
+          Suppress non-error stderr (warnings stay in the envelope)
+
+  -v, --verbose
+          Also print incidental and non-error JSON diagnostics to stderr
+
+      --limit <LIMIT>
+          Cap the primary result list; composite sub-lists may need their own limit
+
+      --max-filesize <MAX_FILESIZE>
+          Skip larger files (bytes); report FILE_TOO_LARGE
+
+          [default: 5242880]
+
+  -i, --ignore-case
+          Case-insensitive matching for textual filters (grep, name)
+
+  -t, --type <TYPE>
+          Filter files by language extension without forcing a parser
+
+      --json
+          Emit one versioned program JSON result, including errors
+
+      --outfile <FILE>
+          Atomically write program JSON to this file; stdout is quiet on success
+
+      --infile <FILE>
+          Load a full GraphQL document (implies query and program JSON); - reads stdin
+
+          [aliases: --intfile]
+
+      --format <FORMAT>
+          Output format (auto: markdown in a terminal, NDJSON when piped)
+
+          Possible values:
+          - auto:     Pick at runtime: TTY → markdown, pipe → ndjson
+          - markdown
+          - json
+          - ndjson:   Newline-delimited JSON: one item per line + a final summary
+          - sarif:    SARIF 2.1.0 — GitHub Advanced Security can ingest this directly
+          - github:   GitHub Actions annotations
+          - mermaid:  Mermaid graph (graph commands only)
+          - dot:      Graphviz DOT graph (graph commands only)
+
+Example:
+  lmprobe find '\.lmctl$' . --older-than 1w --action delete
+
+Default: display only. Add --force to execute deletion, or pipe to lmprobe delete.
+Use --display name for paths, --paths-only --null for shell pipelines.

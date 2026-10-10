@@ -1,0 +1,18 @@
+[package]
+publish = false
+name = "xtask"
+version = "0.0.0"
+
+authors.workspace = true
+edition.workspace = true
+
+[dependencies]
+ast-grep-core.workspace = true
+ast-grep-config.workspace = true
+ast-grep-language.workspace = true
+
+anyhow.workspace = true
+serde_json = { version = "1.0.116", features = ["preserve_order"] }
+toml_edit = "0.25.0"
+regex.workspace = true
+schemars.workspace = true

@@ -1,0 +1,558 @@
+
+#### File: ./src/exec/mod.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/exit_codes.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/filesystem.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/filter/size.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/filter/time.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/fmt/input.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/fmt/mod.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/hyperlink.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/regex_helper.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./src/walk.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+
+#### File: ./tests/tests.rs
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```
+- **test** (decoration)
+```Rust
+#[test]
+```

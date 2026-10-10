@@ -1,0 +1,566 @@
+# Seed credential-source database for lmprobe-secrets.
+# Source taxonomy is local to lmprobe; provider_id values join to providers/default.toml.
+
+schema_version = 1
+title = "lmprobe credential source database"
+
+[[sources]]
+id = "env-aws"
+description = "AWS credential environment variable reads"
+category = "env"
+provider_id = "aws"
+credential_kind = "key-secret-pair"
+env_var_names = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"]
+source_urls = ["https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html"]
+fast_path_tokens = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"]
+
+[[sources.languages]]
+language = "python"
+sdk = "stdlib-env"
+source_node_kinds = ["call", "subscript"]
+positive_test = '''import os
+secret = os.environ["AWS_SECRET_ACCESS_KEY"]'''
+negative_test = '''import os
+region = os.getenv("AWS_REGION")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.environ", "os.getenv", "os.environ.get"]
+keys = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "node-env"
+source_node_kinds = ["member_expression", "subscript_expression"]
+positive_test = '''const secret = process.env.AWS_SECRET_ACCESS_KEY;'''
+negative_test = '''const region = process.env.AWS_REGION;'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["process.env"]
+keys = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"]
+
+[[sources.languages]]
+language = "go"
+sdk = "stdlib-env"
+source_node_kinds = ["call_expression"]
+positive_test = '''import "os"
+secret := os.Getenv("AWS_SECRET_ACCESS_KEY")'''
+negative_test = '''import "os"
+region := os.Getenv("AWS_REGION")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.Getenv", "os.LookupEnv"]
+keys = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "java"
+sdk = "stdlib-env"
+source_node_kinds = ["method_invocation"]
+positive_test = '''String secret = System.getProperty("AWS_SECRET_ACCESS_KEY");'''
+negative_test = '''String region = System.getenv("AWS_REGION");'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["System.getenv", "System.getProperty"]
+keys = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"]
+
+[[sources]]
+id = "env-stripe"
+description = "Stripe credential environment variable reads"
+category = "env"
+provider_id = "stripe"
+credential_kind = "api-key"
+env_var_names = ["STRIPE_API_KEY", "STRIPE_SECRET_KEY"]
+source_urls = ["https://docs.stripe.com/keys"]
+fast_path_tokens = ["STRIPE_API_KEY", "STRIPE_SECRET_KEY"]
+
+[[sources.languages]]
+language = "python"
+sdk = "stdlib-env"
+source_node_kinds = ["call", "subscript"]
+positive_test = '''import os
+key = os.getenv("STRIPE_API_KEY")'''
+negative_test = '''import os
+mode = os.getenv("STRIPE_ENV")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.environ", "os.getenv", "os.environ.get"]
+keys = ["STRIPE_API_KEY", "STRIPE_SECRET_KEY"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "node-env"
+source_node_kinds = ["member_expression", "subscript_expression"]
+positive_test = '''const key = process.env.STRIPE_API_KEY;'''
+negative_test = '''const mode = process.env.STRIPE_ENV;'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["process.env"]
+keys = ["STRIPE_API_KEY", "STRIPE_SECRET_KEY"]
+
+[[sources.languages]]
+language = "go"
+sdk = "stdlib-env"
+source_node_kinds = ["call_expression"]
+positive_test = '''import "os"
+key := os.Getenv("STRIPE_API_KEY")'''
+negative_test = '''import "os"
+mode := os.Getenv("STRIPE_ENV")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.Getenv", "os.LookupEnv"]
+keys = ["STRIPE_API_KEY", "STRIPE_SECRET_KEY"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "java"
+sdk = "stdlib-env"
+source_node_kinds = ["method_invocation"]
+positive_test = '''String key = System.getenv("STRIPE_API_KEY");'''
+negative_test = '''String mode = System.getProperty("STRIPE_ENV");'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["System.getenv", "System.getProperty"]
+keys = ["STRIPE_API_KEY", "STRIPE_SECRET_KEY"]
+
+[[sources]]
+id = "env-github"
+description = "GitHub credential environment variable reads"
+category = "env"
+provider_id = "github"
+credential_kind = "bearer-token"
+env_var_names = ["GITHUB_TOKEN", "GH_TOKEN", "GITHUB_PAT"]
+source_urls = ["https://docs.github.com/actions/security-guides/using-secrets-in-github-actions"]
+fast_path_tokens = ["GITHUB_TOKEN", "GH_TOKEN", "GITHUB_PAT"]
+
+[[sources.languages]]
+language = "python"
+sdk = "stdlib-env"
+source_node_kinds = ["call", "subscript"]
+positive_test = '''import os
+token = os.environ.get("GITHUB_TOKEN")'''
+negative_test = '''import os
+repo = os.getenv("GITHUB_REPOSITORY")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.environ", "os.getenv", "os.environ.get"]
+keys = ["GITHUB_TOKEN", "GH_TOKEN", "GITHUB_PAT"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "node-env"
+source_node_kinds = ["member_expression", "subscript_expression"]
+positive_test = '''const token = process.env.GITHUB_TOKEN;'''
+negative_test = '''const repo = process.env.GITHUB_REPOSITORY;'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["process.env"]
+keys = ["GITHUB_TOKEN", "GH_TOKEN", "GITHUB_PAT"]
+
+[[sources.languages]]
+language = "go"
+sdk = "stdlib-env"
+source_node_kinds = ["call_expression"]
+positive_test = '''import "os"
+token := os.Getenv("GITHUB_TOKEN")'''
+negative_test = '''import "os"
+repo := os.Getenv("GITHUB_REPOSITORY")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.Getenv", "os.LookupEnv"]
+keys = ["GITHUB_TOKEN", "GH_TOKEN", "GITHUB_PAT"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "java"
+sdk = "stdlib-env"
+source_node_kinds = ["method_invocation"]
+positive_test = '''String token = System.getProperty("GITHUB_TOKEN");'''
+negative_test = '''String repo = System.getenv("GITHUB_REPOSITORY");'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["System.getenv", "System.getProperty"]
+keys = ["GITHUB_TOKEN", "GH_TOKEN", "GITHUB_PAT"]
+
+[[sources]]
+id = "hashicorp-vault-kv"
+description = "HashiCorp Vault KV secret reads"
+category = "vault"
+credential_kind = "external-secret"
+source_urls = ["https://developer.hashicorp.com/vault/api-docs/secret/kv/kv-v2"]
+fast_path_tokens = ["hvac", "read_secret_version", "KVv2", "node-vault", "vault.logical"]
+
+[[sources.languages]]
+language = "python"
+sdk = "hvac-v1"
+source_node_kinds = ["call"]
+positive_test = '''import hvac
+secret = client.secrets.kv.v2.read_secret_version(path="prod/aws")'''
+negative_test = '''import hvac
+status = client.sys.health()'''
+[[sources.languages.read_shapes]]
+kind = "kv_get"
+access_paths = ["secrets.kv.v2.read_secret_version"]
+key_names = ["path"]
+import_hints = ["hvac"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "node-vault-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''const vault = require("node-vault")();
+const secret = vault.read("secret/data/prod");'''
+negative_test = '''const vault = require("node-vault")();
+vault.status();'''
+[[sources.languages.read_shapes]]
+kind = "kv_get"
+access_paths = ["vault.read"]
+key_names = ["secret/data"]
+import_hints = ["node-vault"]
+
+[[sources.languages]]
+language = "go"
+sdk = "vault-api-v1"
+source_node_kinds = ["call_expression"]
+positive_test = '''secret, err := client.KVv2("secret").Get(ctx, "prod/aws")'''
+negative_test = '''health, err := client.Sys().Health()'''
+[[sources.languages.read_shapes]]
+kind = "kv_get"
+access_paths = ["KVv2", "Get"]
+key_names = ["secret"]
+import_hints = ["vault/api"]
+
+[[sources.languages]]
+language = "java"
+sdk = "vault-java-current"
+source_node_kinds = ["method_invocation"]
+positive_test = '''var response = vault.logical().read("secret/data/prod");'''
+negative_test = '''var health = vault.debug().health();'''
+[[sources.languages.read_shapes]]
+kind = "kv_get"
+access_paths = ["logical().read", "logical.read"]
+key_names = ["secret/data"]
+import_hints = ["vault"]
+
+[[sources]]
+id = "aws-secrets-manager"
+description = "AWS Secrets Manager secret reads"
+category = "secret-manager"
+credential_kind = "external-secret"
+source_urls = ["https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieving-secrets.html"]
+fast_path_tokens = ["GetSecretValue", "get_secret_value", "GetSecretValueCommand", "secretsmanager"]
+
+[[sources.languages]]
+language = "python"
+sdk = "boto3-secretsmanager-v1"
+source_node_kinds = ["call"]
+positive_test = '''client.get_secret_value(SecretId="prod/stripe")'''
+negative_test = '''client.list_secrets()'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["get_secret_value"]
+import_hints = ["boto3", "secretsmanager"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "aws-sdk-js-v3-secretsmanager"
+source_node_kinds = ["call_expression", "new_expression"]
+positive_test = '''client.send(new GetSecretValueCommand({ SecretId: name }));'''
+negative_test = '''client.send(new ListSecretsCommand({}));'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["GetSecretValueCommand"]
+import_hints = ["@aws-sdk/client-secrets-manager"]
+
+[[sources.languages]]
+language = "go"
+sdk = "aws-sdk-go-v2-secretsmanager"
+source_node_kinds = ["call_expression"]
+positive_test = '''client.GetSecretValue(ctx, &secretsmanager.GetSecretValueInput{SecretId: aws.String(name)})'''
+negative_test = '''client.ListSecrets(ctx, &secretsmanager.ListSecretsInput{})'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["GetSecretValue"]
+import_hints = ["secretsmanager"]
+
+[[sources.languages]]
+language = "java"
+sdk = "aws-sdk-java-v2-secretsmanager"
+source_node_kinds = ["method_invocation"]
+positive_test = '''client.getSecretValue(GetSecretValueRequest.builder().secretId(name).build());'''
+negative_test = '''client.listSecrets(ListSecretsRequest.builder().build());'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["getSecretValue"]
+import_hints = ["software.amazon.awssdk.services.secretsmanager"]
+
+[[sources]]
+id = "dotenv-loader"
+description = "Dotenv file loader calls"
+category = "dotenv"
+credential_kind = "external-secret"
+source_urls = ["https://pypi.org/project/python-dotenv/", "https://www.npmjs.com/package/dotenv"]
+fast_path_tokens = ["load_dotenv", "dotenv", "dotenv.config", "godotenv", "Dotenv.load"]
+
+[[sources.languages]]
+language = "python"
+sdk = "python-dotenv-current"
+source_node_kinds = ["call"]
+positive_test = '''from dotenv import load_dotenv
+load_dotenv()'''
+negative_test = '''print("no dotenv")'''
+[[sources.languages.read_shapes]]
+kind = "dotenv_load"
+callees = ["load_dotenv", "dotenv_values"]
+import_hints = ["dotenv"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "dotenv-node-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''require("dotenv").config();'''
+negative_test = '''console.log("no dotenv");'''
+[[sources.languages.read_shapes]]
+kind = "dotenv_load"
+callees = ["dotenv.config", "require(\"dotenv\").config", "require('dotenv').config"]
+import_hints = ["dotenv"]
+
+[[sources.languages]]
+language = "go"
+sdk = "godotenv-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''godotenv.Load()'''
+negative_test = '''fmt.Println("no dotenv")'''
+[[sources.languages.read_shapes]]
+kind = "dotenv_load"
+callees = ["godotenv.Load"]
+import_hints = ["godotenv"]
+
+[[sources.languages]]
+language = "java"
+sdk = "java-dotenv-current"
+source_node_kinds = ["method_invocation"]
+positive_test = '''Dotenv dotenv = Dotenv.load();'''
+negative_test = '''System.out.println("no dotenv");'''
+[[sources.languages.read_shapes]]
+kind = "dotenv_load"
+callees = ["Dotenv.load"]
+import_hints = ["io.github.cdimascio.dotenv"]
+
+[[sources]]
+id = "gcp-secret-manager"
+description = "Google Cloud Secret Manager secret reads"
+category = "secret-manager"
+credential_kind = "external-secret"
+source_urls = ["https://cloud.google.com/secret-manager/docs/reference/libraries"]
+fast_path_tokens = ["SecretManagerServiceClient", "access_secret_version", "accessSecretVersion", "secretmanager"]
+
+[[sources.languages]]
+language = "python"
+sdk = "google-cloud-secret-manager-python-current"
+source_node_kinds = ["call"]
+positive_test = '''client.access_secret_version(name=name)'''
+negative_test = '''client.list_secrets(parent=parent)'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["access_secret_version"]
+import_hints = ["secretmanager"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "google-cloud-secret-manager-node-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''const [version] = await client.accessSecretVersion({ name });'''
+negative_test = '''const [secrets] = await client.listSecrets({ parent });'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["accessSecretVersion"]
+import_hints = ["@google-cloud/secret-manager"]
+
+[[sources.languages]]
+language = "go"
+sdk = "google-cloud-secretmanager-go-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''result, err := client.AccessSecretVersion(ctx, req)'''
+negative_test = '''it := client.ListSecrets(ctx, req)'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["AccessSecretVersion"]
+import_hints = ["secretmanager"]
+
+[[sources.languages]]
+language = "java"
+sdk = "google-cloud-secretmanager-java-current"
+source_node_kinds = ["method_invocation"]
+positive_test = '''var response = client.accessSecretVersion(name);'''
+negative_test = '''var response = client.listSecrets(parent);'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["accessSecretVersion"]
+import_hints = ["SecretManagerServiceClient"]
+
+[[sources]]
+id = "azure-key-vault"
+description = "Azure Key Vault secret reads"
+category = "secret-manager"
+credential_kind = "external-secret"
+source_urls = ["https://learn.microsoft.com/azure/key-vault/secrets/quick-create-python"]
+fast_path_tokens = ["SecretClient", "get_secret", "getSecret", "azsecrets", "KeyVault"]
+
+[[sources.languages]]
+language = "python"
+sdk = "azure-keyvault-secrets-python-current"
+source_node_kinds = ["call"]
+positive_test = '''secret = client.get_secret("prod-api-key")'''
+negative_test = '''props = client.list_properties_of_secrets()'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["get_secret"]
+import_hints = ["azure.keyvault.secrets"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "azure-keyvault-secrets-js-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''const secret = await client.getSecret("prod-api-key");'''
+negative_test = '''const props = client.listPropertiesOfSecrets();'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["getSecret"]
+import_hints = ["@azure/keyvault-secrets"]
+
+[[sources.languages]]
+language = "go"
+sdk = "azure-sdk-for-go-azsecrets-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''resp, err := client.GetSecret(ctx, "prod-api-key", "", nil)'''
+negative_test = '''pager := client.NewListSecretPropertiesPager(nil)'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["GetSecret"]
+import_hints = ["azsecrets"]
+
+[[sources.languages]]
+language = "java"
+sdk = "azure-security-keyvault-secrets-java-current"
+source_node_kinds = ["method_invocation"]
+positive_test = '''KeyVaultSecret secret = secretClient.getSecret("prod-api-key");'''
+negative_test = '''secretClient.listPropertiesOfSecrets();'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["getSecret"]
+import_hints = ["SecretClient"]
+
+[[sources]]
+id = "kubernetes-secret"
+description = "Kubernetes Secret object reads"
+category = "secret-manager"
+credential_kind = "external-secret"
+source_urls = ["https://kubernetes.io/docs/concepts/configuration/secret/"]
+fast_path_tokens = ["read_namespaced_secret", "readNamespacedSecret", "CoreV1Api", "Secrets("]
+
+[[sources.languages]]
+language = "python"
+sdk = "kubernetes-python-current"
+source_node_kinds = ["call"]
+positive_test = '''secret = client.read_namespaced_secret("name", "default")'''
+negative_test = '''pods = client.list_namespaced_pod("default")'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["read_namespaced_secret"]
+import_hints = ["kubernetes"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "k8s-client-node-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''const secret = await coreV1Api.readNamespacedSecret({ name, namespace });'''
+negative_test = '''const pods = await coreV1Api.listNamespacedPod({ namespace });'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["readNamespacedSecret"]
+import_hints = ["@kubernetes/client-node"]
+
+[[sources.languages]]
+language = "go"
+sdk = "client-go-current"
+source_node_kinds = ["call_expression"]
+positive_test = '''secret, err := client.CoreV1().Secrets(ns).Get(ctx, name, metav1.GetOptions{})'''
+negative_test = '''pods, err := client.CoreV1().Pods(ns).List(ctx, metav1.ListOptions{})'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["Get"]
+import_hints = ["k8s.io/client-go"]
+
+[[sources.languages]]
+language = "java"
+sdk = "kubernetes-java-client-current"
+source_node_kinds = ["method_invocation"]
+positive_test = '''var secret = client.readNamespacedSecret(name, namespace).execute();'''
+negative_test = '''var pods = client.listNamespacedPod(namespace).execute();'''
+[[sources.languages.read_shapes]]
+kind = "sdk_call"
+callees = ["readNamespacedSecret"]
+import_hints = ["io.kubernetes.client"]
+
+[[sources]]
+id = "env-openai"
+description = "OpenAI credential environment variable reads"
+category = "env"
+provider_id = "openai"
+credential_kind = "api-key"
+env_var_names = ["OPENAI_API_KEY"]
+source_urls = ["https://platform.openai.com/docs/quickstart"]
+fast_path_tokens = ["OPENAI_API_KEY"]
+
+[[sources.languages]]
+language = "python"
+sdk = "stdlib-env"
+source_node_kinds = ["call", "subscript"]
+positive_test = '''import os
+key = os.environ["OPENAI_API_KEY"]'''
+negative_test = '''import os
+model = os.getenv("OPENAI_MODEL")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.environ", "os.getenv", "os.environ.get"]
+keys = ["OPENAI_API_KEY"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "javascript"
+sdk = "node-env"
+source_node_kinds = ["member_expression", "subscript_expression"]
+positive_test = '''const key = process.env.OPENAI_API_KEY;'''
+negative_test = '''const model = process.env.OPENAI_MODEL;'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["process.env"]
+keys = ["OPENAI_API_KEY"]
+
+[[sources.languages]]
+language = "go"
+sdk = "stdlib-env"
+source_node_kinds = ["call_expression"]
+positive_test = '''import "os"
+key := os.Getenv("OPENAI_API_KEY")'''
+negative_test = '''import "os"
+model := os.Getenv("OPENAI_MODEL")'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["os.Getenv", "os.LookupEnv"]
+keys = ["OPENAI_API_KEY"]
+import_hints = ["os"]
+
+[[sources.languages]]
+language = "java"
+sdk = "stdlib-env"
+source_node_kinds = ["method_invocation"]
+positive_test = '''String key = System.getProperty("OPENAI_API_KEY");'''
+negative_test = '''String model = System.getenv("OPENAI_MODEL");'''
+[[sources.languages.read_shapes]]
+kind = "env_read"
+access_paths = ["System.getenv", "System.getProperty"]
+keys = ["OPENAI_API_KEY"]

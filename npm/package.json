@@ -1,0 +1,42 @@
+{
+  "name": "@lmctl-ai/lmprobe",
+  "version": "0.43.0",
+  "description": "lmprobe — a one-shot, AST-aware structural code-search CLI with schema-first JSON envelopes. Installs the right prebuilt native binary for your platform.",
+  "keywords": [
+    "ast",
+    "ast-grep",
+    "tree-sitter",
+    "code-search",
+    "structural-search",
+    "static-analysis",
+    "cli",
+    "lmprobe"
+  ],
+  "homepage": "https://lmctl.com/lmprobe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmctl-ai/lmprobe.git",
+    "directory": "npm"
+  },
+  "bugs": {
+    "url": "https://github.com/lmctl-ai/lmprobe/issues"
+  },
+  "license": "MIT",
+  "bin": {
+    "lmprobe": "bin/lmprobe.js"
+  },
+  "files": [
+    "bin/lmprobe.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "optionalDependencies": {
+    "@lmctl-ai/lmprobe-linux-x64": "0.43.0",
+    "@lmctl-ai/lmprobe-linux-arm64": "0.43.0",
+    "@lmctl-ai/lmprobe-darwin-x64": "0.43.0",
+    "@lmctl-ai/lmprobe-darwin-arm64": "0.43.0",
+    "@lmctl-ai/lmprobe-win32-x64": "0.43.0"
+  }
+}

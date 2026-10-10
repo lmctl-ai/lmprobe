@@ -1,0 +1,15 @@
+[package]
+name = "lmprobe-lang-json"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lattice Systems LLC"]
+license = "MIT"
+description = "lmprobe per-language crate: D5 capability impls for json"
+
+[dependencies]
+ast-grep-core = { workspace = true }
+ast-grep-language = { workspace = true }
+lmprobe-lang-core = { path = "../lmprobe-lang-core", version = "0.1.0" }
+
+[dev-dependencies]
+tempfile = "3.10"

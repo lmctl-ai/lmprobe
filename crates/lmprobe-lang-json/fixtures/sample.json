@@ -1,0 +1,14 @@
+{
+  "name": "lmprobe",
+  "version": "0.1.0",
+  "dependencies": {
+    "serde": "1.0",
+    "tokio": "1.28"
+  },
+  "features": ["serve", "watch"],
+  "nested": {
+    "key": "value",
+    "count": 42,
+    "enabled": true
+  }
+}

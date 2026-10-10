@@ -1,0 +1,107 @@
+{
+  "version": "1",
+  "archetype": "prebuilt-binary-matrix",
+  "package": {
+    "name": "@lmctl-ai/lmprobe",
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "kind": "meta+platform"
+  },
+  "repo": {
+    "host": "github",
+    "owner": "lmctl-ai",
+    "name": "lmprobe",
+    "defaultBranch": "main"
+  },
+  "publish": {
+    "auth": "oidc",
+    "trigger": "push",
+    "branch": "main",
+    "distTag": "latest",
+    "provenance": false,
+    "nodeVersion": "22",
+    "packageManager": "npm",
+    "versionSource": "cargo-toml",
+    "autoPatchBump": true
+  },
+  "build": {
+    "language": "rust",
+    "toolchain": "stable",
+    "locked": true,
+    "commands": {
+      "build": "cargo build -p lmprobe --release --locked",
+      "test": "cargo test --workspace --locked",
+      "smoke": [
+        "target/release/lmprobe --version",
+        "target/release/lmprobe --help"
+      ]
+    }
+  },
+  "matrix": [
+    {
+      "nodeOs": "linux",
+      "nodeCpu": "x64",
+      "runner": "ubuntu-24.04",
+      "rustTarget": "x86_64-unknown-linux-gnu",
+      "binary": "lmprobe"
+    },
+    {
+      "nodeOs": "linux",
+      "nodeCpu": "arm64",
+      "runner": "ubuntu-24.04-arm",
+      "rustTarget": "aarch64-unknown-linux-gnu",
+      "binary": "lmprobe"
+    },
+    {
+      "nodeOs": "darwin",
+      "nodeCpu": "x64",
+      "runner": "macos-15-intel",
+      "rustTarget": "x86_64-apple-darwin",
+      "binary": "lmprobe"
+    },
+    {
+      "nodeOs": "darwin",
+      "nodeCpu": "arm64",
+      "runner": "macos-15",
+      "rustTarget": "aarch64-apple-darwin",
+      "binary": "lmprobe"
+    },
+    {
+      "nodeOs": "win32",
+      "nodeCpu": "x64",
+      "runner": "windows-2022",
+      "rustTarget": "x86_64-pc-windows-msvc",
+      "binary": "lmprobe.exe"
+    }
+  ],
+  "platformPackages": {
+    "nameTemplate": "@lmctl-ai/lmprobe-${nodeOs}-${nodeCpu}",
+    "assembler": "npm/scripts/assemble-platform.mjs",
+    "metaStamper": "npm/scripts/prepare-meta.mjs",
+    "versionStamper": "npm/scripts/set-version.mjs",
+    "launcher": "npm/bin/lmprobe.js",
+    "metaDir": "npm"
+  },
+  "workflow": {
+    "path": ".github/workflows/release-npm.yml",
+    "name": "release-npm",
+    "environment": null,
+    "requireApproval": false
+  },
+  "security": {
+    "requireGranularToken": false,
+    "pinActionsToSha": true
+  },
+  "bootstrap": {
+    "required": false,
+    "packages": [
+      "@lmctl-ai/lmprobe-linux-x64",
+      "@lmctl-ai/lmprobe-linux-arm64",
+      "@lmctl-ai/lmprobe-darwin-x64",
+      "@lmctl-ai/lmprobe-darwin-arm64",
+      "@lmctl-ai/lmprobe-win32-x64",
+      "@lmctl-ai/lmprobe"
+    ],
+    "order": "platform-packages-first-meta-last"
+  }
+}

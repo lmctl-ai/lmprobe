@@ -1,0 +1,2 @@
+./src/markupsafe/__init__.py:24: def escape(s: t.Any, /) -> Markup:
+./src/markupsafe/__init__.py:48: def escape_silent(s: t.Any | None, /) -> Markup:

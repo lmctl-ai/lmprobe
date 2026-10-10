@@ -1,0 +1,11 @@
+[package]
+name = "lmprobe-lang-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lattice Systems LLC"]
+license = "MIT"
+description = "lmprobe foundation crate: D5 capability traits, SgLang re-export, per-language helper utilities"
+
+[dependencies]
+ast-grep-core = { workspace = true }
+ast-grep-language = { workspace = true }

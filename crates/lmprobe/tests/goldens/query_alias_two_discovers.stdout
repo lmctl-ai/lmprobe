@@ -1,0 +1,21 @@
+{
+  "schema": "lmprobe.query.v1",
+  "data": {
+    "a": {
+      "projects": [
+        {
+          "name": "lua"
+        }
+      ]
+    },
+    "b": {
+      "projects": [
+        {
+          "name": "nix"
+        }
+      ]
+    }
+  },
+  "warnings": [],
+  "exit_status": "matched"
+}

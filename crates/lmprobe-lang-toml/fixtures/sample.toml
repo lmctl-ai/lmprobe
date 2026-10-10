@@ -1,0 +1,17 @@
+# Sample TOML used by lmprobe-lang-toml smoke tests.
+# Exercises the four shapes TomlExtractor handles:
+#   - bare_key    → "package"
+#   - dotted_key  → "build.target"
+#   - quoted_key  → "with spaces"
+#   - pair (key)  → "name", "version"
+
+[package]
+name = "lmprobe-lang-toml-fixture"
+version = "0.1.0"
+"with spaces" = "ok"
+
+[build.target]
+profile = "release"
+
+[[bin]]
+name = "demo"

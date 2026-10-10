@@ -1,0 +1,559 @@
+{
+  "ast_files_parsed": 0,
+  "canonical_findings": [
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 1,
+            "end_line": 14,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 1,
+            "start_line": 14
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line_number": 14,
+      "provider_id": "aws",
+      "redacted_secret": "REDACTED",
+      "sdk": "stdlib-env"
+    },
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 1,
+            "end_line": 14,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 1,
+            "start_line": 14
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line_number": 14,
+      "provider_id": "aws",
+      "redacted_secret": "REDACTED",
+      "sdk": "stdlib-env"
+    },
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 1,
+            "end_line": 17,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 1,
+            "start_line": 17
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line_number": 17,
+      "provider_id": "stripe",
+      "redacted_secret": "REDACTED",
+      "sdk": "stdlib-env"
+    },
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 1,
+            "end_line": 21,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 1,
+            "start_line": 21
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line_number": 21,
+      "provider_id": "aws",
+      "redacted_secret": "REDACTED",
+      "sdk": "stdlib-env"
+    },
+    {
+      "credential_kind": "key-secret-pair",
+      "detector": "gitleaks-rule",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 1,
+            "end_line": 21,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 1,
+            "start_line": 21
+          }
+        },
+        {
+          "detector": "gitleaks-rule",
+          "location": {
+            "end_column": 68,
+            "end_line": 20,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 2,
+            "start_line": 20
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line_number": 21,
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/go/aws-sdk-go-v2/0",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "sdk": "aws-sdk-go-v2"
+    },
+    {
+      "credential_kind": "api-key",
+      "detector": "gitleaks-rule",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 1,
+            "end_line": 24,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 1,
+            "start_line": 24
+          }
+        },
+        {
+          "detector": "gitleaks-rule",
+          "location": {
+            "end_column": 46,
+            "end_line": 23,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+            "start_column": 2,
+            "start_line": 23
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line_number": 24,
+      "provider_id": "stripe",
+      "provider_rule_ids": [
+        "stripe-access-token"
+      ],
+      "provider_shape_id": "stripe/go/stripe-go-v85/0",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "sdk": "stripe-go-v85"
+    }
+  ],
+  "confirmed_flows": [
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "source",
+          "line": 12,
+          "symbol": "id"
+        },
+        {
+          "column": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "definition",
+          "line": 12,
+          "symbol": "id"
+        },
+        {
+          "column": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "import",
+          "line": 12,
+          "symbol": "local"
+        },
+        {
+          "column": 1,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "sink",
+          "line": 14,
+          "symbol": "id"
+        }
+      ],
+      "intermediate_vars": [
+        "id"
+      ],
+      "provider_id": "aws",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 0,
+        "callee_text": "credentials.NewStaticCredentialsProvider",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 14,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 8,
+        "env_var_name": "AWS_ACCESS_KEY_ID",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 12,
+        "provider_id": "aws",
+        "sdk": "stdlib-env",
+        "source_category": "env",
+        "source_id": "env-aws",
+        "variable": "id"
+      }
+    },
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 12,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "source",
+          "line": 13,
+          "symbol": "secret"
+        },
+        {
+          "column": 12,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "definition",
+          "line": 13,
+          "symbol": "secret"
+        },
+        {
+          "column": 12,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "import",
+          "line": 13,
+          "symbol": "local"
+        },
+        {
+          "column": 1,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "sink",
+          "line": 14,
+          "symbol": "secret"
+        }
+      ],
+      "intermediate_vars": [
+        "secret"
+      ],
+      "provider_id": "aws",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 1,
+        "callee_text": "credentials.NewStaticCredentialsProvider",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 14,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 12,
+        "env_var_name": "AWS_SECRET_ACCESS_KEY",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 13,
+        "provider_id": "aws",
+        "sdk": "stdlib-env",
+        "source_category": "env",
+        "source_id": "env-aws",
+        "variable": "secret"
+      }
+    },
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 16,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "source",
+          "line": 16,
+          "symbol": "key"
+        },
+        {
+          "column": 16,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "definition",
+          "line": 16,
+          "symbol": "key"
+        },
+        {
+          "column": 16,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "import",
+          "line": 16,
+          "symbol": "local"
+        },
+        {
+          "column": 1,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "sink",
+          "line": 17,
+          "symbol": "key"
+        }
+      ],
+      "intermediate_vars": [
+        "key"
+      ],
+      "provider_id": "stripe",
+      "sink": {
+        "arg_name": "stripe.Key",
+        "arg_position": null,
+        "callee_text": "stripe.Key",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 17,
+        "sink_kind": "attribute-assignment"
+      },
+      "source": {
+        "column": 16,
+        "env_var_name": "STRIPE_API_KEY",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 16,
+        "provider_id": "stripe",
+        "sdk": "stdlib-env",
+        "source_category": "env",
+        "source_id": "env-stripe",
+        "variable": "key"
+      }
+    },
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "source",
+          "line": 12,
+          "symbol": "id"
+        },
+        {
+          "column": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "definition",
+          "line": 12,
+          "symbol": "id"
+        },
+        {
+          "column": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "import",
+          "line": 12,
+          "symbol": "local"
+        },
+        {
+          "column": 1,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "kind": "sink",
+          "line": 21,
+          "symbol": "id"
+        }
+      ],
+      "intermediate_vars": [
+        "id"
+      ],
+      "provider_id": "aws",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 0,
+        "callee_text": "credentials.NewStaticCredentialsProvider",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 21,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 8,
+        "env_var_name": "AWS_ACCESS_KEY_ID",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 12,
+        "provider_id": "aws",
+        "sdk": "stdlib-env",
+        "source_category": "env",
+        "source_id": "env-aws",
+        "variable": "id"
+      }
+    }
+  ],
+  "exit_status": "matched",
+  "findings": [
+    {
+      "ast_context": "test-or-generated-path",
+      "confidence": "rule-compatible-low",
+      "description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+      "detector": "gitleaks-rule",
+      "end_column": 68,
+      "end_line": 20,
+      "entropy": 5.021928094887362,
+      "evidence": [
+        {
+          "end_column": 68,
+          "end_line": 20,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "start_column": 2,
+          "start_line": 20
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "fingerprint": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go:generic-api-key:20",
+      "line_number": 20,
+      "match_text": "REDACTED",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "source_mode": "filesystem-gitleaks-compat",
+      "start_column": 2,
+      "start_line": 20,
+      "tags": []
+    },
+    {
+      "ast_context": "test-or-generated-path",
+      "confidence": "rule-compatible-low",
+      "description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+      "detector": "gitleaks-rule",
+      "end_column": 46,
+      "end_line": 23,
+      "entropy": 4.75,
+      "evidence": [
+        {
+          "end_column": 46,
+          "end_line": 23,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+          "start_column": 2,
+          "start_line": 23
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "fingerprint": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go:generic-api-key:23",
+      "line_number": 23,
+      "match_text": "REDACTED",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "source_mode": "filesystem-gitleaks-compat",
+      "start_column": 2,
+      "start_line": 23,
+      "tags": []
+    }
+  ],
+  "schema": "lmprobe.secrets.v1",
+  "semantic_findings": [
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "key-secret-pair",
+      "detector": "symbol-reachability",
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/go/aws-sdk-go-v2/0",
+      "sdk": "aws-sdk-go-v2",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 1,
+        "callee_text": "credentials.NewStaticCredentialsProvider",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 21,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 2,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 20,
+        "literal": "REDACTED",
+        "variable": "aws_secret_access_key"
+      }
+    },
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "api-key",
+      "detector": "symbol-reachability",
+      "provider_id": "stripe",
+      "provider_rule_ids": [
+        "stripe-access-token"
+      ],
+      "provider_shape_id": "stripe/go/stripe-go-v85/0",
+      "sdk": "stripe-go-v85",
+      "sink": {
+        "arg_name": "stripe.Key",
+        "arg_position": null,
+        "callee_text": "stripe.Key",
+        "column": 1,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 24,
+        "sink_kind": "attribute-assignment"
+      },
+      "source": {
+        "column": 2,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+        "line": 23,
+        "literal": "REDACTED",
+        "variable": "api_key"
+      }
+    }
+  ],
+  "sink_catalog_version": "2026-05-p4-v1",
+  "sink_evidence": [],
+  "source_evidence": [
+    {
+      "column": 8,
+      "env_var_name": "AWS_ACCESS_KEY_ID",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line": 12,
+      "provider_id": "aws",
+      "sdk": "stdlib-env",
+      "source_category": "env",
+      "source_id": "env-aws",
+      "variable": "id"
+    },
+    {
+      "column": 12,
+      "env_var_name": "AWS_SECRET_ACCESS_KEY",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line": 13,
+      "provider_id": "aws",
+      "sdk": "stdlib-env",
+      "source_category": "env",
+      "source_id": "env-aws",
+      "variable": "secret"
+    },
+    {
+      "column": 16,
+      "env_var_name": "STRIPE_API_KEY",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/go/aws_env_app.go",
+      "line": 16,
+      "provider_id": "stripe",
+      "sdk": "stdlib-env",
+      "source_category": "env",
+      "source_id": "env-stripe",
+      "variable": "key"
+    }
+  ],
+  "summary": {
+    "canonical": 6,
+    "confirmed_flows": 4,
+    "layer1": 2,
+    "sink_evidence": 0,
+    "source_evidence": 3,
+    "suppressed": 0,
+    "symbol_reachability": 2
+  },
+  "suppressed": [],
+  "warnings": []
+}

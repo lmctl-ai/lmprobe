@@ -1,0 +1,297 @@
+{
+  "ast_files_parsed": 0,
+  "canonical_findings": [
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 10,
+            "end_line": 3,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+            "start_column": 10,
+            "start_line": 3
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+      "line_number": 3,
+      "provider_id": "stripe",
+      "redacted_secret": "REDACTED",
+      "sdk": "node-env"
+    },
+    {
+      "detector": "confirmed-credential-flow",
+      "evidence": [
+        {
+          "detector": "confirmed-credential-flow",
+          "location": {
+            "end_column": 5,
+            "end_line": 6,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+            "start_column": 5,
+            "start_line": 6
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+      "line_number": 6,
+      "provider_id": "github",
+      "redacted_secret": "REDACTED",
+      "sdk": "node-env"
+    },
+    {
+      "credential_kind": "api-key",
+      "detector": "gitleaks-rule",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 10,
+            "end_line": 9,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+            "start_column": 10,
+            "start_line": 9
+          }
+        },
+        {
+          "detector": "gitleaks-rule",
+          "location": {
+            "end_column": 50,
+            "end_line": 8,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+            "start_column": 7,
+            "start_line": 8
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+      "line_number": 9,
+      "provider_id": "stripe",
+      "provider_rule_ids": [
+        "stripe-access-token"
+      ],
+      "provider_shape_id": "stripe/javascript/stripe-node-current/0",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "sdk": "stripe-node-current"
+    }
+  ],
+  "confirmed_flows": [
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 13,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "source",
+          "line": 2,
+          "symbol": "key"
+        },
+        {
+          "column": 13,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "definition",
+          "line": 2,
+          "symbol": "key"
+        },
+        {
+          "column": 13,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "import",
+          "line": 2,
+          "symbol": "local"
+        },
+        {
+          "column": 10,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "sink",
+          "line": 3,
+          "symbol": "key"
+        }
+      ],
+      "intermediate_vars": [
+        "key"
+      ],
+      "provider_id": "stripe",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 0,
+        "callee_text": "stripe",
+        "column": 10,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+        "line": 3,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 13,
+        "env_var_name": "STRIPE_API_KEY",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+        "line": 2,
+        "provider_id": "stripe",
+        "sdk": "node-env",
+        "source_category": "env",
+        "source_id": "env-stripe",
+        "variable": "key"
+      }
+    },
+    {
+      "confidence": "confirmed-credential-flow",
+      "detector": "confirmed-credential-flow",
+      "flow": [
+        {
+          "column": 15,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "source",
+          "line": 5,
+          "symbol": "token"
+        },
+        {
+          "column": 15,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "definition",
+          "line": 5,
+          "symbol": "token"
+        },
+        {
+          "column": 15,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "import",
+          "line": 5,
+          "symbol": "local"
+        },
+        {
+          "column": 5,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "kind": "sink",
+          "line": 6,
+          "symbol": "token"
+        }
+      ],
+      "intermediate_vars": [
+        "token"
+      ],
+      "provider_id": "github",
+      "sink": {
+        "arg_name": "auth",
+        "arg_position": null,
+        "callee_text": "Octokit",
+        "column": 5,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+        "line": 6,
+        "sink_kind": "credential-kwarg"
+      },
+      "source": {
+        "column": 15,
+        "env_var_name": "GITHUB_TOKEN",
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+        "line": 5,
+        "provider_id": "github",
+        "sdk": "node-env",
+        "source_category": "env",
+        "source_id": "env-github",
+        "variable": "token"
+      }
+    }
+  ],
+  "exit_status": "matched",
+  "findings": [
+    {
+      "ast_context": "test-or-generated-path",
+      "confidence": "rule-compatible-low",
+      "description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+      "detector": "gitleaks-rule",
+      "end_column": 50,
+      "end_line": 8,
+      "entropy": 4.75,
+      "evidence": [
+        {
+          "end_column": 50,
+          "end_line": 8,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+          "start_column": 7,
+          "start_line": 8
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+      "fingerprint": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js:generic-api-key:8",
+      "line_number": 8,
+      "match_text": "REDACTED",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "source_mode": "filesystem-gitleaks-compat",
+      "start_column": 7,
+      "start_line": 8,
+      "tags": []
+    }
+  ],
+  "schema": "lmprobe.secrets.v1",
+  "semantic_findings": [
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "api-key",
+      "detector": "symbol-reachability",
+      "provider_id": "stripe",
+      "provider_rule_ids": [
+        "stripe-access-token"
+      ],
+      "provider_shape_id": "stripe/javascript/stripe-node-current/0",
+      "sdk": "stripe-node-current",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 0,
+        "callee_text": "stripe",
+        "column": 10,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+        "line": 9,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 7,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+        "line": 8,
+        "literal": "REDACTED",
+        "variable": "api_key"
+      }
+    }
+  ],
+  "sink_catalog_version": "2026-05-p4-v1",
+  "sink_evidence": [],
+  "source_evidence": [
+    {
+      "column": 13,
+      "env_var_name": "STRIPE_API_KEY",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+      "line": 2,
+      "provider_id": "stripe",
+      "sdk": "node-env",
+      "source_category": "env",
+      "source_id": "env-stripe",
+      "variable": "key"
+    },
+    {
+      "column": 15,
+      "env_var_name": "GITHUB_TOKEN",
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/source_baseline/javascript/stripe_env_app.js",
+      "line": 5,
+      "provider_id": "github",
+      "sdk": "node-env",
+      "source_category": "env",
+      "source_id": "env-github",
+      "variable": "token"
+    }
+  ],
+  "summary": {
+    "canonical": 3,
+    "confirmed_flows": 2,
+    "layer1": 1,
+    "sink_evidence": 0,
+    "source_evidence": 2,
+    "suppressed": 0,
+    "symbol_reachability": 1
+  },
+  "suppressed": [],
+  "warnings": []
+}

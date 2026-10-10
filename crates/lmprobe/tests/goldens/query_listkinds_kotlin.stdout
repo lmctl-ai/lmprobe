@@ -1,0 +1,77 @@
+{
+  "schema": "lmprobe.query.v1",
+  "data": {
+    "listKinds": {
+      "exitStatus": "MATCHED",
+      "rows": [
+        {
+          "kinds": [
+            "function_declaration"
+          ],
+          "portable": "function"
+        },
+        {
+          "kinds": [
+            "function_declaration"
+          ],
+          "portable": "method"
+        },
+        {
+          "kinds": [
+            "class_declaration",
+            "object_declaration"
+          ],
+          "portable": "class"
+        },
+        {
+          "kinds": [],
+          "portable": "struct"
+        },
+        {
+          "kinds": [
+            "class_declaration"
+          ],
+          "portable": "interface"
+        },
+        {
+          "kinds": [],
+          "portable": "trait"
+        },
+        {
+          "kinds": [
+            "class_declaration"
+          ],
+          "portable": "enum"
+        },
+        {
+          "kinds": [
+            "type_alias"
+          ],
+          "portable": "type_alias"
+        },
+        {
+          "kinds": [
+            "property_declaration"
+          ],
+          "portable": "const"
+        },
+        {
+          "kinds": [],
+          "portable": "macro"
+        },
+        {
+          "kinds": [
+            "import_header"
+          ],
+          "portable": "import"
+        },
+        {
+          "kinds": [],
+          "portable": "route"
+        }
+      ]
+    }
+  },
+  "warnings": [],
+  "exit_status": "matched"
+}

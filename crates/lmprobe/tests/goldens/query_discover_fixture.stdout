@@ -1,0 +1,16 @@
+{
+  "schema": "lmprobe.query.v1",
+  "data": {
+    "discover": {
+      "exitStatus": "MATCHED",
+      "projects": [
+        {
+          "name": "lua"
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "warnings": [],
+  "exit_status": "matched"
+}

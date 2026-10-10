@@ -1,0 +1,173 @@
+{
+  "ast_files_parsed": 0,
+  "canonical_findings": [
+    {
+      "credential_kind": "key-secret-pair",
+      "detector": "symbol-reachability",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 5,
+            "end_line": 11,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+            "start_column": 5,
+            "start_line": 11
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+      "line_number": 11,
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/java/aws-sdk-java-v1/0",
+      "redacted_secret": "REDACTED",
+      "sdk": "aws-sdk-java-v1"
+    },
+    {
+      "credential_kind": "key-secret-pair",
+      "detector": "gitleaks-rule",
+      "evidence": [
+        {
+          "detector": "symbol-reachability",
+          "location": {
+            "end_column": 5,
+            "end_line": 11,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+            "start_column": 5,
+            "start_line": 11
+          }
+        },
+        {
+          "detector": "gitleaks-rule",
+          "location": {
+            "end_column": 62,
+            "end_line": 10,
+            "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+            "start_column": 12,
+            "start_line": 10
+          }
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+      "line_number": 11,
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/java/aws-sdk-java-v1/0",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "sdk": "aws-sdk-java-v1"
+    }
+  ],
+  "exit_status": "matched",
+  "findings": [
+    {
+      "ast_context": "test-or-generated-path",
+      "confidence": "rule-compatible-low",
+      "description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+      "detector": "gitleaks-rule",
+      "end_column": 62,
+      "end_line": 10,
+      "entropy": 5.021928094887364,
+      "evidence": [
+        {
+          "end_column": 62,
+          "end_line": 10,
+          "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+          "start_column": 12,
+          "start_line": 10
+        }
+      ],
+      "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+      "fingerprint": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java:generic-api-key:10",
+      "line_number": 10,
+      "match_text": "REDACTED",
+      "redacted_secret": "REDACTED",
+      "rule_id": "generic-api-key",
+      "source_mode": "filesystem-gitleaks-compat",
+      "start_column": 12,
+      "start_line": 10,
+      "tags": []
+    }
+  ],
+  "schema": "lmprobe.secrets.v1",
+  "semantic_findings": [
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "key-secret-pair",
+      "detector": "symbol-reachability",
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/java/aws-sdk-java-v1/0",
+      "sdk": "aws-sdk-java-v1",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 0,
+        "callee_text": "BasicAWSCredentials",
+        "column": 5,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+        "line": 11,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 12,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+        "line": 9,
+        "literal": "REDACTED",
+        "variable": "id"
+      }
+    },
+    {
+      "confidence": "bounded-symbol-flow",
+      "credential_kind": "key-secret-pair",
+      "detector": "symbol-reachability",
+      "provider_id": "aws",
+      "provider_rule_ids": [
+        "aws-access-token",
+        "aws-amazon-bedrock-api-key-long-lived",
+        "aws-amazon-bedrock-api-key-short-lived"
+      ],
+      "provider_shape_id": "aws/java/aws-sdk-java-v1/0",
+      "sdk": "aws-sdk-java-v1",
+      "sink": {
+        "arg_name": null,
+        "arg_position": 1,
+        "callee_text": "BasicAWSCredentials",
+        "column": 5,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+        "line": 11,
+        "sink_kind": "method-call"
+      },
+      "source": {
+        "column": 12,
+        "file_path": "crates/lmprobe-secrets/tests/fixtures/migration_baseline/java/BasicAWSCredentials.java",
+        "line": 10,
+        "literal": "REDACTED",
+        "variable": "secret"
+      }
+    }
+  ],
+  "sink_catalog_version": "2026-05-p4-v1",
+  "sink_evidence": [],
+  "summary": {
+    "canonical": 2,
+    "layer1": 1,
+    "sink_evidence": 0,
+    "suppressed": 0,
+    "symbol_reachability": 2
+  },
+  "suppressed": [],
+  "warnings": []
+}

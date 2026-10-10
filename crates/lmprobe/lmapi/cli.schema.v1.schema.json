@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lmctl.com/schemas/cli.schema.v1.schema.json",
+  "title": "cli.schema.v1",
+  "description": "JSON Schema specification for published CLI tool metadata documents.",
+  "type": "object",
+  "required": ["schema", "tool", "policy", "inputs", "operations"],
+  "properties": {
+    "schema": {
+      "const": "cli.schema.v1"
+    },
+    "tool": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "not": {
+        "enum": ["__proto__", "constructor", "prototype"]
+      }
+    },
+    "version": {
+      "type": "string"
+    },
+    "policy": {
+      "type": "object",
+      "required": ["dryrun", "readonly"],
+      "properties": {
+        "dryrun": {
+          "type": "boolean"
+        },
+        "readonly": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "enum": ["flags", "json", "graphql"]
+      }
+    },
+    "globals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GlobalParamSpec"
+      }
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/OperationSchema"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "product": {
+      "type": "object",
+      "required": ["name", "supported", "detect"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "supported": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detect": {
+          "type": "object",
+          "required": ["argv", "pattern"],
+          "properties": {
+            "argv": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "pattern": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ParamSpec": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z_]\\w*$",
+          "not": {
+            "enum": ["__proto__", "constructor", "prototype", "dryrun"]
+          }
+        },
+        "type": {
+          "enum": ["string", "number", "boolean", "object", "array", "json"]
+        },
+        "occurs": {
+          "enum": ["1", "?", "+", "*"]
+        },
+        "default": true,
+        "enum": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          }
+        },
+        "positional": {
+          "type": "boolean"
+        },
+        "items": {
+          "enum": ["string", "number", "boolean", "object"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "not": {
+              "enum": ["__proto__", "constructor", "prototype"]
+            }
+          }
+        },
+        "cliOnly": {
+          "type": "boolean"
+        },
+        "docOnly": {
+          "type": "boolean"
+        },
+        "derived": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GlobalParamSpec": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$",
+          "not": {
+            "enum": ["__proto__", "constructor", "prototype"]
+          }
+        },
+        "type": {
+          "enum": ["string", "number", "boolean", "object", "array", "json"]
+        },
+        "occurs": {
+          "enum": ["1", "?", "+", "*"]
+        },
+        "default": true,
+        "enum": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          }
+        },
+        "positional": {
+          "type": "boolean"
+        },
+        "items": {
+          "enum": ["string", "number", "boolean", "object"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "not": {
+              "enum": ["__proto__", "constructor", "prototype"]
+            }
+          }
+        },
+        "cliOnly": {
+          "type": "boolean"
+        },
+        "docOnly": {
+          "type": "boolean"
+        },
+        "derived": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OperationSchema": {
+      "type": "object",
+      "required": ["name", "params"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "not": {
+            "enum": ["__proto__", "constructor", "prototype"]
+          }
+        },
+        "access": {
+          "enum": ["read", "write", "dynamic"]
+        },
+        "returns": {
+          "enum": ["object", "array", "string", "number", "boolean", "null"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ParamSpec"
+          }
+        },
+        "additionalParams": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

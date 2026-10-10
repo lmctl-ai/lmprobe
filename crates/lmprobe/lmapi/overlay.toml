@@ -1,0 +1,406 @@
+# lmapi overlay for `lmprobe --schema` (cli.schema.v1).
+#
+# The operation schemas are GENERATED from the clap command tree (flags, shorts, aliases,
+# occurrence, defaults, value enums, positionals, help text). This file adds what clap cannot
+# say: the published lmapi name of each operation, its access, whether it is dangerous
+# (requires --confirm), and parameters to leave out or fix.
+#
+# Rules (enforced by tests in src/lmapi):
+# - every clap leaf command is either published by at least one [[op]] or listed in `excluded`;
+# - every [[op]] has `access` (a missing access is an error, never read-only);
+# - published names never equal a legacy subcommand name, so legacy argv such as
+#   `lmprobe def X` keeps the legacy parser (lmapi protocol 6.1): single-word commands get a
+#   distinct name (def -> def_symbol, grep -> grep_text, ...);
+# - `exclude_params` lists clap arg ids (snake_case) that are not published for that op.
+
+# Commands that are never published.
+excluded = ["serve", "help"]
+
+# Args owned by the legacy output path; never lmapi params.
+exclude_params = [
+  "json",
+  "outfile",
+  "infile",
+  "format",
+  "exit_zero_on_no_match",
+  # Only change stderr diagnostics; lmapi mode never returns the child's stderr.
+  "quiet",
+  "verbose",
+]
+
+# Common options published only where the dispatch consumes them (keeps the document small).
+# -A/-B/-C feed `ContextLines`, used only by ref (markdown) and grep (cli.rs run_invocation).
+[only_for]
+after = ["grep_text", "ref_symbol"]
+before = ["grep_text", "ref_symbol"]
+context = ["grep_text", "ref_symbol"]
+
+# --- sensors (read) ---------------------------------------------------------------------
+
+[[op]]
+name = "discover_projects"
+command = "discover"
+access = "read"
+
+[[op]]
+name = "search_symbols"
+command = "search"
+access = "read"
+
+[[op]]
+name = "def_symbol"
+command = "def"
+access = "read"
+
+[[op]]
+name = "ref_symbol"
+command = "ref"
+access = "read"
+
+[[op]]
+name = "list_kinds"
+command = "list-kinds"
+access = "read"
+
+[[op]]
+name = "callers_of"
+command = "callers"
+access = "read"
+
+[[op]]
+name = "imports_of"
+command = "imports"
+access = "read"
+
+[[op]]
+name = "decorations_of"
+command = "decorations"
+access = "read"
+
+[[op]]
+name = "evolution_of"
+command = "evolution"
+access = "read"
+
+[[op]]
+name = "callees_of"
+command = "callees"
+access = "read"
+
+[[op]]
+name = "supertypes_of"
+command = "supertypes"
+access = "read"
+
+[[op]]
+name = "subtypes_of"
+command = "subtypes"
+access = "read"
+
+[[op]]
+name = "overrides_of"
+command = "overrides"
+access = "read"
+
+[[op]]
+name = "exports_of"
+command = "exports"
+access = "read"
+
+[[op]]
+name = "impact_of"
+command = "impact"
+access = "read"
+
+[[op]]
+name = "pr_triage"
+command = "pr-triage"
+access = "read"
+
+[[op]]
+name = "context_bundle"
+command = "context"
+access = "read"
+
+[[op]]
+name = "ast_diff"
+command = "ast-diff"
+access = "read"
+
+[[op]]
+name = "diff_context"
+command = "diff-context"
+access = "read"
+
+[[op]]
+name = "resource_sites"
+command = "resource-sites"
+access = "read"
+
+[[op]]
+name = "async_leaks"
+command = "async-leaks"
+access = "read"
+
+[[op]]
+name = "crypto_sites"
+command = "crypto-sites"
+access = "read"
+
+[[op]]
+name = "config_keys"
+command = "config-keys"
+access = "read"
+
+[[op]]
+name = "secrets_scan"
+command = "secrets"
+access = "read"
+
+[[op]]
+name = "secrets_recipes_list"
+command = "secrets-recipes list"
+access = "read"
+common_options = false
+
+[[op]]
+name = "secrets_recipes_show"
+command = "secrets-recipes show"
+access = "read"
+common_options = false
+
+[[op]]
+name = "secrets_sources_list"
+command = "secrets-sources list"
+access = "read"
+common_options = false
+
+[[op]]
+name = "secrets_sources_show"
+command = "secrets-sources show"
+access = "read"
+common_options = false
+
+[[op]]
+name = "guard_sites"
+command = "guard-sites"
+access = "read"
+
+[[op]]
+name = "openapi_facts"
+command = "openapi-facts"
+access = "read"
+
+[[op]]
+name = "route_anchors"
+command = "route-anchors"
+access = "read"
+
+[[op]]
+name = "http_client_calls"
+command = "http-client-calls"
+access = "read"
+
+[[op]]
+name = "py_slice_candidates"
+command = "py-slice-candidates"
+access = "read"
+
+[[op]]
+name = "callsite_args"
+command = "callsites"
+access = "read"
+
+[[op]]
+name = "grep_text"
+command = "grep"
+access = "read"
+
+[[op]]
+name = "find_paths"
+command = "find"
+access = "read"
+description = "Find paths with modification time and size (display only)"
+exclude_params = ["action", "force", "paths_only", "null"]
+
+# --- git (read) -------------------------------------------------------------------------
+# git, aws and the secrets recipe/source listings dispatch with their own args only
+# (git_command::run / aws_command::run / dispatch_secrets_* ignore CommonArgs and walk_opts;
+# --workspace is refused): `common_options = false` publishes none of the common options.
+
+[[op]]
+name = "git_status"
+command = "git status"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_diff"
+command = "git diff"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_log"
+command = "git log"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_show"
+command = "git show"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_branch"
+command = "git branch"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_remote"
+command = "git remote"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_rev_parse"
+command = "git rev-parse"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_ls_files"
+command = "git ls-files"
+access = "read"
+common_options = false
+
+[[op]]
+name = "git_blame"
+command = "git blame"
+access = "read"
+common_options = false
+
+# --- history (read) ---------------------------------------------------------------------
+
+[[op]]
+name = "history_blame"
+command = "history blame"
+access = "read"
+
+[[op]]
+name = "history_introduced"
+command = "history introduced"
+access = "read"
+
+[[op]]
+name = "history_commit"
+command = "history commit"
+access = "read"
+
+[[op]]
+name = "history_diff"
+command = "history diff"
+access = "read"
+
+[[op]]
+name = "history_churn"
+command = "history churn"
+access = "read"
+
+[[op]]
+name = "history_co_change"
+command = "history co-change"
+access = "read"
+
+[[op]]
+name = "history_todos"
+command = "history todos"
+access = "read"
+
+[[op]]
+name = "history_evolution"
+command = "history evolution"
+access = "read"
+
+# --- aws (read; the allowlist is enforced by lmprobe) ------------------------------------
+
+[[op]]
+name = "aws_catalog"
+command = "aws catalog"
+access = "read"
+common_options = false
+
+[[op]]
+name = "aws_query"
+command = "aws query"
+access = "read"
+common_options = false
+
+# --- previews (read) and their applying write ops ----------------------------------------
+
+[[op]]
+name = "edit_preview"
+command = "edit"
+access = "read"
+description = "Preview text replacements and line edits (writes nothing)"
+exclude_params = ["apply"]
+
+[[op]]
+name = "edit_text"
+command = "edit"
+access = "write"
+dangerous = true
+description = "Apply text replacements and line edits"
+exclude_params = ["apply"]
+fixed_args = ["--apply"]
+
+[[op]]
+name = "fix_preview"
+command = "fix"
+access = "read"
+description = "Preview AST replacements (writes nothing)"
+exclude_params = ["apply"]
+
+[[op]]
+name = "fix_ast"
+command = "fix"
+access = "write"
+dangerous = true
+description = "Apply AST replacements via an audited worktree patch"
+exclude_params = ["apply"]
+fixed_args = ["--apply"]
+
+# --- deletion and trace (write, dangerous) -----------------------------------------------
+
+[[op]]
+name = "find_delete"
+command = "find"
+access = "write"
+dangerous = true
+description = "Delete the files find selects; previews unless force is set"
+exclude_params = ["action", "paths_only", "null"]
+fixed_args = ["--action", "delete"]
+
+[[op]]
+name = "delete_paths"
+command = "delete"
+access = "write"
+dangerous = true
+description = "Delete the given files; previews unless force is set"
+exclude_params = ["null"]
+stdin_param = { name = "paths", description = "Paths to delete (one per entry)" }
+
+[[op]]
+name = "trace_exec"
+command = "trace"
+access = "write"
+dangerous = true
+
+# --- GraphQL (dynamic: mutations write) ---------------------------------------------------
+
+[[op]]
+name = "query_graphql"
+command = "query"
+access = "dynamic"

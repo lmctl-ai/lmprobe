@@ -1,0 +1,42 @@
+[package]
+name = "lmprobe-registry"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lattice Systems LLC"]
+license = "MIT"
+description = "lmprobe foundation crate: per-language dispatch registry. Aggregates per-lang crates and exposes name_extractor_for(SgLang) etc."
+
+[dependencies]
+ast-grep-core = { workspace = true }
+ast-grep-language = { workspace = true }
+lmprobe-types = { path = "../lmprobe-types", version = "0.1.0" }
+lmprobe-lang-core = { path = "../lmprobe-lang-core", version = "0.1.0" }
+lmprobe-lang-tsx = { path = "../lmprobe-lang-tsx", version = "0.1.0" }
+lmprobe-lang-typescript = { path = "../lmprobe-lang-typescript", version = "0.1.0" }
+lmprobe-lang-javascript = { path = "../lmprobe-lang-javascript", version = "0.1.0" }
+lmprobe-lang-css = { path = "../lmprobe-lang-css", version = "0.1.0" }
+lmprobe-lang-html = { path = "../lmprobe-lang-html", version = "0.1.0" }
+lmprobe-lang-xml = { path = "../lmprobe-lang-xml", version = "0.1.0" }
+lmprobe-lang-yaml = { path = "../lmprobe-lang-yaml", version = "0.1.0" }
+lmprobe-lang-json = { path = "../lmprobe-lang-json", version = "0.1.0" }
+lmprobe-lang-solidity = { path = "../lmprobe-lang-solidity", version = "0.1.0" }
+lmprobe-lang-hcl = { path = "../lmprobe-lang-hcl", version = "0.1.0" }
+lmprobe-lang-haskell = { path = "../lmprobe-lang-haskell", version = "0.1.0" }
+lmprobe-lang-elixir = { path = "../lmprobe-lang-elixir", version = "0.1.0" }
+lmprobe-lang-nix = { path = "../lmprobe-lang-nix", version = "0.1.0" }
+lmprobe-lang-lua = { path = "../lmprobe-lang-lua", version = "0.1.0" }
+lmprobe-lang-bash = { path = "../lmprobe-lang-bash", version = "0.1.0" }
+lmprobe-lang-dart = { path = "../lmprobe-lang-dart", version = "0.1.0" }
+lmprobe-lang-php = { path = "../lmprobe-lang-php", version = "0.1.0" }
+lmprobe-lang-c = { path = "../lmprobe-lang-c", version = "0.1.0" }
+lmprobe-lang-ruby = { path = "../lmprobe-lang-ruby", version = "0.1.0" }
+lmprobe-lang-go = { path = "../lmprobe-lang-go", version = "0.1.0" }
+lmprobe-lang-cpp = { path = "../lmprobe-lang-cpp", version = "0.1.0" }
+lmprobe-lang-swift = { path = "../lmprobe-lang-swift", version = "0.1.0" }
+lmprobe-lang-scala = { path = "../lmprobe-lang-scala", version = "0.1.0" }
+lmprobe-lang-python = { path = "../lmprobe-lang-python", version = "0.1.0" }
+lmprobe-lang-java = { path = "../lmprobe-lang-java", version = "0.1.0" }
+lmprobe-lang-toml = { path = "../lmprobe-lang-toml", version = "0.1.0" }
+lmprobe-lang-csharp = { path = "../lmprobe-lang-csharp", version = "0.1.0" }
+lmprobe-lang-kotlin = { path = "../lmprobe-lang-kotlin", version = "0.1.0" }
+lmprobe-lang-rust = { path = "../lmprobe-lang-rust", version = "0.1.0" }

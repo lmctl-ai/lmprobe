@@ -1,0 +1,35 @@
+{
+  "schema": "lmprobe.query.v1",
+  "data": {
+    "def": {
+      "hits": [
+        {
+          "callers": {
+            "hits": [
+              {
+                "enclosing": {
+                  "kind": "function_item",
+                  "name": "one_caller"
+                },
+                "filePath": "tests/fixtures/composition/lib.rs",
+                "name": "compute_total"
+              },
+              {
+                "enclosing": {
+                  "kind": "function_item",
+                  "name": "another_caller"
+                },
+                "filePath": "tests/fixtures/composition/lib.rs",
+                "name": "compute_total"
+              }
+            ]
+          },
+          "filePath": "tests/fixtures/composition/lib.rs",
+          "name": "compute_total"
+        }
+      ]
+    }
+  },
+  "warnings": [],
+  "exit_status": "matched"
+}
