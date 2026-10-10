@@ -236,7 +236,7 @@ Concrete steps — adding hypothetical "Zig" (SgLang variant added upstream firs
 
    **W4 trait API constraint**: only `lmprobe-lang-core` traits + `ast-grep-core` types in method signatures. Never `lmprobe-types` envelope refs — keeps async-graphql out of per-language builds.
 
-4. **Add small in-tree fixtures** at `crates/lmprobe-lang-zig/fixtures/` — one or two files, ≤30 lines each, idiomatic Zig. Used by the per-crate smoke test and any future cross-language smoke harness. The deep-tier corpus stays at `~/search/qa1/repos/zig/` (workspace-external), with in-tree fixtures as the smoke tier baseline when external corpus depth is insufficient.
+4. **Add small in-tree fixtures** at `crates/lmprobe-lang-zig/fixtures/` — one or two files, ≤30 lines each, idiomatic Zig. Used by the per-crate smoke test and any future cross-language smoke harness. The deep-tier corpus stays at `$LMPROBE_QA_CORPUS/zig/` (workspace-external), with in-tree fixtures as the smoke tier baseline when external corpus depth is insufficient.
 
 5. **Verify**:
 
