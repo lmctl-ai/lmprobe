@@ -17,6 +17,6 @@ source tree:
 | `ast-grep-language` lineage | [ast-grep `crates/language`](https://github.com/ast-grep/ast-grep/tree/main/crates/language) | Tree-sitter language registry |
 
 Original ast-grep authors retain copyright on pre-fork code. lmprobe-original
-work is copyright 2026 lmctl-ai / Mike Ma.
+work is copyright 2026 Lattice Systems LLC.
 
 This repository contains documentation and static site assets only.
