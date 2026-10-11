@@ -175,12 +175,9 @@ pub fn fix_apply(
 
   // 5. Apply rewrites in the worktree.
   let mut applied_in_wt: u32 = 0;
+  let toplevel = repo_toplevel(root);
   for diff in &preview.diffs {
-    let rel = diff
-      .file_path
-      .strip_prefix(&format!("{}/", root.display()))
-      .or_else(|| diff.file_path.strip_prefix("./"))
-      .unwrap_or(&diff.file_path);
+    let rel = path_in_repo(&diff.file_path, root, toplevel.as_deref());
     let wt_path = wt.path.join(rel);
     let lang = match SgLang::from_path(&wt_path) {
       Some(l) => l,
@@ -366,10 +363,54 @@ fn capture_fix_patch(wt: &FixWorktree) -> std::result::Result<PathBuf, Diagnosti
   Ok(target)
 }
 
+/// The top level of the repository containing `root` (a directory or a file); `None` outside Git.
+fn repo_toplevel(root: &Path) -> Option<PathBuf> {
+  let dir = if root.is_dir() {
+    root
+  } else {
+    root
+      .parent()
+      .filter(|p| !p.as_os_str().is_empty())
+      .unwrap_or(Path::new("."))
+  };
+  Command::new("git")
+    .args(["rev-parse", "--show-toplevel"])
+    .current_dir(dir)
+    .output()
+    .ok()
+    .filter(|o| o.status.success())
+    .map(|o| PathBuf::from(String::from_utf8_lossy(&o.stdout).trim()))
+}
+
+/// `file` (as reported by the dry run, relative to the cwd) relative to the repository top
+/// level, which is where the worktree and the captured patch are rooted.
+fn path_in_repo(file: &str, root: &Path, toplevel: Option<&Path>) -> PathBuf {
+  let from_top = toplevel.and_then(|top| {
+    let top = top.canonicalize().ok()?;
+    let abs = std::env::current_dir()
+      .ok()?
+      .join(file)
+      .canonicalize()
+      .ok()?;
+    abs.strip_prefix(&top).ok().map(Path::to_path_buf)
+  });
+  from_top.unwrap_or_else(|| {
+    PathBuf::from(
+      file
+        .strip_prefix(&format!("{}/", root.display()))
+        .or_else(|| file.strip_prefix("./"))
+        .unwrap_or(file),
+    )
+  })
+}
+
 fn apply_patch_to_root(root: &Path, patch: &Path) -> std::result::Result<(), Diagnostic> {
+  // The patch paths are relative to the repository top level (`git diff` in the worktree);
+  // `git apply` run from a subdirectory silently skips them ("No valid patches in input").
+  let toplevel = repo_toplevel(root).unwrap_or_else(|| root.to_path_buf());
   let out = Command::new("git")
     .args(["apply", "--whitespace=nowarn", patch.to_str().unwrap_or("")])
-    .current_dir(root)
+    .current_dir(&toplevel)
     .output()
     .map_err(|e| Diagnostic::new("PATCH_APPLY_FAILED", format!("git apply spawn: {}", e)))?;
   if !out.status.success() {
