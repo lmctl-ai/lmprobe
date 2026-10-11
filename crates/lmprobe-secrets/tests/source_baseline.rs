@@ -94,11 +94,17 @@ fn source_baseline_snapshots_are_byte_equal_after_normalization() {
     let expected = normalize_json(&fs::read(&expected_path).expect("read expected snapshot"));
     assert_redacted(&expected, case.name);
 
+    // Fixtures keep a `REMOVEME` mark inside Stripe-shaped keys so GitHub secret
+    // scanning does not reject pushes; scan an unmarked copy at the same
+    // workspace-relative path so reported paths match the snapshots.
+    let scan_root = unmarked_copy(&fixture_arg, case.name);
     let output = Command::new("cargo")
-      .current_dir(WORKSPACE_ROOT)
+      .current_dir(&scan_root)
       .args([
         "run",
         "-q",
+        "--manifest-path",
+        concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"),
         "-p",
         "lmprobe",
         "--",
@@ -163,6 +169,34 @@ fn source_baseline_snapshots_are_byte_equal_after_normalization() {
 
 fn array_len(value: &Value, key: &str) -> usize {
   value.get(key).and_then(Value::as_array).map_or(0, Vec::len)
+}
+
+fn unmarked_copy(rel_dir: &str, name: &str) -> std::path::PathBuf {
+  let root = std::env::temp_dir().join(format!("lmprobe-source-{}-{name}", std::process::id()));
+  let _ = fs::remove_dir_all(&root);
+  copy_unmarked(
+    &Path::new(WORKSPACE_ROOT).join(rel_dir),
+    &root.join(rel_dir),
+  );
+  root
+}
+
+fn copy_unmarked(from: &Path, to: &Path) {
+  fs::create_dir_all(to).expect("create scan dir");
+  for entry in fs::read_dir(from).expect("read fixture dir") {
+    let entry = entry.expect("fixture entry");
+    let target = to.join(entry.file_name());
+    if entry.file_type().expect("file type").is_dir() {
+      copy_unmarked(&entry.path(), &target);
+    } else {
+      let bytes = fs::read(entry.path()).expect("read fixture");
+      match String::from_utf8(bytes) {
+        Ok(text) => fs::write(&target, text.replace("REMOVEME", "")),
+        Err(err) => fs::write(&target, err.into_bytes()),
+      }
+      .expect("write fixture copy");
+    }
+  }
 }
 
 fn normalize_json(bytes: &[u8]) -> String {
