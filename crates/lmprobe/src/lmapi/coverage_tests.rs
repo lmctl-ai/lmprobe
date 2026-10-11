@@ -109,49 +109,10 @@ fn argv_through_forms(plan: &OpPlan, params: &Record) -> Vec<String> {
   legacy_argv(plan, &from_json)
 }
 
-/// The flags form of `params`: named flags, then (with `positional`) positional values after
-/// `--` in schema order, as the runner assigns them.
+/// The flags form of `params` (with `positional`, positional values follow `--` in schema
+/// order, as the runner assigns them).
 fn flags_form(plan: &OpPlan, params: &Record, positional: bool) -> Vec<String> {
-  let is_positional = |name: &str| {
-    plan
-      .schema
-      .params
-      .iter()
-      .any(|p| p.name == name && p.positional == Some(true))
-  };
-  if !positional {
-    return encode_argv(
-      &plan.schema,
-      params,
-      EncodeArgvOptions { positional: false },
-    );
-  }
-  let named: Record = params
-    .iter()
-    .filter(|(k, _)| !is_positional(k))
-    .map(|(k, v)| (k.clone(), v.clone()))
-    .collect();
-  let mut argv = encode_argv(
-    &plan.schema,
-    &named,
-    EncodeArgvOptions { positional: false },
-  );
-  let trailing: Vec<String> = plan
-    .schema
-    .params
-    .iter()
-    .filter(|p| p.positional == Some(true))
-    .filter_map(|p| params.get(&p.name))
-    .flat_map(|v| match v {
-      Value::Array(items) => items.iter().map(lmrust::js::to_display).collect(),
-      other => vec![lmrust::js::to_display(other)],
-    })
-    .collect();
-  if !trailing.is_empty() {
-    argv.push("--".into());
-    argv.extend(trailing);
-  }
-  argv
+  encode_argv(&plan.schema, params, EncodeArgvOptions { positional })
 }
 
 fn clap_parses(argv: &[String]) -> Result<(), clap::Error> {
@@ -352,12 +313,10 @@ fn the_document_stays_within_its_size_budget() {
   );
 }
 
-/// lmrust bug: `encode_argv` with `positional: true` emits positional values in the params
-/// map's iteration order, while the runner assigns positionals in schema order; with sorted
-/// JSON objects (`default-features = false`) `{"symbol", "path"}` becomes `-- <path> <symbol>`
-/// and the values swap.
+/// `encode_argv` emits positionals in schema order even when the params' keys sort the other
+/// way (`default-features = false` keeps JSON objects sorted): fixed in lmrust 0.1.2, before which
+/// `{"symbol", "path"}` became `-- <path> <symbol>` and the values swapped.
 #[test]
-#[ignore = "bug: lmrust encode_argv orders positionals by params-map key order, not schema order"]
 fn lmrust_encode_argv_keeps_positional_schema_order() {
   let plan = plans()
     .unwrap()

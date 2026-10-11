@@ -28,7 +28,7 @@ chrono = { version = "0.4", features = ["serde"] }
 git2 = "0.19"
 rusqlite = { version = "0.32", features = ["bundled"] }
 # lmapi mode (`lmprobe --schema`, published operations): the lmapi Rust SDK.
-lmrust = { git = "https://github.com/lmctl-ai/lmrust", tag = "v0.1.1", default-features = false }
+lmrust = { git = "https://github.com/lmctl-ai/lmrust", tag = "v0.1.2", default-features = false }
 
 # Phase 4E — GraphQL is the core surface. async-graphql + a
 # minimal current-thread tokio runtime ship in default builds for

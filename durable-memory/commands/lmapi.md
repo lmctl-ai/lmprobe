@@ -4,7 +4,7 @@ lmprobe is a native [lmapi](https://github.com/lmctl-ai/lmapi) tool (lmapi proto
 the same binary serves a published `cli.schema.v1` document and operations with lmapi's JSON
 results, envelopes and exit codes, while every legacy invocation keeps its own parser, output and
 exit codes. The server side is the lmapi Rust SDK
-[lmrust](https://github.com/lmctl-ai/lmrust) (`crates/lmprobe/Cargo.toml`, tag `v0.1.1`, with
+[lmrust](https://github.com/lmctl-ai/lmrust) (`crates/lmprobe/Cargo.toml`, tag `v0.1.2`, with
 `default-features = false`: lmrust's default `preserve_order` feature would switch every
 `serde_json::Value` lmprobe prints to insertion order and break the legacy sorted-key output and
 goldens, because Cargo unifies features across the binary).
