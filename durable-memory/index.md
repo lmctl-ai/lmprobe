@@ -2,7 +2,7 @@
 
 > Terms such as "Lead", "Coder" and "Reviewer" (and lettered "arbitration" items) in these notes and in code comments name the AI-agent roles used while developing lmprobe; they record design decisions and need no action from contributors.
 
-Last updated: 2026-10-06
+Last updated: 2026-10-11
 
 `durable-memory/` is the project development, design, and implementation
 memory for fresh portal/LLM sessions and contributors working in this
@@ -21,6 +21,14 @@ filesystem selection/traversal expressions and Git remote identity.
 advanced expression-file input, and atomic outfile behavior.
 [commands/lmapi.md](commands/lmapi.md) documents lmapi mode: the published
 `cli.schema.v1` document, operation names, mode detection and its limitations.
+[current_status.md](current_status.md) records the public workspace's current
+verification and release state. [migration.md](migration.md) identifies the
+canonical checkout and local installation procedure.
+[integration-guidance.md](integration-guidance.md),
+[31_portable_builds.md](31_portable_builds.md),
+[30_publishing_diagnostics.md](30_publishing_diagnostics.md), and
+[historical/design-evolution.md](historical/design-evolution.md) preserve reusable
+technical lessons with synthetic examples and current-contract references.
 [github-search.md](github-search.md) records native `gh search --json` recipes,
 field selection, query argument behavior, and the boundary with lmprobe envelopes.
 [commands/aws.md](commands/aws.md) documents the exact read-only AWS catalog;

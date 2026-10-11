@@ -24,9 +24,9 @@
   ],
   "recent_history": [
     {
-      "commit_hash": "1df6273376a1d58422366ff59d4904851542b279",
+      "commit_hash": "37120b568bfcb3113deca7457cf4e90f23565891",
       "author": "Mike Ma",
-      "timestamp": "2026-10-10T22:15:03+00:00",
+      "timestamp": "2026-10-11T03:32:23+00:00",
       "change_type": "INTRODUCED",
       "file_path": "crates/lmprobe/tests/fixtures/import_aware/model.ts",
       "line_start": 1,
