@@ -1879,8 +1879,8 @@ dependencies = [
 
 [[package]]
 name = "lmrust"
-version = "0.1.1"
-source = "git+https://github.com/lmctl-ai/lmrust?tag=v0.1.1#594fc83f189ca7fb38727ee5c9bbe6bf07c84225"
+version = "0.1.2"
+source = "git+https://github.com/lmctl-ai/lmrust?tag=v0.1.2#8125b3e38bf6e2cdbca1f0ee407df730ddd3ddfe"
 dependencies = [
  "regex-lite",
  "serde",
