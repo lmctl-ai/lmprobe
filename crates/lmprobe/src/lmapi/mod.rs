@@ -186,31 +186,137 @@ pub(crate) fn legacy_argv(plan: &OpPlan, params: &Record) -> Vec<String> {
   argv
 }
 
-/// Standard lmapi code for a legacy lmprobe error code (the legacy code is kept in
-/// `error.data.tool_code`). Explicit codes first, then suffix families.
-pub(crate) fn standard_code(legacy: &str) -> ErrorCode {
-  match legacy {
+/// Legacy codes lmprobe only reports as warnings or notes: never the reason a run failed, so
+/// they never become an error's `tool_code`. Every SCREAMING_CASE code in the source is either
+/// listed here or mapped by [`mapped_code`] (`coverage_tests` scans the source).
+pub(crate) const WARNING_CODES: [&str; 47] = [
+  "ANCHORS_WITHOUT_GUARD",
+  "ASYNC_LEAKS_NO_CALLS",
+  "AUDIT_LOG_MISSING",
+  "AWS_PAGE_INCOMPLETE",
+  "AWS_PARTIAL_FAILURE",
+  "AWS_SELECT_NOT_FOUND",
+  "AWS_VALUES_REDACTED",
+  "CONFIG_KEYS_GREP_ANCHOR_LIMIT",
+  "CONFIG_KEYS_GREP_KEY_LIMIT",
+  "CONFIG_PARSE_FAILED",
+  "CONTEXT_LOCATION_RESOLVED",
+  "CROSS_FILE_DEPTH_CAP",
+  "CROSS_FILE_UNRESOLVED_IMPORT",
+  "CRYPTO_SITES_NO_ALGORITHMS",
+  "DELETE_FAILED",
+  "DELETE_PREVIEW",
+  "DEPRECATED_CACHE_PATH",
+  "DEPRECATED_POSITIONAL_QUERY",
+  "DIFF_CONTEXT_SOURCE_FALLBACK",
+  "EVOLUTION_PARTIAL_CLONE",
+  "FILE_METADATA_FAILED",
+  "FILE_READ_FAILED",
+  "FILE_TOO_LARGE",
+  "GITHUB_CLI_REVIEW_THREADS_UNSUPPORTED",
+  "GITIGNORE_PATHS_EXCLUDED",
+  "GIT_GRAPH_INCOMPLETE",
+  "GIT_REMOTE_NAME_ENCODING",
+  "HISTORY_SHALLOW",
+  "HISTORY_TRUNCATED",
+  "IMPACT_DEPTH_CAPPED",
+  "IMPORT_AWARE_CONTEXT",
+  "LANGUAGE_UNSUPPORTED",
+  "MULTI_PATH_DROPPED",
+  "NO_ANCHORS_FOUND",
+  "NO_FILES_SCANNED",
+  "OPENAPI_PARSE_FAILED",
+  "PATTERN_STRICTNESS_ELLIPSIS_UNSUPPORTED",
+  "PYTHON_TYPED_DEF_PATTERN_FALLBACK",
+  "QUOTED_INPUT",
+  "REGEX_LITERAL_PIPE_NO_MATCH",
+  "SEARCH_NAME_POSITIONAL_AS_PATH",
+  "SVELTE_SYNTHETIC_CONTEXT",
+  "TRACE_AUDIT_LOG",
+  "WALK_ENTRY_ERROR",
+  "WALK_ERROR",
+  "WORKTREE_PRESERVED",
+  "WORKTREE_USED",
+];
+
+/// Standard lmapi code for a legacy lmprobe error code: explicit codes first, then suffix
+/// families for codes built at runtime (GraphQL extension codes). `None` for warning codes and
+/// unknown codes.
+pub(crate) fn mapped_code(legacy: &str) -> Option<ErrorCode> {
+  if WARNING_CODES.contains(&legacy) {
+    return None;
+  }
+  Some(match legacy {
     "ARGUMENT_ERROR"
     | "PATTERN_LANGUAGE_REQUIRED"
     | "PROGRAM_FORMAT_CONFLICT"
     | "INFILE_COMMAND_CONFLICT"
+    | "STREAMING_COMMAND"
     | "MISSING_SCOPE"
     | "AMBIGUOUS_SCOPE"
     | "INVALID_SCOPE"
     | "INVALID_MARKER"
-    | "INVALID_TRACE_MODE" => ErrorCode::ValidationError,
-    "WORKSPACE_READ_ONLY" => ErrorCode::Conflict,
-    "NOT_GIT_REPO" | "GIT_REPOSITORY_ERROR" => ErrorCode::NotFound,
-    "AWS_CLI_ERROR" => ErrorCode::CommandFailed,
+    | "INVALID_TRACE_MODE"
+    | "INVALID_ACTION"
+    | "FILE_PREDICATE_INVALID"
+    | "PATTERN_PARSE_FAILED"
+    | "REGEX_PARSE_FAILED"
+    | "RULE_PARSE_FAILED"
+    | "TRACE_JSON_REQUIRED"
+    | "TRACE_WATCH_LANG_UNSUPPORTED"
+    | "TRACE_WATCH_IDENTIFIER_UNSUPPORTED"
+    | "NO_TRACE_TEMPLATE"
+    | "CYTHON_NOT_SUPPORTED"
+    | "NOT_IMPLEMENTED"
+    | "GIT_WORKSPACE_UNSUPPORTED"
+    | "AWS_WORKSPACE_UNSUPPORTED"
+    | "AWS_PAGINATION_UNSUPPORTED"
+    | "AWS_PAGINATION_INVALID"
+    | "AWS_PARAMETER_INVALID"
+    | "AWS_PARAMETERS_INVALID"
+    | "AWS_REQUEST_INVALID"
+    | "AWS_REQUEST_SCHEMA"
+    | "AWS_SELECT_INVALID"
+    | "AWS_TIMEOUT_INVALID" => ErrorCode::ValidationError,
+    "WORKSPACE_READ_ONLY" | "EDIT_NON_GIT" => ErrorCode::Conflict,
+    "NOT_GIT_REPO" | "GIT_REPOSITORY_ERROR" | "GIT_REVISION_ERROR" => ErrorCode::NotFound,
     "AWS_CLI_UNAVAILABLE" => ErrorCode::CommandNotFound,
     "PANIC" => ErrorCode::InternalError,
+    "COMMAND_FAILED"
+    | "GRAPHQL_ERROR"
+    | "AWS_CLI_ERROR"
+    | "AWS_CONFIG_RESOLUTION_FAILED"
+    | "AWS_ERROR_CAPTURE_FAILED"
+    | "AWS_JSON_INVALID"
+    | "AWS_OUTPUT_CAPTURE_FAILED"
+    | "AWS_OUTPUT_TOO_LARGE"
+    | "GITHUB_CLI_FAILED"
+    | "GITHUB_CLI_JSON"
+    | "GIT_BINARY_BLAME"
+    | "GIT_STATUS_FAILED"
+    | "AUDIT_LOG_WRITE_FAILED"
+    | "DELETE_AUDIT_FAILED"
+    | "EDIT_WRITE_FAILED"
+    | "FILE_SELECTION_FAILED"
+    | "FIX_FAILED"
+    | "PATCH_APPLY_FAILED"
+    | "PATCH_CAPTURE_FAILED"
+    | "TRACE_FAILED"
+    | "UNTRACE_FAILED"
+    | "WORKTREE_CLEANUP_FAILED"
+    | "WORKTREE_PROVISION_FAILED" => ErrorCode::CommandFailed,
     code if code.starts_with("OUTFILE_") => ErrorCode::InternalError,
     code if code.ends_with("DIRTY_TREE") => ErrorCode::Conflict,
     code if code.ends_with("_NOT_FOUND") => ErrorCode::NotFound,
     code if code.ends_with("_REFUSED") => ErrorCode::Forbidden,
     code if code.ends_with("_TIMEOUT") => ErrorCode::Timeout,
-    _ => ErrorCode::CommandFailed,
-  }
+    _ => return None,
+  })
+}
+
+/// [`mapped_code`], with `COMMAND_FAILED` for unknown and warning codes.
+pub(crate) fn standard_code(legacy: &str) -> ErrorCode {
+  mapped_code(legacy).unwrap_or(ErrorCode::CommandFailed)
 }
 
 /// `mutation` as a GraphQL keyword (outside comments and strings is good enough here: a
@@ -269,8 +375,10 @@ fn handle(plan: &OpPlan, params: &Record, policy: &Policy) -> Result<Value, CliE
       };
       lines.iter().map(|l| format!("{l}\n")).collect::<String>()
     });
-  let run =
-    child::run_legacy(&argv, stdin).map_err(|e| CliError::new(ErrorCode::InternalError, e))?;
+  let run = child::run_legacy(&argv, stdin).map_err(|e| match e {
+    child::SpawnError::Input(message) => CliError::new(ErrorCode::ValidationError, message),
+    child::SpawnError::Internal(message) => CliError::new(ErrorCode::InternalError, message),
+  })?;
   outcome(run)
 }
 
@@ -299,7 +407,18 @@ fn outcome(run: child::LegacyRun) -> Result<Value, CliError> {
   match result.get("status").and_then(Value::as_str) {
     Some("ok" | "no_match" | "partial") => Ok(result),
     _ => {
-      let diagnostic = result.get("diagnostics").and_then(|d| d.get(0));
+      // The reason is the first diagnostic with an error code: warnings collected before the
+      // failure (FILE_READ_FAILED before DELETE_REFUSED) must not become the tool_code.
+      let diagnostics = result
+        .get("diagnostics")
+        .and_then(Value::as_array)
+        .map(Vec::as_slice)
+        .unwrap_or_default();
+      let code_of = |d: &Value| d.get("code").and_then(Value::as_str).map(str::to_string);
+      let diagnostic = diagnostics
+        .iter()
+        .find(|d| code_of(d).as_deref().and_then(mapped_code).is_some())
+        .or(diagnostics.first());
       let legacy = diagnostic
         .and_then(|d| d.get("code"))
         .and_then(Value::as_str)
