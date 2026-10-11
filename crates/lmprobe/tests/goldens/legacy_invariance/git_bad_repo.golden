@@ -1,0 +1,24 @@
+exit: Some(2)
+--- stdout ---
+{
+  "diagnostics": [
+    {
+      "code": "GIT_REPOSITORY_ERROR",
+      "hint": null,
+      "lang": null,
+      "message": "GIT_REPOSITORY_ERROR: /nonexistent/repo"
+    }
+  ],
+  "metadata": {},
+  "payload": {
+    "data": {
+      "message": "GIT_REPOSITORY_ERROR: /nonexistent/repo"
+    }
+  },
+  "payload_format": "hierarchical",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.cli_error.v1",
+  "status": "error"
+}
+
+--- stderr ---

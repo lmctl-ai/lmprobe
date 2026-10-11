@@ -1,0 +1,30 @@
+exit: Some(0)
+--- stdout ---
+        "file_path": "./notes.txt",
+        "file_path": "./q.graphql",
+        "line_content": "hello world",
+        "line_content": "{ grep(pattern: \"hello\", path: \".\") { exitStatus } }",
+        "line_number": 1
+        "line_number": 1
+      "file_path",
+      "line_content",
+      "line_number"
+      {
+      {
+      }
+      },
+    "columns": [
+    "rows": [
+    ]
+    ],
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.grep.v1",
+  "status": "ok"
+  },
+{
+}
+--- stderr ---

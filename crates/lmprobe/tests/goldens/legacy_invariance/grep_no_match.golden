@@ -1,0 +1,4 @@
+exit: Some(1)
+--- stdout ---
+{"exit_status":"no_match","kind":"summary","scan_stats":{"files_considered":9,"files_ignored":0,"files_scanned":9,"files_skipped":0},"schema":"lmprobe.grep.v1","warnings":[]}
+--- stderr ---

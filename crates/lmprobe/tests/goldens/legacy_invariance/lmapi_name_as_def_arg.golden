@@ -1,0 +1,5 @@
+exit: Some(1)
+--- stdout ---
+{"exit_status":"no_match","kind":"summary","schema":"lmprobe.def.v1","warnings":[]}
+
+--- stderr ---

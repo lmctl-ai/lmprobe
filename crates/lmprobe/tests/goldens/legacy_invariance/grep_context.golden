@@ -1,0 +1,7 @@
+exit: Some(0)
+--- stdout ---
+{"after_context":[{"line_content":"        return []","line_number":18}],"file_path":"app.py","line_content":"if not authorize(token):","line_number":17}
+{"after_context":[{"line_content":"    return bool(t)","line_number":29}],"file_path":"app.py","line_content":"def authorize(t):","line_number":28}
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.grep.v1","warnings":[]}
+
+--- stderr ---

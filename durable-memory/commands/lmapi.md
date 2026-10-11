@@ -44,6 +44,8 @@ lmapi exit codes. The same pattern that exits 1 (`no_match`) in legacy mode exit
   options included, with long name (camelCase param name), shorts and visible aliases, occurrence
   (`1 ? + *` from required/num_args/action), type (numbers and booleans from the value parser,
   value enums as `enum`), defaults and help text. Hidden arguments are not published.
+- A required on/off flag (`callsites --args`) is not a param: it could only ever be `true`, so
+  the generator appends it to the op's fixed legacy args.
 - Merged with `crates/lmprobe/lmapi/overlay.toml`: published name, `access` (required),
   `dangerous`, description overrides, per-op excluded params, fixed legacy args (`--apply`,
   `--action delete`) and the stdin list param of `delete_paths`.
@@ -156,37 +158,79 @@ and feeds them to `lmprobe delete` on stdin. `query_graphql` is `dynamic`: a doc
 ## Errors
 
 Legacy error codes become standard lmapi codes; the legacy code is kept in `error.data.tool_code`,
-the legacy exit code in `data.legacy_exit_code` and the legacy result in `data.result`:
+the legacy exit code in `data.legacy_exit_code` and the legacy result in `data.result`. The reason
+is the first diagnostic with an error code: warnings collected before the failure
+(`FILE_READ_FAILED` before `DELETE_REFUSED`) never become the `tool_code`.
 
 | Legacy code | lmapi code (exit) |
 | --- | --- |
-| `ARGUMENT_ERROR`, `INVALID_*` scope/marker/trace mode, format/infile conflicts | `VALIDATION_ERROR` (2) |
-| `DIRTY_TREE`, `EDIT_DIRTY_TREE`, `WORKSPACE_READ_ONLY` | `CONFLICT` (5) |
-| `NOT_GIT_REPO`, `GIT_REPOSITORY_ERROR`, `*_NOT_FOUND` | `NOT_FOUND` (4) |
-| `*_REFUSED` | `FORBIDDEN` (6) |
+| `ARGUMENT_ERROR`, `INVALID_*` scope/marker/trace mode/action, format/infile conflicts, pattern/regex/rule/predicate parse failures, unsupported trace languages, `AWS_*_INVALID`, `AWS_REQUEST_SCHEMA`, `*_WORKSPACE_UNSUPPORTED`, `STREAMING_COMMAND` | `VALIDATION_ERROR` (2) |
+| `DIRTY_TREE`, `EDIT_DIRTY_TREE`, `EDIT_NON_GIT`, `WORKSPACE_READ_ONLY` | `CONFLICT` (5) |
+| `NOT_GIT_REPO`, `GIT_REPOSITORY_ERROR`, `GIT_REVISION_ERROR`, `*_NOT_FOUND` | `NOT_FOUND` (4) |
+| `*_REFUSED` (delete, fix, trace, untrace, AWS operation) | `FORBIDDEN` (6) |
 | `*_TIMEOUT` (AWS query timeout) | `TIMEOUT` (7) |
 | `AWS_CLI_UNAVAILABLE` | `COMMAND_NOT_FOUND` (127) |
-| `OUTFILE_*`, a panic (exit 101) or a run without a result | `INTERNAL_ERROR` (1) |
-| anything else (e.g. `AWS_CLI_ERROR`) | `COMMAND_FAILED` (1) |
+| `OUTFILE_*`, a panic (exit 101), a signal or a run without a result | `INTERNAL_ERROR` (1) |
+| tool failures (`AWS_CLI_ERROR`, `GITHUB_CLI_FAILED`, `PATCH_APPLY_FAILED`, `GRAPHQL_ERROR`, ...) and unknown codes | `COMMAND_FAILED` (1) |
+
+Params the OS cannot pass to the legacy child (a NUL byte; a value over the 128 KiB per-argument
+limit; an argument list over `ARG_MAX`) are `VALIDATION_ERROR` (2) without running anything.
+
+The full table is `lmapi::mapped_code` plus `WARNING_CODES` (codes that are only ever warnings).
+`src/lmapi/error_tests.rs` scans the product sources for SCREAMING_CASE codes (quoted literals
+and `"CODE: message"` error prefixes) and fails when a new one is neither mapped nor declared.
 
 ## Implementation and limitations
 
 - Phase 1 runs every operation as a child process: `lmapi/child.rs::run_legacy` (the only spawn
   site) executes the current executable with `--outfile <private temp> <legacy argv>` (no shell)
   and reads the `lmprobe.result.v1` document ([program JSON](../program-json.md)). Cost: one extra
-  process per operation.
+  process per operation. On Linux the child gets `PR_SET_PDEATHSIG(SIGKILL)`, so killing a hung
+  lmapi invocation also stops the legacy run; elsewhere a killed parent still orphans its child.
 - Phase 2 (in-process) is blocked by the `process::exit` calls on the legacy path: in `cli.rs`
   `run()` (parse/outfile failures and the program-JSON error exit), `render_parse_error`, the
   workspace mutation refusal, and the exit-code exits at the end of `run_invocation` / sensor
   dispatch; `output.rs` `handle_stdout_err` also exits. Replace `run_legacy` once those return.
-- The document is still sizeable (~196 KB): sensors repeat the remaining common options.
+- The document is still sizeable (~196 KB): sensors repeat the remaining common options. A test
+  keeps it under 256 KiB.
+- Params travel to the legacy child as argv: one value is limited to 128 KiB (Linux
+  `MAX_ARG_STRLEN`) and NUL bytes cannot be passed (both are `VALIDATION_ERROR`).
+- Conditional requirements (`aws query`: service and operation, or `--request-file`;
+  `query`: a document or `--recipe`; `edit`: one edit operation) cannot be expressed in
+  `cli.schema.v1`; the params are optional and the legacy parser reports the missing ones
+  (`VALIDATION_ERROR`, tool_code `ARGUMENT_ERROR`).
 - `query_graphql` mutation detection is lexical (a `mutation` word outside `#` comments).
 
 ## Tests
 
 - `crates/lmprobe/src/lmapi/*`: generator types/occurs/defaults/bindings, overlay rules (missing
   access is an error, every clap command published or excluded, no name shadows a legacy command),
-  access table, argv building, error mapping, pre-filter and legacy-stays-legacy tables.
-- `crates/lmprobe/tests/lmapi.rs`: channel files, JSON Schema and publish checks, `--list`,
-  flags and JSON forms, unknown op, bad params, readonly/env floor/confirm/dryrun, `delete_paths`,
-  no-match exit 0 vs legacy exit 1, lmrust's interpreter over the published document.
+  access table, argv building, pre-filter and legacy-stays-legacy tables.
+- `src/lmapi/coverage_tests.rs`: for all 63 ops, minimal and full param sets generated from the
+  published schema resolve to the same params and legacy argv in the flags form (positional and
+  named) and the JSON form, the argv parses with lmprobe's clap parser, every non-default value
+  reaches its flag, no two ops build the same argv, legacy commands published twice are declared
+  variants, the document is deterministic, in overlay order and under its size budget.
+- `src/lmapi/error_tests.rs`: every legacy error code -> standard code, exit and `tool_code`;
+  warnings never become the reason; the source scan for undeclared codes.
+- `src/lmapi/selfexec_tests.rs`: the child runner against stubs (signal, silence, truncated or
+  invalid output, 8 MiB pipes and a 16 MiB result, stdin, NUL/oversized args, 16 concurrent runs),
+  the outfile removed on every path.
+- `tests/lmapi.rs`: channel files, JSON Schema and publish checks, `--list`, flags and JSON forms,
+  unknown op, bad params, readonly/env floor/confirm/dryrun, `delete_paths`, no-match exit 0 vs
+  legacy exit 1, lmrust's interpreter over the published document.
+- `tests/lmapi_ops.rs`: every op end to end on an offline fixture (a `lmprobe.result.v1` document;
+  `pr_triage` without `gh` is a structured error); `aws_catalog`/`aws_query` against an `aws` stub
+  on PATH (allowlist refusals never run aws; a missing aws is `COMMAND_NOT_FOUND`).
+- `tests/lmapi_policy.rs`: access x policy matrix (flags, aliases, env values, flag-vs-env floor).
+- `tests/lmapi_hostile.rs`: reserved names, dash values, unicode/space paths, empty strings, 1 MiB
+  and NUL values, duplicate flags and ops, 5k-entry arrays, 100k-deep JSON, bad input files,
+  mixed/unpublished forms, unknown globals, type/enum/missing errors.
+- `tests/lmapi_schema.rs`: `--schema` byte-identical across runs, cwd, HOME, locale and TZ; `--list`
+  and `--explain` agree with it; canonical order; size budget.
+- `tests/lmapi_selfexec.rs`: a private TMPDIR stays empty on every path; 8 parallel invocations;
+  an unusable temp dir; a multi-megabyte result; killing lmapi mode kills its legacy child (Linux).
+- `tests/legacy_invariance.rs`: 58 legacy invocations (every family, `--json`/`--format`, exit
+  0/1/2/3, lmapi-looking argv that stays legacy) byte-identical to goldens recorded from the
+  lmprobe 0.43.0 binary built before lmapi mode existed; re-record with `LMPROBE_RECORD_LEGACY_BIN=<binary>` only for an
+  intended legacy change.

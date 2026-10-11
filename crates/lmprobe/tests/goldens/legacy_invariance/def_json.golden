@@ -1,0 +1,32 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [
+      "content",
+      "file_path",
+      "kind",
+      "lang",
+      "line_start",
+      "name"
+    ],
+    "rows": [
+      {
+        "content": "pub fn helper(x: i32) -> i32  { ... }",
+        "file_path": "./src/lib.rs",
+        "kind": "function_item",
+        "lang": "Rust",
+        "line_start": 21,
+        "name": "helper"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.def.v1",
+  "status": "ok"
+}
+
+--- stderr ---

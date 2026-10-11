@@ -1,0 +1,5 @@
+exit: Some(0)
+--- stdout ---
+{"bare":false,"clean":true,"detached":false,"exit_status":"matched","head":"2d4bb622428ecae127f77eec8e47fe7a37fe0342","head_name":"main","kind":"summary","partial":false,"repo":"<ROOT>/.git/","schema":"lmprobe.git_status.v1","shallow":false,"unborn":false,"warnings":[],"workdir":"<ROOT>/"}
+
+--- stderr ---

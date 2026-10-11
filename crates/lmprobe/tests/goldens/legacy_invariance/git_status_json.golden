@@ -1,0 +1,27 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "bare": false,
+    "clean": true,
+    "detached": false,
+    "head": "2d4bb622428ecae127f77eec8e47fe7a37fe0342",
+    "head_name": "main",
+    "partial": false,
+    "repo": "<ROOT>/.git/",
+    "shallow": false,
+    "unborn": false,
+    "workdir": "<ROOT>/"
+  },
+  "payload": {
+    "columns": [],
+    "rows": []
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.git_status.v1",
+  "status": "ok"
+}
+
+--- stderr ---

@@ -1,0 +1,42 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "paths": [
+      "./app.py"
+    ]
+  },
+  "payload": {
+    "columns": [
+      "absolute_path",
+      "changed_at",
+      "device",
+      "file_type",
+      "has_symlink_parent",
+      "inode",
+      "modified_at",
+      "path",
+      "size_bytes"
+    ],
+    "rows": [
+      {
+        "absolute_path": "<ROOT>/app.py",
+        "changed_at":"<TIME>",
+        "device":<N>,
+        "file_type": "file",
+        "has_symlink_parent": false,
+        "inode":<N>,
+        "modified_at":"<TIME>",
+        "path": "./app.py",
+        "size_bytes": 659
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.find.v1",
+  "status": "ok"
+}
+
+--- stderr ---

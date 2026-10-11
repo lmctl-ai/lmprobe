@@ -1,0 +1,6 @@
+exit: Some(0)
+--- stdout ---
+{"after":"bye world\n","applied":false,"before":"hello world\n","path":"<ROOT>/notes.txt"}
+{"audit_path":null,"exit_status":"matched","kind":"summary","mode":"dry_run","schema":"lmprobe.edit.v1","warnings":[]}
+
+--- stderr ---

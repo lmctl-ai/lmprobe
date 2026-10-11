@@ -1,0 +1,4 @@
+exit: Some(0)
+--- stdout ---
+{"data":{"grep":{"exitStatus":"MATCHED"}},"exit_status":"matched","kind":"summary","schema":"lmprobe.query.v1","warnings":[]}
+--- stderr ---

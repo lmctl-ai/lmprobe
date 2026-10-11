@@ -1,0 +1,35 @@
+exit: Some(2)
+--- stdout ---
+{
+  "diagnostics": [
+    {
+      "code": "GRAPHQL_ERROR",
+      "hint": null,
+      "lang": null,
+      "message": "Unknown field \"nope\" on type \"Query\"."
+    }
+  ],
+  "metadata": {
+    "errors": [
+      {
+        "locations": [
+          {
+            "column": 3,
+            "line": 1
+          }
+        ],
+        "message": "Unknown field \"nope\" on type \"Query\"."
+      }
+    ]
+  },
+  "payload": {
+    "data": null
+  },
+  "payload_format": "hierarchical",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.query.v1",
+  "status": "error"
+}
+
+--- stderr ---
+lmprobe: query [GRAPHQL_ERROR]: Unknown field "nope" on type "Query".

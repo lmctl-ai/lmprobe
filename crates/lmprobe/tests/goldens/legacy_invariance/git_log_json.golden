@@ -1,0 +1,102 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "bare": false,
+    "detached": false,
+    "head": "2d4bb622428ecae127f77eec8e47fe7a37fe0342",
+    "head_name": "main",
+    "max_count": 5,
+    "partial": false,
+    "repo": "<ROOT>/.git/",
+    "shallow": false,
+    "truncated": false,
+    "unborn": false,
+    "workdir": "<ROOT>/"
+  },
+  "payload": {
+    "columns": [
+      "author",
+      "committer",
+      "id",
+      "message",
+      "parents",
+      "short_id",
+      "summary",
+      "tree"
+    ],
+    "rows": [
+      {
+        "author": {
+          "email": "fixture@example.invalid",
+          "name": "Fixture",
+          "offset_minutes": 0,
+          "time": 1767323045
+        },
+        "committer": {
+          "email": "fixture@example.invalid",
+          "name": "Fixture",
+          "offset_minutes": 0,
+          "time": 1767323045
+        },
+        "id": "2d4bb622428ecae127f77eec8e47fe7a37fe0342",
+        "message": "invariance extras\n",
+        "parents": [
+          "9b9335617fffd35a25e09ad521febeffe11c7717"
+        ],
+        "short_id": "2d4bb62",
+        "summary": "invariance extras",
+        "tree": "7a8b5f30ae4bbee5686c4cdc9d156763c823b82a"
+      },
+      {
+        "author": {
+          "email": "fixture@example.invalid",
+          "name": "Fixture",
+          "offset_minutes": 0,
+          "time": 1767323045
+        },
+        "committer": {
+          "email": "fixture@example.invalid",
+          "name": "Fixture",
+          "offset_minutes": 0,
+          "time": 1767323045
+        },
+        "id": "9b9335617fffd35a25e09ad521febeffe11c7717",
+        "message": "saturate helper\n",
+        "parents": [
+          "5bd4b82f488c0ecab567e684797aebbbce3ba330"
+        ],
+        "short_id": "9b93356",
+        "summary": "saturate helper",
+        "tree": "c746c0f87cfa18726f2b5c4fd87acd6eb932dfc6"
+      },
+      {
+        "author": {
+          "email": "fixture@example.invalid",
+          "name": "Fixture",
+          "offset_minutes": 0,
+          "time": 1767323045
+        },
+        "committer": {
+          "email": "fixture@example.invalid",
+          "name": "Fixture",
+          "offset_minutes": 0,
+          "time": 1767323045
+        },
+        "id": "5bd4b82f488c0ecab567e684797aebbbce3ba330",
+        "message": "init\n",
+        "parents": [],
+        "short_id": "5bd4b82",
+        "summary": "init",
+        "tree": "7e3b50d14df8e8ddd9331fc60c8940237f895c4b"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.git_log.v1",
+  "status": "ok"
+}
+
+--- stderr ---

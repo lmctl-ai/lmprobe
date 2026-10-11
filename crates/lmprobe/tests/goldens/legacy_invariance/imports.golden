@@ -1,0 +1,6 @@
+exit: Some(0)
+--- stdout ---
+{"content":"import os","file_path":"./app.py","kind":"import","lang":"Python","line_start":1,"name":"os"}
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.imports.v1","warnings":[]}
+
+--- stderr ---

@@ -1,0 +1,25 @@
+exit: Some(2)
+--- stdout ---
+{
+  "diagnostics": [
+    {
+      "code": "PATH_NOT_FOUND",
+      "hint": "check the path spelling or remove the explicit path argument",
+      "lang": null,
+      "message": "path does not exist: missing-dir"
+    }
+  ],
+  "metadata": {},
+  "payload": {
+    "columns": [],
+    "rows": []
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.grep.v1",
+  "status": "error"
+}
+
+--- stderr ---
+lmprobe: grep [PATH_NOT_FOUND]: path does not exist: missing-dir
+lmprobe:   hint: check the path spelling or remove the explicit path argument

@@ -1,0 +1,23 @@
+exit: Some(1)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "scan_stats": {
+      "files_considered": 9,
+      "files_ignored": 0,
+      "files_scanned": 9,
+      "files_skipped": 0
+    }
+  },
+  "payload": {
+    "columns": [],
+    "rows": []
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.grep.v1",
+  "status": "no_match"
+}
+
+--- stderr ---

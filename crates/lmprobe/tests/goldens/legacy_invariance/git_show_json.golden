@@ -1,0 +1,32 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "bare": false,
+    "detached": false,
+    "head": "2d4bb622428ecae127f77eec8e47fe7a37fe0342",
+    "head_name": "main",
+    "partial": false,
+    "repo": "<ROOT>/.git/",
+    "shallow": false,
+    "unborn": false,
+    "workdir": "<ROOT>/"
+  },
+  "payload": {
+    "data": {
+      "binary": false,
+      "content": "use std::collections::HashMap;\n\npub trait Shape {\n    fn area(&self) -> f64;\n}\n\npub struct Square {\n    pub side: f64,\n}\n\nimpl Shape for Square {\n    fn area(&self) -> f64 {\n        self.side * self.side\n    }\n}\n\npub struct User {\n    pub name: String,\n}\n\npub fn helper(x: i32) -> i32 {\n    // TODO: overflow\n    x.saturating_add(1)\n}\n\npub fn run() -> i32 {\n    let m: HashMap<i32, i32> = HashMap::new();\n    helper(m.len() as i32)\n}\n",
+      "file": "src/lib.rs",
+      "mode": 33188,
+      "oid": "7e2841bd26017eba83eeb731399fec9e92745ebd",
+      "revision": "2d4bb622428ecae127f77eec8e47fe7a37fe0342"
+    }
+  },
+  "payload_format": "hierarchical",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.git_show.v1",
+  "status": "ok"
+}
+
+--- stderr ---

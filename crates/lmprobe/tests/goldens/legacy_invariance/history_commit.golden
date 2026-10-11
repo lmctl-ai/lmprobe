@@ -1,0 +1,41 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [
+      "author",
+      "commit_hash",
+      "matched_files",
+      "message",
+      "timestamp"
+    ],
+    "rows": [
+      {
+        "author": "Fixture",
+        "commit_hash": "5bd4b82f488c0ecab567e684797aebbbce3ba330",
+        "matched_files": [
+          "src/lib.rs"
+        ],
+        "message": "init",
+        "timestamp": "2026-01-02T03:04:05+00:00"
+      },
+      {
+        "author": "Fixture",
+        "commit_hash": "9b9335617fffd35a25e09ad521febeffe11c7717",
+        "matched_files": [
+          "src/lib.rs"
+        ],
+        "message": "saturate helper",
+        "timestamp": "2026-01-02T03:04:05+00:00"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.history_commit.v1",
+  "status": "ok"
+}
+
+--- stderr ---

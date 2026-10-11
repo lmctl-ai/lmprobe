@@ -1,0 +1,29 @@
+exit: Some(2)
+--- stdout ---
+{
+  "diagnostics": [
+    {
+      "code": "REGEX_PARSE_FAILED",
+      "hint": "use Rust regex syntax; escape literal metacharacters with one backslash, for example `\\(` for a literal `(`, and use bare `|` for alternation",
+      "lang": null,
+      "message": "regex pattern failed to parse:\nregex parse error:\n    (\n    ^\nerror: unclosed group"
+    }
+  ],
+  "metadata": {},
+  "payload": {
+    "columns": [],
+    "rows": []
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.grep.v1",
+  "status": "error"
+}
+
+--- stderr ---
+lmprobe: grep [REGEX_PARSE_FAILED]: regex pattern failed to parse:
+regex parse error:
+    (
+    ^
+error: unclosed group
+lmprobe:   hint: use Rust regex syntax; escape literal metacharacters with one backslash, for example `\(` for a literal `(`, and use bare `|` for alternation

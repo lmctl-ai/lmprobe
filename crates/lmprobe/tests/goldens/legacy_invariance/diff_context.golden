@@ -1,0 +1,8 @@
+exit: Some(0)
+--- stdout ---
+{"anchor_kind":"changed_line","file_path":"flags.txt","line_content":"--schema is just text here","line_number":1,"new_lines":1,"new_start":1,"old_lines":0,"old_start":0}
+{"anchor_kind":"changed_line","file_path":"git_status/marker.txt","line_content":"git_status marker","line_number":1,"new_lines":1,"new_start":1,"old_lines":0,"old_start":0}
+{"anchor_kind":"changed_line","file_path":"q.graphql","line_content":"{ grep(pattern: \"hello\", path: \".\") { exitStatus } }","line_number":1,"new_lines":1,"new_start":1,"old_lines":0,"old_start":0}
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.diff_context.v1","warnings":[]}
+
+--- stderr ---

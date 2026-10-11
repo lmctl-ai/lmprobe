@@ -1,0 +1,88 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [
+      "change_type",
+      "from_line",
+      "from_signature",
+      "kind",
+      "name",
+      "to_line",
+      "to_signature"
+    ],
+    "rows": [
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 3,
+        "from_signature": "pub trait Shape  { ... }",
+        "kind": "declaration",
+        "name": "Shape",
+        "to_line": 3,
+        "to_signature": "pub trait Shape  { ... }"
+      },
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 7,
+        "from_signature": "pub struct Square  { ... }",
+        "kind": "declaration",
+        "name": "Square",
+        "to_line": 7,
+        "to_signature": "pub struct Square  { ... }"
+      },
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 17,
+        "from_signature": "pub struct User  { ... }",
+        "kind": "declaration",
+        "name": "User",
+        "to_line": 17,
+        "to_signature": "pub struct User  { ... }"
+      },
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 12,
+        "from_signature": "fn area(&self) -> f64  { ... }",
+        "kind": "declaration",
+        "name": "area",
+        "to_line": 12,
+        "to_signature": "fn area(&self) -> f64  { ... }"
+      },
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 21,
+        "from_signature": "pub fn helper(x: i32) -> i32  { ... }",
+        "kind": "declaration",
+        "name": "helper",
+        "to_line": 21,
+        "to_signature": "pub fn helper(x: i32) -> i32  { ... }"
+      },
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 26,
+        "from_signature": "pub fn run() -> i32  { ... }",
+        "kind": "declaration",
+        "name": "run",
+        "to_line": 26,
+        "to_signature": "pub fn run() -> i32  { ... }"
+      },
+      {
+        "change_type": "UNCHANGED",
+        "from_line": 1,
+        "from_signature": "use std::collections::HashMap;",
+        "kind": "declaration",
+        "name": "use",
+        "to_line": 1,
+        "to_signature": "use std::collections::HashMap;"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.ast_diff.v1",
+  "status": "ok"
+}
+
+--- stderr ---

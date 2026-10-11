@@ -1,0 +1,5 @@
+exit: Some(0)
+--- stdout ---
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.grep.v1","warnings":[]}
+{"file_path":"./git_status/marker.txt","line_content":"git_status marker","line_number":1}
+--- stderr ---

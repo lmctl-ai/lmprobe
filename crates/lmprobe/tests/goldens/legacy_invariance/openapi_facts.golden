@@ -1,0 +1,28 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [
+      "file_path",
+      "method",
+      "operation_id",
+      "path"
+    ],
+    "rows": [
+      {
+        "file_path": "openapi.yaml",
+        "method": "GET",
+        "operation_id": "listUsers",
+        "path": "/users"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.openapi_facts.v1",
+  "status": "ok"
+}
+
+--- stderr ---

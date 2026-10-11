@@ -1,0 +1,5 @@
+exit: Some(0)
+--- stdout ---
+{"exit_status":"matched","kind":"summary","rows":[{"kinds":["function_item"],"portable":"function"},{"kinds":["function_item"],"portable":"method"},{"kinds":[],"portable":"class"},{"kinds":["struct_item"],"portable":"struct"},{"kinds":[],"portable":"interface"},{"kinds":["trait_item"],"portable":"trait"},{"kinds":["enum_item"],"portable":"enum"},{"kinds":["type_item"],"portable":"type_alias"},{"kinds":["const_item","static_item"],"portable":"const"},{"kinds":["macro_definition","macro_invocation"],"portable":"macro"},{"kinds":["use_declaration"],"portable":"import"},{"kinds":[],"portable":"route"}],"schema":"lmprobe.list_kinds.v1","warnings":[]}
+
+--- stderr ---

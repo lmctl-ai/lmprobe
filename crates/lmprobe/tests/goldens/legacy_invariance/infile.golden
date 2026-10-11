@@ -1,0 +1,18 @@
+exit: Some(0)
+--- stdout ---
+        "exitStatus": "MATCHED"
+      "grep": {
+      }
+    "data": {
+    }
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+  "payload_format": "hierarchical",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.query.v1",
+  "status": "ok"
+  },
+{
+}
+--- stderr ---

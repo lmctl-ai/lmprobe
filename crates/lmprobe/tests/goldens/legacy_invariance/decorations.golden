@@ -1,0 +1,6 @@
+exit: Some(0)
+--- stdout ---
+{"content":"@require_auth","file_path":"./app.py","kind":"decoration","lang":"Python","line_start":14,"name":"require_auth"}
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.decorations.v1","warnings":[]}
+
+--- stderr ---

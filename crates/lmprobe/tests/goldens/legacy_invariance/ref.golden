@@ -1,0 +1,7 @@
+exit: Some(0)
+--- stdout ---
+{"file_path":"./src/lib.rs","line_content":"pub fn helper(x: i32) -> i32 {","line_number":21}
+{"file_path":"./src/lib.rs","line_content":"helper(m.len() as i32)","line_number":28}
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.ref.v1","warnings":[]}
+
+--- stderr ---

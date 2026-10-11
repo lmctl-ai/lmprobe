@@ -1,0 +1,86 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "bare": false,
+    "detached": false,
+    "head": "2d4bb622428ecae127f77eec8e47fe7a37fe0342",
+    "head_name": "main",
+    "partial": false,
+    "repo": "<ROOT>/.git/",
+    "shallow": false,
+    "unborn": false,
+    "workdir": "<ROOT>/"
+  },
+  "payload": {
+    "columns": [
+      "mode",
+      "oid",
+      "path",
+      "stage"
+    ],
+    "rows": [
+      {
+        "mode": 33188,
+        "oid": "df09fc07d392a7ae64e1d559055af313213abcac",
+        "path": "app.py",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "c159f425c1ff370a8a66c5fcc0f7a0deefe241e1",
+        "path": "config.yaml",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "637ddddcce31be34d3f17af06ac69ecc6c76dafb",
+        "path": "flags.txt",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "f1e3e83d1587b224ef792b9668039ad7fbb4eb8a",
+        "path": "git_status/marker.txt",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "3b18e512dba79e4c8300dd08aeb37f8e728b8dad",
+        "path": "notes.txt",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "98ec5b385efbb7b7e19e2e46cee9782fb35a2857",
+        "path": "openapi.yaml",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "2b2dc743c1116d3098ec4afedb5dafe221951e85",
+        "path": "q.graphql",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "9eeaac71dad1e0b194be0b2622eccac0307b22fd",
+        "path": "rules.toml",
+        "stage": 0
+      },
+      {
+        "mode": 33188,
+        "oid": "7e2841bd26017eba83eeb731399fec9e92745ebd",
+        "path": "src/lib.rs",
+        "stage": 0
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.git_ls_files.v1",
+  "status": "ok"
+}
+
+--- stderr ---

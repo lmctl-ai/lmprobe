@@ -1,0 +1,150 @@
+exit: Some(0)
+--- stdout ---
+Structural code search, Git history, and runtime evidence.
+
+Usage: lmprobe [OPTIONS] <COMMAND>
+
+Commands:
+  aws                  Read-only AWS queries with JSON parameters and structured results
+  git                  Inspect common Git operations as parsed records
+  edit                 Preview text replacements and line edits; use --apply to write
+  discover             Find project roots and nested projects
+  search               Find declarations by name, kind, or AST pattern
+  def                  Find a symbol definition by exact name
+  ref                  Find identifier references to a symbol
+  list-kinds           List portable and parser-specific kinds for a language
+  callers              Find calls to a function or method
+  imports              Find imports of a module
+  decorations          Find uses of an annotation, decorator, or attribute
+  evolution            Show a symbol's changes through Git history
+  callees              Find functions or methods called by a symbol
+  supertypes           Find a type's parents or implemented interfaces
+  subtypes             Find subtypes or implementers of a type
+  overrides            Find declarations marked as overriding a method
+  exports              Find exports of a symbol
+  impact               Walk callers or callees to estimate change impact
+  pr-triage            Show GitHub pull request checks, reviews, and comments
+  context              Gather a symbol's definition, calls, imports, and history
+  history              Explore Git blame, commits, churn, and symbol history
+  trace                Inject logs, run a command, then restore source files
+  ast-diff             Compare declarations in a file between Git revisions
+  diff-context         Show changed Git lines with source or AST context
+  resource-sites       Find acquire/release anchors and local context
+  async-leaks          Find JS/TS teardown calls and await/return evidence
+  crypto-sites         Find Go crypto algorithm uses and nearby FIPS evidence
+  config-keys          Extract config keys and optional code references
+  secrets              Scan files or Git history for potential secrets
+  secrets-recipes      List or show credential sink query recipes
+  secrets-sources      List or show credential source query recipes
+  guard-sites          Find sensitive actions and nearby guard anchors
+  openapi-facts        Extract HTTP methods and paths from OpenAPI files
+  route-anchors        Find route declarations and literal HTTP paths
+  http-client-calls    Find HTTP client calls with literal URLs
+  fix                  Preview AST replacements; use --apply to write changes
+  grep                 Search file contents with a regular expression
+  find                 Find paths with modification time and size; optionally filter or act
+  delete               Preview deleting selected files from stdin; --force executes deletion
+  py-slice-candidates  Find Python slice/unsliced-variable forwarding suspects
+  callsites            Extract Python call arguments for a callee
+  serve                Start the optional GraphQL HTTP server
+  query                Run a GraphQL document or recipe in-process
+  help                 Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+
+Common options:
+      --exit-zero-on-no-match
+          Return exit 0 instead of 1 when no results match
+
+      --no-cache
+          Bypass history cache where supported
+
+      --workspace <WORKSPACE>
+          Read across repositories listed in a roots: YAML file; mutations refuse this mode
+
+  -l, --lang <LANG>
+          Force the parser language; use --type to filter files by extension
+
+  -G, --globs <GLOBS>
+          Include file globs (repeatable or comma-separated; prefix ! to exclude)
+
+      --exclude-glob <EXCLUDE_GLOBS>
+          Exclude file globs (repeatable or comma-separated)
+
+      --no-ignore
+          Include files excluded by .gitignore and .ignore
+
+      --no-default-excludes
+          Include dependency, build, VCS, and cache directories
+
+  -j, --threads <THREADS>
+          Worker thread count (default: num_cpus)
+
+  -A, --after <AFTER>
+          Lines after grep/ref hits; grep JSON includes structured context
+
+  -B, --before <BEFORE>
+          Lines before grep/ref hits; grep JSON includes structured context
+
+  -C, --context <CONTEXT>
+          Lines around grep/ref hits; grep JSON includes structured context
+
+  -q, --quiet
+          Suppress non-error stderr (warnings stay in the envelope)
+
+  -v, --verbose
+          Also print incidental and non-error JSON diagnostics to stderr
+
+      --limit <LIMIT>
+          Cap the primary result list; composite sub-lists may need their own limit
+
+      --max-filesize <MAX_FILESIZE>
+          Skip larger files (bytes); report FILE_TOO_LARGE
+          
+          [default: 5242880]
+
+  -i, --ignore-case
+          Case-insensitive matching for textual filters (grep, name)
+
+  -t, --type <TYPE>
+          Filter files by language extension without forcing a parser
+
+      --json
+          Emit one versioned program JSON result, including errors
+
+      --outfile <FILE>
+          Atomically write program JSON to this file; stdout is quiet on success
+
+      --infile <FILE>
+          Load a full GraphQL document (implies query and program JSON); - reads stdin
+          
+          [aliases: --intfile]
+
+      --format <FORMAT>
+          Output format (auto: markdown in a terminal, NDJSON when piped)
+
+          Possible values:
+          - auto:     Pick at runtime: TTY → markdown, pipe → ndjson
+          - markdown
+          - json
+          - ndjson:   Newline-delimited JSON: one item per line + a final summary
+          - sarif:    SARIF 2.1.0 — GitHub Advanced Security can ingest this directly
+          - github:   GitHub Actions annotations
+          - mermaid:  Mermaid graph (graph commands only)
+          - dot:      Graphviz DOT graph (graph commands only)
+
+Examples:
+  lmprobe search --name Parser .
+  lmprobe def --body handle_request src/
+  lmprobe grep 'TODO|FIXME' src/
+
+Run lmprobe <COMMAND> --help for options and an example.
+Most paths default to .; -l forces a parser, --type filters files.
+Use --format json for a single machine-readable envelope.
+
+--- stderr ---

@@ -1,0 +1,70 @@
+exit: Some(0)
+--- stdout ---
+{
+  "schema": "lmprobe.list_kinds.v1",
+  "rows": [
+    {
+      "portable": "function",
+      "kinds": [
+        "function_definition"
+      ]
+    },
+    {
+      "portable": "method",
+      "kinds": [
+        "function_definition"
+      ]
+    },
+    {
+      "portable": "class",
+      "kinds": [
+        "class_definition"
+      ]
+    },
+    {
+      "portable": "struct",
+      "kinds": []
+    },
+    {
+      "portable": "interface",
+      "kinds": []
+    },
+    {
+      "portable": "trait",
+      "kinds": []
+    },
+    {
+      "portable": "enum",
+      "kinds": []
+    },
+    {
+      "portable": "type_alias",
+      "kinds": []
+    },
+    {
+      "portable": "const",
+      "kinds": [
+        "assignment"
+      ]
+    },
+    {
+      "portable": "macro",
+      "kinds": []
+    },
+    {
+      "portable": "import",
+      "kinds": [
+        "import_statement",
+        "import_from_statement"
+      ]
+    },
+    {
+      "portable": "route",
+      "kinds": []
+    }
+  ],
+  "warnings": [],
+  "exit_status": "matched"
+}
+
+--- stderr ---

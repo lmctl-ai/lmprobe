@@ -1,0 +1,6 @@
+exit: Some(0)
+--- stdout ---
+"git_status/marker.txt"
+{"exit_status":"matched","files":[{"absolute_path":"<ROOT>/git_status/marker.txt","changed_at":"<TIME>","device":<N>,"file_type":"file","has_symlink_parent":false,"inode":<N>,"modified_at":"<TIME>","path":"git_status/marker.txt","size_bytes":18}],"kind":"summary","schema":"lmprobe.find.v1","warnings":[]}
+
+--- stderr ---

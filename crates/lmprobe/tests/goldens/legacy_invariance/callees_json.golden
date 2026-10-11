@@ -1,0 +1,48 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [
+      "content",
+      "file_path",
+      "kind",
+      "lang",
+      "line_start",
+      "name"
+    ],
+    "rows": [
+      {
+        "content": "HashMap::new()",
+        "file_path": "src/lib.rs",
+        "kind": "call_site",
+        "lang": "Rust",
+        "line_start": 27,
+        "name": "new"
+      },
+      {
+        "content": "helper(m.len() as i32)",
+        "file_path": "src/lib.rs",
+        "kind": "call_site",
+        "lang": "Rust",
+        "line_start": 28,
+        "name": "helper"
+      },
+      {
+        "content": "m.len()",
+        "file_path": "src/lib.rs",
+        "kind": "call_site",
+        "lang": "Rust",
+        "line_start": 28,
+        "name": "len"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.callees.v1",
+  "status": "ok"
+}
+
+--- stderr ---

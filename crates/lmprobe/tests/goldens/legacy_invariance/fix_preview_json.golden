@@ -1,0 +1,38 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {
+    "applied_files_count": 0,
+    "files_count": 1,
+    "matches_count": 1,
+    "mode": "dry_run"
+  },
+  "payload": {
+    "columns": [
+      "file_path",
+      "hunks",
+      "matches_count"
+    ],
+    "rows": [
+      {
+        "file_path": "./src/lib.rs",
+        "hunks": [
+          {
+            "after": "x + 1",
+            "before": "x.saturating_add(1)",
+            "line_count": 1,
+            "line_start": 23
+          }
+        ],
+        "matches_count": 1
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.fix.v1",
+  "status": "ok"
+}
+
+--- stderr ---

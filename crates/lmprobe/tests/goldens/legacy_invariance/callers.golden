@@ -1,0 +1,6 @@
+exit: Some(0)
+--- stdout ---
+{"content":"helper(m.len() as i32)","enclosing_decl":"run","enclosing_decl_kind":"function_item","file_path":"src/lib.rs","kind":"call_site","lang":"Rust","line_start":28,"name":"helper"}
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.callers.v1","warnings":[]}
+
+--- stderr ---

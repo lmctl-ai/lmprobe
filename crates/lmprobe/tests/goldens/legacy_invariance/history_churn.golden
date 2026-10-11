@@ -1,0 +1,66 @@
+exit: Some(0)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [
+      "commit_count",
+      "last_touched",
+      "path"
+    ],
+    "rows": [
+      {
+        "commit_count": 2,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "src/lib.rs"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "app.py"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "config.yaml"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "flags.txt"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "git_status/marker.txt"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "notes.txt"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "openapi.yaml"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "q.graphql"
+      },
+      {
+        "commit_count": 1,
+        "last_touched": "2026-01-02T03:04:05+00:00",
+        "path": "rules.toml"
+      }
+    ]
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.history_churn.v1",
+  "status": "ok"
+}
+
+--- stderr ---

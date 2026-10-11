@@ -10,8 +10,14 @@
 //! legacy `no_match` or `partial` is a successful result (exit 0) whose `status` says so.
 
 mod child;
+#[cfg(test)]
+mod coverage_tests;
+#[cfg(test)]
+mod error_tests;
 mod generate;
 mod overlay;
+#[cfg(test)]
+mod selfexec_tests;
 
 use generate::{Binding, OpPlan, Slot, ValueKind};
 use lmrust::server::{check_policy, CheckContext, CliError, CliSpec, ErrorCode, OpDef, Policy};

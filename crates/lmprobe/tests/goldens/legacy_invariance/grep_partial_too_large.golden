@@ -1,0 +1,32 @@
+exit: Some(3)
+--- stdout ---
+{
+  "diagnostics": [
+    {
+      "code": "FILE_TOO_LARGE",
+      "hint": null,
+      "lang": null,
+      "message": "skipped notes.txt (12 bytes > --max-filesize 8)"
+    }
+  ],
+  "metadata": {
+    "partial": true,
+    "scan_stats": {
+      "files_considered": 1,
+      "files_ignored": 0,
+      "files_scanned": 0,
+      "files_skipped": 1
+    }
+  },
+  "payload": {
+    "columns": [],
+    "rows": []
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.grep.v1",
+  "status": "partial"
+}
+
+--- stderr ---
+lmprobe: grep [FILE_TOO_LARGE]: skipped notes.txt (12 bytes > --max-filesize 8)

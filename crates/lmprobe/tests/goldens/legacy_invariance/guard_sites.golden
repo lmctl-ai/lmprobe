@@ -1,0 +1,9 @@
+exit: Some(0)
+--- stdout ---
+{"confidence":"local-evidence-only","decorations":[{"line_content":"@app.get(\"/users\")","line_number":13,"match_text":"@app.get(\"/users\")"},{"line_content":"@require_auth","line_number":14,"match_text":"auth"}],"file_path":"./app.py","nearby_guards":[],"sensitive":{"line_content":"    delete_user(1)","line_number":24,"match_text":"delete_user"}}
+{"confidence":"local-evidence-only","decorations":[],"file_path":"./app.py","nearby_guards":[],"sensitive":{"line_content":"def delete_user(i):","line_number":32,"match_text":"delete_user"}}
+{"exit_status":"matched","kind":"summary","scan_stats":{"anchors_found":2,"files_scanned":2,"guard_hits":0,"unsupported_files":3},"schema":"lmprobe.guard_sites.v1","warnings":[{"code":"LANGUAGE_UNSUPPORTED","hint":null,"lang":null,"message":"3 file(s) had a recognized non-code language and were not scanned by guard-sites"},{"code":"ANCHORS_WITHOUT_GUARD","hint":null,"lang":null,"message":"guard-sites found sensitive anchors but no nearby guard anchors for the supplied regex/window"}]}
+
+--- stderr ---
+lmprobe: guard_sites [LANGUAGE_UNSUPPORTED]: 3 file(s) had a recognized non-code language and were not scanned by guard-sites
+lmprobe: guard_sites [ANCHORS_WITHOUT_GUARD]: guard-sites found sensitive anchors but no nearby guard anchors for the supplied regex/window

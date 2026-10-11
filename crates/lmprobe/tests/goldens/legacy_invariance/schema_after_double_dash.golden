@@ -1,0 +1,25 @@
+exit: Some(0)
+--- stdout ---
+        "file_path": "./flags.txt",
+        "line_content": "--schema is just text here",
+        "line_number": 1
+      "file_path",
+      "line_content",
+      "line_number"
+      {
+      }
+    "columns": [
+    "rows": [
+    ]
+    ],
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.grep.v1",
+  "status": "ok"
+  },
+{
+}
+--- stderr ---

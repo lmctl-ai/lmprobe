@@ -1,0 +1,6 @@
+exit: Some(0)
+--- stdout ---
+{"exit_status":"matched","kind":"summary","schema":"lmprobe.grep.v1","warnings":[]}
+{"file_path":"./notes.txt","line_content":"hello world","line_number":1}
+{"file_path":"./q.graphql","line_content":"{ grep(pattern: \"hello\", path: \".\") { exitStatus } }","line_number":1}
+--- stderr ---

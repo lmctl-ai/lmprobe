@@ -1,0 +1,16 @@
+exit: Some(1)
+--- stdout ---
+{
+  "diagnostics": [],
+  "metadata": {},
+  "payload": {
+    "columns": [],
+    "rows": []
+  },
+  "payload_format": "rows",
+  "schema": "lmprobe.result.v1",
+  "source_schema": "lmprobe.supertypes.v1",
+  "status": "no_match"
+}
+
+--- stderr ---
