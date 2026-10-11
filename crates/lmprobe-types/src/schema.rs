@@ -103,6 +103,9 @@ pub struct EnclosingDecl {
 
 /// Engine-side child-resolver implementations that the
 /// `#[ComplexObject] impl SymbolHit` block delegates to.
+// async_trait's generated methods carry `#[must_use]` on boxed futures; clippy 1.99's
+// double_must_use flags that generated code, not anything written here.
+#[allow(clippy::double_must_use)]
 #[async_trait::async_trait]
 pub trait SymbolHitChildResolvers: Send + Sync {
   async fn callers(
