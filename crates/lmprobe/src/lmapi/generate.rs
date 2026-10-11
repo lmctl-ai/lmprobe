@@ -342,6 +342,7 @@ fn plan(root: &Command, overlay: &Overlay, op: &OverlayOp) -> Result<OpPlan, Str
   };
   let mut params: Vec<ParamSpec> = Vec::new();
   let mut bindings: Vec<Binding> = Vec::new();
+  let mut fixed_args = op.fixed_args.clone();
   // chain[0] is the root (its args are global and reappear on the leaf).
   for (depth, cmd) in chain.iter().enumerate().skip(1) {
     let level = depth - 1;
@@ -352,6 +353,14 @@ fn plan(root: &Command, overlay: &Overlay, op: &OverlayOp) -> Result<OpPlan, Str
     for arg in args {
       if arg.is_hide_set() || excluded(arg.get_id().as_str()) || (arg.is_global_set() && !is_leaf) {
         continue;
+      }
+      // A required on/off flag is a marker the legacy command always needs (`callsites
+      // --args`): a published boolean could only ever be `true`, so it is a fixed arg instead.
+      if is_leaf && arg.is_required_set() && matches!(arg.get_action(), ArgAction::SetTrue) {
+        if let Some(long) = arg.get_long() {
+          fixed_args.push(format!("--{long}"));
+          continue;
+        }
       }
       let Some((spec, binding)) = param_for(arg, level) else {
         continue;
@@ -389,7 +398,7 @@ fn plan(root: &Command, overlay: &Overlay, op: &OverlayOp) -> Result<OpPlan, Str
     dangerous: op.dangerous,
     schema,
     bindings,
-    fixed_args: op.fixed_args.clone(),
+    fixed_args,
     stdin_param: op.stdin_param.as_ref().map(|s| s.name.clone()),
   })
 }
@@ -477,6 +486,12 @@ mod tests {
                   .visible_alias("enable"),
               )
               .arg(Arg::new("secret").long("secret").hide(true))
+              .arg(
+                Arg::new("marker")
+                  .long("marker")
+                  .action(ArgAction::SetTrue)
+                  .required(true),
+              )
               .arg(Arg::new("target").required(true))
               .arg(Arg::new("rest").num_args(1..).last(true)),
           ),
@@ -524,6 +539,11 @@ mod tests {
       params.iter().all(|x| x["name"] != "secret"),
       "hidden args are not published"
     );
+    assert!(
+      params.iter().all(|x| x["name"] != "marker"),
+      "a required on/off flag is not a param"
+    );
+    assert_eq!(p.fixed_args, ["--marker"], "it is always passed instead");
     assert_eq!(doc["description"], "A leaf");
     assert_eq!(doc["returns"], "object");
     let rest = p.bindings.iter().find(|b| b.param == "rest").unwrap();

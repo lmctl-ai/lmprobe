@@ -3950,12 +3950,6 @@
       "description": "Extract Python call arguments for a callee",
       "params": [
         {
-          "name": "args",
-          "type": "boolean",
-          "occurs": "?",
-          "description": "Enable argument extraction. Required for this first command slice"
-        },
-        {
           "name": "around",
           "type": "number",
           "occurs": "?",
