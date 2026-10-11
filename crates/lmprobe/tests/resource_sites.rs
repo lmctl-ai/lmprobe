@@ -19,7 +19,11 @@ impl Drop for Fixture {
 fn fixture() -> Fixture {
   let suffix = std::time::SystemTime::now()
     .duration_since(std::time::UNIX_EPOCH)
-    .map(|d| d.as_nanos())
+    .map(|d| {
+      // Unique within the process: parallel tests can read the same clock value.
+      static N: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+      d.as_nanos() * 1024 + N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) as u128
+    })
     .unwrap_or(0);
   let root = std::env::temp_dir().join(format!(
     "lmprobe-resource-sites-{}-{suffix}",
@@ -489,7 +493,11 @@ fn resource_sites_reports_regex_parse_failures_in_envelope() {
 fn resource_sites_reports_rust_question_mark_evidence() {
   let suffix = std::time::SystemTime::now()
     .duration_since(std::time::UNIX_EPOCH)
-    .map(|d| d.as_nanos())
+    .map(|d| {
+      // Unique within the process: parallel tests can read the same clock value.
+      static N: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+      d.as_nanos() * 1024 + N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) as u128
+    })
     .unwrap_or(0);
   let root = std::env::temp_dir().join(format!(
     "lmprobe-resource-sites-rust-{}-{suffix}",

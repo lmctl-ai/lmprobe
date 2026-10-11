@@ -342,7 +342,11 @@ fn provision_dirty_repo() -> PathBuf {
     // don't collide.
     std::time::SystemTime::now()
       .duration_since(std::time::UNIX_EPOCH)
-      .map(|d| d.as_nanos())
+      .map(|d| {
+        // Unique within the process: parallel tests can read the same clock value.
+        static N: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        d.as_nanos() * 1024 + N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) as u128
+      })
       .unwrap_or(0)
   ));
   let _ = std::fs::remove_dir_all(&tmp);
@@ -454,7 +458,11 @@ fn surface_equality_layer_2_workspace_readonly_diagnostic_equivalence() {
     std::process::id(),
     std::time::SystemTime::now()
       .duration_since(std::time::UNIX_EPOCH)
-      .map(|d| d.as_nanos())
+      .map(|d| {
+        // Unique within the process: parallel tests can read the same clock value.
+        static N: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        d.as_nanos() * 1024 + N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) as u128
+      })
       .unwrap_or(0)
   ));
   let _ = std::fs::remove_dir_all(&tmp);

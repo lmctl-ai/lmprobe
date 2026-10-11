@@ -31,7 +31,11 @@ fn assert_grep_pattern_hint(stdout: &str, stderr: &str, exit: i32) {
 fn grep_line_number_flags_are_accepted_as_compatibility_noop() {
   let suffix = std::time::SystemTime::now()
     .duration_since(std::time::UNIX_EPOCH)
-    .map(|d| d.as_nanos())
+    .map(|d| {
+      // Unique within the process: parallel tests can read the same clock value.
+      static N: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+      d.as_nanos() * 1024 + N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) as u128
+    })
     .unwrap_or(0);
   let fixture = std::env::temp_dir().join(format!("lmprobe-grep-n-compat-{suffix}"));
   let _ = std::fs::remove_dir_all(&fixture);
