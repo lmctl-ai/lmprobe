@@ -8,8 +8,8 @@ once. The actual clap definitions and implementation take precedence if notes dr
 Update the matching file whenever command behavior/options change. The help
 coverage tests check that every command and option stays represented here.
 
-[lmapi mode](lmapi.md) documents the lmapi (LLM-era API) surface: `lmprobe --schema`, the
-published snake_case operations, mode detection, policy flags and error mapping.
+[lmcode host](lmcode.md) documents the native host contract, operation catalog, invocation
+manifest, dry behavior and result frames.
 
 | Command | Purpose |
 | --- | --- |

@@ -19,8 +19,8 @@ pitfalls. Keep the matching command file aligned when behavior or options change
 filesystem selection/traversal expressions and Git remote identity.
 [program-json.md](program-json.md) defines the program result contract,
 advanced expression-file input, and atomic outfile behavior.
-[commands/lmapi.md](commands/lmapi.md) documents lmapi mode: the published
-`cli.schema.v1` document, operation names, mode detection and its limitations.
+[commands/lmcode.md](commands/lmcode.md) documents the lmcode host contract, operation
+catalog, invocation manifest and terminal result frames.
 [current_status.md](current_status.md) records the public workspace's current
 verification and release state. [migration.md](migration.md) identifies the
 canonical checkout and local installation procedure.

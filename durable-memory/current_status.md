@@ -4,14 +4,15 @@ Last updated: 2026-10-11
 
 Canonical repository: [lmctl-ai/lmprobe](https://github.com/lmctl-ai/lmprobe).
 The source workspace, manual, tests and packaging all live in this public project.
-The source/package version is `0.43.0`; the lmapi SDK is pinned to `lmrust 0.1.2`.
+The source/package version is `0.43.0`; the lmprobe host uses a reviewed, full-SHA pin
+of the lmcode Rust SDK.
 Source and registry versions can differ until an explicit release is performed.
 
 ## Available capabilities
 
 Current command contracts cover structural/text search, symbol and call relations,
 history/cache queries, evidence scanners, preview-first changes, live text editing,
-parsed Git inspections, read-only AWS queries and lmapi mode. Start at the
+parsed Git inspections, read-only AWS queries and the lmcode operation host. Start at the
 [command index](commands/index.md). AWS remains an exact 41-operation allowlist;
 credential/token sources and pagination coverage require their existing guards.
 
@@ -37,7 +38,7 @@ Verification from the public checkout on 2026-10-11:
 - Two context smoke snapshots had stale import commit/time fields; only those
   history values were updated to the current public import, then the suite passed.
 - The local PATH installation was linked to the public checkout's release binary.
-  It reports `lmprobe 0.43.0 (commit 80f545e)`, parses its lmapi schema, and emits
+  It reports `lmprobe 0.43.0 (commit 80f545e)`, publishes its lmcode host schema, and emits
   the 41-operation read-only AWS catalog as structured JSON.
 - New memory links, the synthetic trace fixture and a public privacy scan passed.
   Independent review approved the sanitized documentation.

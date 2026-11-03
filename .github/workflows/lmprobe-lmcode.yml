@@ -1,0 +1,47 @@
+name: lmprobe-lmcode
+
+on:
+  pull_request:
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "crates/lmprobe/**"
+      - "crates/lmprobe-engine/**"
+      - "crates/lmprobe-types/**"
+      - "durable-memory/commands/lmcode.md"
+      - ".github/workflows/lmprobe-lmcode.yml"
+  push:
+    branches: [main]
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "crates/lmprobe/**"
+      - "crates/lmprobe-engine/**"
+      - "crates/lmprobe-types/**"
+      - "durable-memory/commands/lmcode.md"
+      - ".github/workflows/lmprobe-lmcode.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  lmcode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Install lmcode compiler locally
+        run: |
+          npm install --prefix "$RUNNER_TEMP/lmctl" --no-save --ignore-scripts @lmctl-ai/lmctl@0.2.456
+          echo "LMSCRIPT_BIN=$RUNNER_TEMP/lmctl/node_modules/.bin/lmscript" >> "$GITHUB_ENV"
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Check
+        run: cargo check -p lmprobe --locked
+      - name: Test lmprobe and engine
+        run: cargo test -p lmprobe -p lmprobe-engine --locked
+      - name: Clippy
+        run: cargo clippy -p lmprobe --locked --all-targets

@@ -66,26 +66,20 @@ lmprobe aws query --request-file request.json --outfile result.json
 The [AWS query reference](durable-memory/commands/aws-query.md) defines complex
 JSON parameters, pagination, output selection, and the supported operation catalog.
 
-## lmapi (LLM-era API)
+## lmcode host
 
-lmprobe is also a native [lmapi](https://github.com/lmctl-ai/lmapi) tool: `lmprobe --schema`
-publishes a `cli.schema.v1` contract, and published operations (snake_case names such as
-`git_status`, `grep_text`, `def_symbol`) run with lmapi JSON results, error envelopes and exit
-codes, plus `--readonly`, `--dryrun` and `--confirm` policy flags:
+lmprobe exposes its 63 operation library as an lmcode host. Inspect the host
+contract with `lmprobe --lmcode-schema --json` or print its function signatures
+with `lmprobe --lmcode-signatures`. Programs invoke `probe_<operation>` functions
+with one JSON string argument; use `json_parse` to turn the returned operation
+JSON into a structured lmcode value. The parameter catalog is
+[`crates/lmprobe/lmcode/operations.json`](crates/lmprobe/lmcode/operations.json).
 
-```bash
-lmprobe --schema
-lmprobe git_status --repo .
-lmprobe grep_text TODO --path src                         # flags form
-lmprobe grep_text --input-json '{"pattern": "TODO", "path": ["src"]}'   # JSON form
-lmprobe --input-json '{"op": "history_churn", "params": {"since": "30d"}}'
-lmprobe find_delete '\.log$' --force --confirm --dryrun   # preview a dangerous write
-```
-
-Only these lmapi-shaped invocations change; every existing command keeps its output and exit
-codes (`lmprobe grep ...` still exits 1 on no match, while `grep_text` returns
-`{"status": "no_match", ...}` with exit 0). The repo root carries `cli.schema.dev.json` and
-`cli.schema.latest.json`. Details: [lmapi mode](durable-memory/commands/lmapi.md).
+Run compiled programs with `lmprobe --lmcode program.bytecode`. Each invocation
+writes a terminal `LMCODE_RETURN` envelope. Invocation dry mode is handled by the
+lmcode runtime before operation callbacks, so dry runs do not launch the legacy
+CLI or touch its resources. Existing CLI commands retain their output and exit
+codes. See [lmcode host notes](crates/lmprobe/lmcode/README.md).
 
 ## Build from source
 
