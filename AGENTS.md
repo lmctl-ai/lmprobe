@@ -10,7 +10,7 @@ Start at [durable-memory/commands/index.md](durable-memory/commands/index.md) fo
 |---|---|---|
 | qa1 test corpus | `$LMPROBE_QA_CORPUS` (`<lang>/<repo>` clones) | 29-language corpus for `crates/lmprobe/tests/deep.rs`, corpus smoke cases and `history_perf`. Tests skip when unset or absent. |
 | gitleaks checkout | `$LMPROBE_GITLEAKS_REPO` (built binary at `<repo>/gitleaks`) | Parity tests in `crates/lmprobe-secrets/tests/gitleaks_parity.rs`; skipped when unset. |
-| lmapi | [`lmctl-ai/lmapi`](https://github.com/lmctl-ai/lmapi), via the [`lmrust`](https://github.com/lmctl-ai/lmrust) SDK | The `cli.schema.v1` contract behind lmprobe's lmapi mode. |
+| lmcode Rust SDK | [`lmctl-ai/lmcode-rust`](https://github.com/lmctl-ai/lmcode-rust), pinned by full SHA in `crates/lmprobe/Cargo.toml` | The native lmprobe host protocol and invocation runtime. Host contracts live under `crates/lmprobe/lmcode/`. |
 | Manual site | `site/` in this repo, published at https://lmctl.com/lmprobe | Deployed by the lmctl website repository; only `site/` plus `LICENSE`/`ATTRIBUTION.md` are uploaded. |
 
 ## Invariants and surprises that have bitten people
