@@ -48,12 +48,16 @@ mod aws_policy;
 mod cli;
 mod edit_command;
 mod git_command;
-mod lmapi;
+mod lmcode;
 mod output;
 mod program_output;
 mod text_edit;
 mod workspace;
 
 fn main() -> error::Result<()> {
+  let args: Vec<std::ffi::OsString> = std::env::args_os().skip(1).collect();
+  if let Some(code) = lmcode::maybe_run(&args) {
+    std::process::exit(code);
+  }
   cli::run()
 }

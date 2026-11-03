@@ -1,0 +1,510 @@
+{
+  "dsl.schema": 2,
+  "name": "lmprobe_host_v1",
+  "functions": {
+    "probe_ast_diff": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_async_leaks": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_aws_catalog": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_aws_query": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_callees_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_callers_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_callsite_args": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_config_keys": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_context_bundle": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_crypto_sites": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_decorations_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_def_symbol": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_delete_paths": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_diff_context": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_discover_projects": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_edit_preview": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_edit_text": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_evolution_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_exports_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_find_delete": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_find_paths": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_fix_ast": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_fix_preview": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_blame": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_branch": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_diff": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_log": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_ls_files": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_remote": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_rev_parse": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_show": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_git_status": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_grep_text": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_guard_sites": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_blame": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_churn": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_co_change": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_commit": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_diff": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_evolution": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_introduced": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_history_todos": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_http_client_calls": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_impact_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_imports_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_list_kinds": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_openapi_facts": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_overrides_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_pr_triage": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_py_slice_candidates": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_query_graphql": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_ref_symbol": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_resource_sites": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_route_anchors": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_search_symbols": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_secrets_recipes_list": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_secrets_recipes_show": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_secrets_scan": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_secrets_sources_list": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_secrets_sources_show": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_subtypes_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_supertypes_of": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ],
+    "probe_trace_exec": [
+      {
+        "params": [
+          "string"
+        ],
+        "returns": "string"
+      }
+    ]
+  }
+}

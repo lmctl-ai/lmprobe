@@ -1,110 +1,11 @@
 {
-  "schema": "cli.schema.v1",
+  "lmprobe.operations": 1,
   "tool": "lmprobe",
-  "version": "0.43.0",
-  "policy": {
-    "dryrun": true,
-    "readonly": true
-  },
-  "inputs": [
-    "flags",
-    "json"
-  ],
-  "globals": [
-    {
-      "name": "dryrun",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "Simulate write operations",
-      "aliases": [
-        "dry-run"
-      ]
-    },
-    {
-      "name": "readonly",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "Refuse to run write operations",
-      "aliases": [
-        "read-only"
-      ]
-    },
-    {
-      "name": "confirm",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "Confirm dangerous operations",
-      "aliases": [
-        "i-understand"
-      ]
-    },
-    {
-      "name": "json",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "Output as JSON"
-    },
-    {
-      "name": "help",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "Show help",
-      "aliases": [
-        "h"
-      ]
-    },
-    {
-      "name": "list",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "List operations as JSON"
-    },
-    {
-      "name": "schema",
-      "type": "boolean",
-      "occurs": "?",
-      "description": "Print schema document"
-    },
-    {
-      "name": "explain",
-      "type": "string",
-      "occurs": "?",
-      "description": "Explain an operation"
-    },
-    {
-      "name": "input-json",
-      "type": "string",
-      "occurs": "?",
-      "description": "JSON document input",
-      "aliases": [
-        "inputJson"
-      ]
-    },
-    {
-      "name": "input-graphql",
-      "type": "string",
-      "occurs": "?",
-      "description": "GraphQL document input",
-      "aliases": [
-        "inputGraphql"
-      ]
-    },
-    {
-      "name": "input-file",
-      "type": "string",
-      "occurs": "?",
-      "description": "Path to file containing JSON document input",
-      "aliases": [
-        "inputFile"
-      ]
-    }
-  ],
   "operations": [
     {
       "name": "discover_projects",
-      "access": "read",
-      "returns": "object",
       "description": "Find project roots and nested projects",
+      "access": "read",
       "params": [
         {
           "name": "tree",
@@ -221,13 +122,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_discover_projects",
+      "dangerous": false
     },
     {
       "name": "search_symbols",
-      "access": "read",
-      "returns": "object",
       "description": "Find declarations by name, kind, or AST pattern",
+      "access": "read",
       "params": [
         {
           "name": "path",
@@ -444,13 +347,15 @@
           "positional": true,
           "description": "Deprecated positional query; prefer --name or -p"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_search_symbols",
+      "dangerous": false
     },
     {
       "name": "def_symbol",
-      "access": "read",
-      "returns": "object",
       "description": "Find a symbol definition by exact name",
+      "access": "read",
       "params": [
         {
           "name": "regex",
@@ -596,13 +501,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_def_symbol",
+      "dangerous": false
     },
     {
       "name": "ref_symbol",
-      "access": "read",
-      "returns": "object",
       "description": "Find identifier references to a symbol",
+      "access": "read",
       "params": [
         {
           "name": "scope",
@@ -763,13 +670,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_ref_symbol",
+      "dangerous": false
     },
     {
       "name": "list_kinds",
-      "access": "read",
-      "returns": "object",
       "description": "List portable and parser-specific kinds for a language",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -859,13 +768,15 @@
           "positional": true,
           "description": "Parser language (rust, python, etc.)"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_list_kinds",
+      "dangerous": false
     },
     {
       "name": "callers_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find calls to a function or method",
+      "access": "read",
       "params": [
         {
           "name": "testsOnly",
@@ -976,13 +887,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_callers_of",
+      "dangerous": false
     },
     {
       "name": "imports_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find imports of a module",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1087,13 +1000,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_imports_of",
+      "dangerous": false
     },
     {
       "name": "decorations_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find uses of an annotation, decorator, or attribute",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1198,13 +1113,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_decorations_of",
+      "dangerous": false
     },
     {
       "name": "evolution_of",
-      "access": "read",
-      "returns": "object",
       "description": "Show a symbol's changes through Git history",
+      "access": "read",
       "params": [
         {
           "name": "force",
@@ -1321,13 +1238,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_evolution_of",
+      "dangerous": false
     },
     {
       "name": "callees_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find functions or methods called by a symbol",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1432,13 +1351,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_callees_of",
+      "dangerous": false
     },
     {
       "name": "supertypes_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find a type's parents or implemented interfaces",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1543,13 +1464,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_supertypes_of",
+      "dangerous": false
     },
     {
       "name": "subtypes_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find subtypes or implementers of a type",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1654,13 +1577,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_subtypes_of",
+      "dangerous": false
     },
     {
       "name": "overrides_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find declarations marked as overriding a method",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1765,13 +1690,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_overrides_of",
+      "dangerous": false
     },
     {
       "name": "exports_of",
-      "access": "read",
-      "returns": "object",
       "description": "Find exports of a symbol",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -1876,13 +1803,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_exports_of",
+      "dangerous": false
     },
     {
       "name": "impact_of",
-      "access": "read",
-      "returns": "object",
       "description": "Walk callers or callees to estimate change impact",
+      "access": "read",
       "params": [
         {
           "name": "direction",
@@ -2017,13 +1946,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_impact_of",
+      "dangerous": false
     },
     {
       "name": "pr_triage",
-      "access": "read",
-      "returns": "object",
       "description": "Show GitHub pull request checks, reviews, and comments",
+      "access": "read",
       "params": [
         {
           "name": "since",
@@ -2139,13 +2070,15 @@
           "positional": true,
           "description": "GitHub pull request URL: https://github.com/<owner>/<repo>/pull/<number>"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_pr_triage",
+      "dangerous": false
     },
     {
       "name": "context_bundle",
-      "access": "read",
-      "returns": "object",
       "description": "Gather a symbol's definition, calls, imports, and history",
+      "access": "read",
       "params": [
         {
           "name": "def",
@@ -2299,13 +2232,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_context_bundle",
+      "dangerous": false
     },
     {
       "name": "ast_diff",
-      "access": "read",
-      "returns": "object",
       "description": "Compare declarations in a file between Git revisions",
+      "access": "read",
       "params": [
         {
           "name": "from",
@@ -2416,13 +2351,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_ast_diff",
+      "dangerous": false
     },
     {
       "name": "diff_context",
-      "access": "read",
-      "returns": "object",
       "description": "Show changed Git lines with source or AST context",
+      "access": "read",
       "params": [
         {
           "name": "from",
@@ -2552,13 +2489,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_diff_context",
+      "dangerous": false
     },
     {
       "name": "resource_sites",
-      "access": "read",
-      "returns": "object",
       "description": "Find acquire/release anchors and local context",
+      "access": "read",
       "params": [
         {
           "name": "acquire",
@@ -2686,13 +2625,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_resource_sites",
+      "dangerous": false
     },
     {
       "name": "async_leaks",
-      "access": "read",
-      "returns": "object",
       "description": "Find JS/TS teardown calls and await/return evidence",
+      "access": "read",
       "params": [
         {
           "name": "call",
@@ -2815,13 +2756,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_async_leaks",
+      "dangerous": false
     },
     {
       "name": "crypto_sites",
-      "access": "read",
-      "returns": "object",
       "description": "Find Go crypto algorithm uses and nearby FIPS evidence",
+      "access": "read",
       "params": [
         {
           "name": "algorithm",
@@ -2950,13 +2893,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_crypto_sites",
+      "dangerous": false
     },
     {
       "name": "config_keys",
-      "access": "read",
-      "returns": "object",
       "description": "Extract config keys and optional code references",
+      "access": "read",
       "params": [
         {
           "name": "key",
@@ -3085,13 +3030,15 @@
           "positional": true,
           "items": "string"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_config_keys",
+      "dangerous": false
     },
     {
       "name": "secrets_scan",
-      "access": "read",
-      "returns": "object",
       "description": "Scan files or Git history for potential secrets",
+      "access": "read",
       "params": [
         {
           "name": "config",
@@ -3255,13 +3202,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_secrets_scan",
+      "dangerous": false
     },
     {
       "name": "secrets_recipes_list",
-      "access": "read",
-      "returns": "object",
       "description": "List credential sink recipes",
+      "access": "read",
       "params": [
         {
           "name": "provider",
@@ -3275,13 +3224,15 @@
           "occurs": "?",
           "description": "Limit rows to a language such as `python`, `javascript`, `go`, or `java`"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_secrets_recipes_list",
+      "dangerous": false
     },
     {
       "name": "secrets_recipes_show",
-      "access": "read",
-      "returns": "object",
       "description": "Show a generated credential sink GraphQL recipe",
+      "access": "read",
       "params": [
         {
           "name": "key",
@@ -3290,13 +3241,15 @@
           "positional": true,
           "description": "Recipe key: <provider>/<language>[/<sdk>]"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_secrets_recipes_show",
+      "dangerous": false
     },
     {
       "name": "secrets_sources_list",
-      "access": "read",
-      "returns": "object",
       "description": "List credential source recipes",
+      "access": "read",
       "params": [
         {
           "name": "source",
@@ -3322,13 +3275,15 @@
           "occurs": "?",
           "description": "Limit rows to a provider id such as `aws`, `stripe`, or `github`"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_secrets_sources_list",
+      "dangerous": false
     },
     {
       "name": "secrets_sources_show",
-      "access": "read",
-      "returns": "object",
       "description": "Show a generated credential source GraphQL recipe",
+      "access": "read",
       "params": [
         {
           "name": "key",
@@ -3337,13 +3292,15 @@
           "positional": true,
           "description": "Recipe key: <source>/<language>[/<sdk>]"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_secrets_sources_show",
+      "dangerous": false
     },
     {
       "name": "guard_sites",
-      "access": "read",
-      "returns": "object",
       "description": "Find sensitive actions and nearby guard anchors",
+      "access": "read",
       "params": [
         {
           "name": "sensitive",
@@ -3471,13 +3428,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_guard_sites",
+      "dangerous": false
     },
     {
       "name": "openapi_facts",
-      "access": "read",
-      "returns": "object",
       "description": "Extract HTTP methods and paths from OpenAPI files",
+      "access": "read",
       "params": [
         {
           "name": "noCache",
@@ -3575,13 +3534,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_openapi_facts",
+      "dangerous": false
     },
     {
       "name": "route_anchors",
-      "access": "read",
-      "returns": "object",
       "description": "Find route declarations and literal HTTP paths",
+      "access": "read",
       "params": [
         {
           "name": "framework",
@@ -3707,13 +3668,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_route_anchors",
+      "dangerous": false
     },
     {
       "name": "http_client_calls",
-      "access": "read",
-      "returns": "object",
       "description": "Find HTTP client calls with literal URLs",
+      "access": "read",
       "params": [
         {
           "name": "around",
@@ -3829,13 +3792,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_http_client_calls",
+      "dangerous": false
     },
     {
       "name": "py_slice_candidates",
-      "access": "read",
-      "returns": "object",
       "description": "Find Python slice/unsliced-variable forwarding suspects",
+      "access": "read",
       "params": [
         {
           "name": "tracePlan",
@@ -3941,13 +3906,15 @@
           "items": "string",
           "description": "Required Python files or directories; use . to scan the current directory"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_py_slice_candidates",
+      "dangerous": false
     },
     {
       "name": "callsite_args",
-      "access": "read",
-      "returns": "object",
       "description": "Extract Python call arguments for a callee",
+      "access": "read",
       "params": [
         {
           "name": "around",
@@ -4058,13 +4025,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_callsite_args",
+      "dangerous": false
     },
     {
       "name": "grep_text",
-      "access": "read",
-      "returns": "object",
       "description": "Search file contents with a regular expression",
+      "access": "read",
       "params": [
         {
           "name": "path",
@@ -4235,13 +4204,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_grep_text",
+      "dangerous": false
     },
     {
       "name": "find_paths",
-      "access": "read",
-      "returns": "object",
       "description": "Find paths with modification time and size (display only)",
+      "access": "read",
       "params": [
         {
           "name": "path",
@@ -4388,13 +4359,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_find_paths",
+      "dangerous": false
     },
     {
       "name": "git_status",
-      "access": "read",
-      "returns": "object",
       "description": "Show staged and worktree changes",
+      "access": "read",
       "params": [
         {
           "name": "ignored",
@@ -4408,13 +4381,15 @@
           "default": ".",
           "description": "Repository or a path inside a repository"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_status",
+      "dangerous": false
     },
     {
       "name": "git_diff",
-      "access": "read",
-      "returns": "object",
       "description": "Show a structured patch and file statistics",
+      "access": "read",
       "params": [
         {
           "name": "staged",
@@ -4449,13 +4424,15 @@
           "occurs": "?",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_diff",
+      "dangerous": false
     },
     {
       "name": "git_log",
-      "access": "read",
-      "returns": "object",
       "description": "List commits newest first",
+      "access": "read",
       "params": [
         {
           "name": "maxCount",
@@ -4477,13 +4454,15 @@
           "default": "HEAD",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_log",
+      "dangerous": false
     },
     {
       "name": "git_show",
-      "access": "read",
-      "returns": "object",
       "description": "Show a commit, or a file from its tree",
+      "access": "read",
       "params": [
         {
           "name": "file",
@@ -4504,13 +4483,15 @@
           "default": "HEAD",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_show",
+      "dangerous": false
     },
     {
       "name": "git_branch",
-      "access": "read",
-      "returns": "object",
       "description": "List local branches and their upstream state",
+      "access": "read",
       "params": [
         {
           "name": "all",
@@ -4524,13 +4505,15 @@
           "default": ".",
           "description": "Repository or a path inside a repository"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_branch",
+      "dangerous": false
     },
     {
       "name": "git_remote",
-      "access": "read",
-      "returns": "object",
       "description": "List configured remotes with redacted URLs",
+      "access": "read",
       "params": [
         {
           "name": "repo",
@@ -4539,13 +4522,15 @@
           "default": ".",
           "description": "Repository or a path inside a repository"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_remote",
+      "dangerous": false
     },
     {
       "name": "git_rev_parse",
-      "access": "read",
-      "returns": "object",
       "description": "Resolve a revision and optionally peel it to a commit",
+      "access": "read",
       "params": [
         {
           "name": "repo",
@@ -4561,13 +4546,15 @@
           "default": "HEAD",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_rev_parse",
+      "dangerous": false
     },
     {
       "name": "git_ls_files",
-      "access": "read",
-      "returns": "object",
       "description": "List index entries, optionally limited to paths",
+      "access": "read",
       "params": [
         {
           "name": "path",
@@ -4582,13 +4569,15 @@
           "default": ".",
           "description": "Repository or a path inside a repository"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_ls_files",
+      "dangerous": false
     },
     {
       "name": "git_blame",
-      "access": "read",
-      "returns": "object",
       "description": "Attribute lines to commits",
+      "access": "read",
       "params": [
         {
           "name": "revision",
@@ -4609,13 +4598,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_git_blame",
+      "dangerous": false
     },
     {
       "name": "history_blame",
-      "access": "read",
-      "returns": "object",
       "description": "Show logic-changing commits for a symbol or source line",
+      "access": "read",
       "params": [
         {
           "name": "around",
@@ -4739,13 +4730,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_blame",
+      "dangerous": false
     },
     {
       "name": "history_introduced",
-      "access": "read",
-      "returns": "object",
       "description": "Find the first AST appearance of a symbol",
+      "access": "read",
       "params": [
         {
           "name": "lang",
@@ -4856,13 +4849,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_introduced",
+      "dangerous": false
     },
     {
       "name": "history_commit",
-      "access": "read",
-      "returns": "object",
       "description": "Find commits by message or code pattern",
+      "access": "read",
       "params": [
         {
           "name": "pattern",
@@ -4982,13 +4977,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_commit",
+      "dangerous": false
     },
     {
       "name": "history_diff",
-      "access": "read",
-      "returns": "object",
       "description": "Find historical code changes matching an AST pattern",
+      "access": "read",
       "params": [
         {
           "name": "pattern",
@@ -5102,13 +5099,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_diff",
+      "dangerous": false
     },
     {
       "name": "history_churn",
-      "access": "read",
-      "returns": "object",
       "description": "Rank files by commit count in a time window",
+      "access": "read",
       "params": [
         {
           "name": "top",
@@ -5220,13 +5219,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_churn",
+      "dangerous": false
     },
     {
       "name": "history_co_change",
-      "access": "read",
-      "returns": "object",
       "description": "Rank files that often change with a given file",
+      "access": "read",
       "params": [
         {
           "name": "since",
@@ -5349,13 +5350,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_co_change",
+      "dangerous": false
     },
     {
       "name": "history_todos",
-      "access": "read",
-      "returns": "object",
       "description": "Find TODO/FIXME/XXX/HACK markers added in history",
+      "access": "read",
       "params": [
         {
           "name": "since",
@@ -5460,13 +5463,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_todos",
+      "dangerous": false
     },
     {
       "name": "history_evolution",
-      "access": "read",
-      "returns": "object",
       "description": "Show a symbol's changes through Git history",
+      "access": "read",
       "params": [
         {
           "name": "force",
@@ -5583,20 +5588,24 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_history_evolution",
+      "dangerous": false
     },
     {
       "name": "aws_catalog",
-      "access": "read",
-      "returns": "object",
       "description": "List the exact supported read-only operations; makes no AWS calls",
-      "params": []
+      "access": "read",
+      "params": [],
+      "return_type": "Json",
+      "host_function": "probe_aws_catalog",
+      "dangerous": false
     },
     {
       "name": "aws_query",
-      "access": "read",
-      "returns": "object",
       "description": "Query an allowlisted AWS API using JSON parameters or a request file",
+      "access": "read",
       "params": [
         {
           "name": "params",
@@ -5672,13 +5681,15 @@
           "positional": true,
           "description": "Exact AWS CLI operation name, such as describe-instances"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_aws_query",
+      "dangerous": false
     },
     {
       "name": "edit_preview",
-      "access": "read",
-      "returns": "object",
       "description": "Preview text replacements and line edits (writes nothing)",
+      "access": "read",
       "params": [
         {
           "name": "pattern",
@@ -5868,13 +5879,15 @@
           "items": "string",
           "description": "Explicit existing UTF-8 files; directories and symlinks are refused"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_edit_preview",
+      "dangerous": false
     },
     {
       "name": "edit_text",
-      "access": "write",
-      "returns": "object",
       "description": "Apply text replacements and line edits",
+      "access": "write",
       "params": [
         {
           "name": "pattern",
@@ -6064,13 +6077,15 @@
           "items": "string",
           "description": "Explicit existing UTF-8 files; directories and symlinks are refused"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_edit_text",
+      "dangerous": true
     },
     {
       "name": "fix_preview",
-      "access": "read",
-      "returns": "object",
       "description": "Preview AST replacements (writes nothing)",
+      "access": "read",
       "params": [
         {
           "name": "pattern",
@@ -6193,13 +6208,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_fix_preview",
+      "dangerous": false
     },
     {
       "name": "fix_ast",
-      "access": "write",
-      "returns": "object",
       "description": "Apply AST replacements via an audited worktree patch",
+      "access": "write",
       "params": [
         {
           "name": "pattern",
@@ -6322,13 +6339,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_fix_ast",
+      "dangerous": true
     },
     {
       "name": "find_delete",
-      "access": "write",
-      "returns": "object",
       "description": "Delete the files find selects; previews unless force is set",
+      "access": "write",
       "params": [
         {
           "name": "path",
@@ -6481,13 +6500,15 @@
           "occurs": "1",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_find_delete",
+      "dangerous": true
     },
     {
       "name": "delete_paths",
-      "access": "write",
-      "returns": "object",
       "description": "Delete the given files; previews unless force is set",
+      "access": "write",
       "params": [
         {
           "name": "force",
@@ -6610,13 +6631,15 @@
           "items": "string",
           "description": "Paths to delete (one per entry)"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_delete_paths",
+      "dangerous": true
     },
     {
       "name": "trace_exec",
-      "access": "write",
-      "returns": "object",
       "description": "Inject logs, run a command, then restore source files",
+      "access": "write",
       "params": [
         {
           "name": "exec",
@@ -6789,13 +6812,15 @@
           "default": ".",
           "positional": true
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_trace_exec",
+      "dangerous": true
     },
     {
       "name": "query_graphql",
-      "access": "dynamic",
-      "returns": "object",
       "description": "Run a GraphQL document or recipe in-process",
+      "access": "dynamic",
       "params": [
         {
           "name": "recipe",
@@ -6925,7 +6950,10 @@
           "positional": true,
           "description": "GraphQL query source. Use `-` for stdin or `@path` for a file"
         }
-      ]
+      ],
+      "return_type": "Json",
+      "host_function": "probe_query_graphql",
+      "dangerous": false
     }
   ]
 }

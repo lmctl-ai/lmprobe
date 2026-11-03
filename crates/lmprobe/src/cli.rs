@@ -2134,17 +2134,12 @@ fn protect_git_output_inner(root: &Path) -> Result<()> {
   crate::program_output::protect(inputs).map_err(|error| crate::error::anyhow!(error))
 }
 
-/// The clap command tree (the lmapi schema generator walks it).
+/// The clap command tree, also used to verify the operation catalog mappings.
 pub(crate) fn command() -> clap::Command {
   Cli::command()
 }
 
 pub fn run() -> Result<()> {
-  // lmapi mode (lmapi protocol 6.1): only lmapi-shaped argv; everything else is unchanged.
-  let lmapi_args: Vec<OsString> = std::env::args_os().skip(1).collect();
-  if let Some(code) = crate::lmapi::maybe_run(&lmapi_args) {
-    process::exit(code);
-  }
   let args = normalize_invocation(std::env::args_os().collect());
   let (requested, outfile, infile, command) = invocation_options(&args);
   crate::program_output::enable(requested);

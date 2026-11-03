@@ -5,34 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
-- lmapi mode (lmapi protocol 6.1, via the lmrust SDK): `lmprobe --schema` publishes a
-  `cli.schema.v1` document generated from the clap tree plus `crates/lmprobe/lmapi/overlay.toml`;
-  63 snake_case operations (`git_status`, `grep_text`, `def_symbol`, `edit_text`, ...) run with
-  flags or `--input-json` input, `--readonly`/`--dryrun`/`--confirm` policy, lmapi envelopes and
-  exit codes (no_match/partial exit 0 with the status in the result). Legacy invocations are
-  unchanged. Repo root `cli.schema.dev.json`/`cli.schema.latest.json` channel files. Depends on
-  lmrust v0.1.1 with `default-features = false` so legacy JSON keeps its sorted key order.
-- `grep --inside-kind <kind,...>` filters text hits by parsed AST ancestor
-  kinds, enabling one-shot containment scans such as DAO reads inside Java
-  loop nodes. Filtered-empty results now report `no_match`.
-- `list-kinds` now accepts the global `-l/--lang` option when the positional
-  language argument is omitted.
-- `search --body` is accepted for symbol search parity with `def --body`.
-  `search` already returns full declaration content by default; the flag makes
-  agent recipes explicit without changing the envelope shape.
-- GraphQL `find` and `grep` now accept `paths: [String!]` for multi-root scans,
-  matching the CLI's repeated `--path` support.
-- GraphQL `grepDirsWith(markerPattern, pattern, path, paths)` adds an
-  in-process marker-directory AND content pipe for recipes such as
-  "packages with `package.json` containing `login`".
-- `secrets`, `secrets-recipes`, and `secrets-sources` CLI surfaces are now
-  reflected in the smoke help goldens, along with `query --recipe` and
-  `query --all-shapes`.
-- `.github/workflows/release-binaries.yml` builds native release artifacts for
-  Linux x86_64/aarch64, macOS Intel/ARM, and Windows x64, plus `SHA256SUMS`.
-- A dependency-free static manual site under `site/` documents install,
-  search, GraphQL composition, history, safe mutation, secrets, and scenario
-  recipes.
+- Native lmcode host for all 63 operation-library entries. The host publishes
+  `--lmcode-schema` and `--lmcode-signatures`, runs compiled programs with the
+  terminal `LMCODE_RETURN` protocol, and honors invocation-manifest dry mode
+  before operation callbacks. The Rust SDK is pinned by reviewed full commit SHA.
+
+### Removed
+- Legacy lmapi entry points, schema channel files, and the `lmrust` dependency.
+  Existing lmprobe CLI commands and their output/exit behavior remain unchanged.
 
 ### Changed
 - Internal project documentation moved from `docs/` to `durable-memory/`;

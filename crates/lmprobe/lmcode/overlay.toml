@@ -1,29 +1,29 @@
-# lmapi overlay for `lmprobe --schema` (cli.schema.v1).
+# lmprobe operation catalog overlay; the lmcode host schema is `crates/lmprobe/lmcode/host.schema.json`.
 #
 # The operation schemas are GENERATED from the clap command tree (flags, shorts, aliases,
 # occurrence, defaults, value enums, positionals, help text). This file adds what clap cannot
-# say: the published lmapi name of each operation, its access, whether it is dangerous
+# say: the lmcode wrapper name of each operation, its access, whether it is dangerous
 # (requires --confirm), and parameters to leave out or fix.
 #
-# Rules (enforced by tests in src/lmapi):
+# Rules (enforced by lmprobe operation-catalog tests):
 # - every clap leaf command is either published by at least one [[op]] or listed in `excluded`;
 # - every [[op]] has `access` (a missing access is an error, never read-only);
 # - published names never equal a legacy subcommand name, so legacy argv such as
-#   `lmprobe def X` keeps the legacy parser (lmapi protocol 6.1): single-word commands get a
+#   `lmprobe def X` keeps the legacy parser (legacy CLI): single-word commands get a
 #   distinct name (def -> def_symbol, grep -> grep_text, ...);
 # - `exclude_params` lists clap arg ids (snake_case) that are not published for that op.
 
 # Commands that are never published.
 excluded = ["serve", "help"]
 
-# Args owned by the legacy output path; never lmapi params.
+# Args owned by the legacy CLI output path; they are not operation parameters.
 exclude_params = [
   "json",
   "outfile",
   "infile",
   "format",
   "exit_zero_on_no_match",
-  # Only change stderr diagnostics; lmapi mode never returns the child's stderr.
+  # Only change stderr diagnostics; lmcode host callbacks return the child's structured result; stderr is not relayed.
   "quiet",
   "verbose",
 ]

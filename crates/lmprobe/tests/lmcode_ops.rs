@@ -1,10 +1,9 @@
-//! Every published lmapi operation runs end to end against a small offline fixture and returns a
-//! `lmprobe.result.v1` document (or, for operations that need a network tool, a structured
-//! envelope). AWS operations run against an `aws` stub on PATH.
+//! Every lmprobe operation runs through the lmcode host against an offline fixture. AWS
+//! operations use an `aws` stub on PATH.
 
-mod lmapi_support;
+mod lmprobe_support;
 
-use lmapi_support::*;
+use lmprobe_support::*;
 use serde_json::{json, Value};
 use std::collections::BTreeSet;
 use std::fs;
@@ -14,7 +13,7 @@ use std::path::Path;
 enum Mode {
   /// Read op on the shared fixture.
   Read,
-  /// Write op on a fresh fixture, with `--confirm`.
+  /// Write op on a fresh fixture, with `confirm: true` in the parameter object.
   Write,
   /// Needs a network tool; offline it must fail with this standard code and tool_code.
   Offline(&'static str, &'static str),
@@ -185,14 +184,18 @@ fn table() -> Vec<(&'static str, Value, Mode)> {
 }
 
 fn published_ops() -> BTreeSet<String> {
-  let out = lm(&["--list"], Path::new(env!("CARGO_MANIFEST_DIR")));
+  let out = run_bin(
+    &bin(),
+    &["--lmcode-schema", "--json"],
+    Path::new(env!("CARGO_MANIFEST_DIR")),
+    Opts::default(),
+  );
   assert_eq!(out.code(), 0);
-  out
-    .json()
-    .as_array()
+  out.json()["functions"]
+    .as_object()
     .unwrap()
-    .iter()
-    .map(|o| o["name"].as_str().unwrap().to_string())
+    .keys()
+    .map(|name| name.strip_prefix("probe_").unwrap().to_string())
     .collect()
 }
 
@@ -205,14 +208,24 @@ fn the_table_covers_every_published_operation_exactly_once() {
 }
 
 fn check_result(op: &str, out: &Run, mode: Mode) {
-  let doc = out.json();
+  let envelope = out.json();
   match mode {
     Offline(code, tool) => {
-      assert_eq!(doc["error"]["code"], code, "{op}: {doc}");
-      assert_eq!(doc["error"]["data"]["tool_code"], tool, "{op}: {doc}");
+      assert_eq!(envelope["ok"], false, "{op}: {envelope}");
+      assert!(
+        envelope["code"].as_str().unwrap_or("").contains(tool),
+        "{op}: {envelope}; expected {code}"
+      );
     }
     _ => {
-      assert_eq!(out.code(), 0, "{op}: {doc}\nstderr: {}", out.err_text());
+      assert_eq!(
+        out.code(),
+        0,
+        "{op}: {envelope}\nstderr: {}",
+        out.err_text()
+      );
+      assert_eq!(envelope["ok"], true, "{op}: {envelope}");
+      let doc = &envelope["result"];
       assert_eq!(doc["schema"], "lmprobe.result.v1", "{op}: {doc}");
       assert!(
         ["ok", "no_match", "partial"].contains(&doc["status"].as_str().unwrap_or_default()),
@@ -249,16 +262,15 @@ fn every_operation_runs_end_to_end_offline() {
           } else {
             shared.to_path_buf()
           };
-          let body = params.to_string();
-          let mut args = vec![*op, "--input-json", &body];
+          let mut body = params.clone();
           if *mode == Write {
-            args.push("--confirm");
+            body["confirm"] = json!(true);
           }
           let opts = Opts {
             env: vec![("LMPROBE_GH", "/nonexistent/gh".to_string())],
             ..Opts::default()
           };
-          let out = run(&args, &cwd, opts);
+          let out = lmcode(op, &body, &cwd, opts);
           let result = std::panic::catch_unwind(|| check_result(op, &out, *mode));
           if result.is_err() {
             failures.lock().unwrap().push(op.to_string());
@@ -274,13 +286,9 @@ fn every_operation_runs_end_to_end_offline() {
 #[test]
 fn write_operations_change_the_fixture() {
   let r = fixture();
-  let out = run(
-    &[
-      "edit_text",
-      "--input-json",
-      r#"{"pattern": "hello", "replacement": "bye", "files": ["notes.txt"]}"#,
-      "--confirm",
-    ],
+  let out = lmcode(
+    "edit_text",
+    &json!({"pattern":"hello","replacement":"bye","files":["notes.txt"],"confirm":true}),
     r.path(),
     Opts::default(),
   );
@@ -290,26 +298,22 @@ fn write_operations_change_the_fixture() {
     "bye world\n"
   );
   let r = fixture();
-  let out = lm(
-    &[
-      "fix_ast",
-      "--pattern",
-      "x.saturating_add(1)",
-      "--replacement",
-      "x + 1",
-      "src",
-      "--confirm",
-    ],
+  let out = lmcode(
+    "fix_ast",
+    &json!({"pattern":"x.saturating_add(1)","replacement":"x + 1","path":"src","confirm":true}),
     r.path(),
+    Opts::default(),
   );
   assert_eq!(out.code(), 0, "{}", out.text());
   assert!(fs::read_to_string(r.path().join("src/lib.rs"))
     .unwrap()
     .contains("    x + 1\n"));
   let r = fixture();
-  let out = lm(
-    &["find_delete", "notes\\.txt$", "--force", "--confirm"],
+  let out = lmcode(
+    "find_delete",
+    &json!({"pattern":"notes\\.txt$","force":true,"confirm":true}),
     r.path(),
+    Opts::default(),
   );
   assert_eq!(out.code(), 0, "{}", out.text());
   assert!(!r.path().join("notes.txt").exists());
@@ -317,20 +321,24 @@ fn write_operations_change_the_fixture() {
 
 #[test]
 fn conditionally_required_params_surface_as_validation_errors() {
-  // The schema cannot express "service and operation, or requestFile": the legacy parser refuses.
+  // The operation catalog cannot express "service and operation, or requestFile" as a union.
   let r = fixture();
-  let out = lm(&["aws_query"], r.path());
+  let out = lmcode("aws_query", &json!({}), r.path(), Opts::default());
   let doc = out.json();
   assert_eq!(
-    (out.code(), doc["error"]["code"].clone()),
-    (2, json!("VALIDATION_ERROR")),
+    (out.code(), &doc["ok"], &doc["code"]),
+    (0, &json!(false), &json!("ARGUMENT_ERROR")),
     "{doc}"
   );
-  assert_eq!(doc["error"]["data"]["tool_code"], "ARGUMENT_ERROR");
-  let out = lm(&["query_graphql"], r.path());
-  assert_eq!(out.json()["error"]["code"], "VALIDATION_ERROR");
-  let out = lm(&["edit_preview", "--files", "notes.txt"], r.path());
-  assert_eq!(out.json()["error"]["code"], "VALIDATION_ERROR");
+  let out = lmcode("query_graphql", &json!({}), r.path(), Opts::default());
+  assert_eq!(out.json()["code"], "ARGUMENT_ERROR");
+  let out = lmcode(
+    "edit_preview",
+    &json!({"files":["notes.txt"]}),
+    r.path(),
+    Opts::default(),
+  );
+  assert_eq!(out.json()["code"], "ARGUMENT_ERROR");
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -385,8 +393,9 @@ fn aws_opts(stub: &Path, home: &Path) -> Opts<'static> {
 fn aws_catalog_lists_the_read_only_allowlist() {
   let stub = aws_stub();
   let home = tempfile::tempdir().unwrap();
-  let out = run(
-    &["aws_catalog"],
+  let out = lmcode(
+    "aws_catalog",
+    &json!({}),
     home.path(),
     aws_opts(stub.path(), home.path()),
   );
@@ -403,8 +412,9 @@ fn aws_catalog_lists_the_read_only_allowlist() {
 fn aws_query_runs_an_allowlisted_operation_through_the_stub() {
   let stub = aws_stub();
   let home = tempfile::tempdir().unwrap();
-  let out = run(
-    &["aws_query", "sts", "get-caller-identity"],
+  let out = lmcode(
+    "aws_query",
+    &json!({"service":"sts","operation":"get-caller-identity"}),
     home.path(),
     aws_opts(stub.path(), home.path()),
   );
@@ -423,18 +433,18 @@ fn aws_query_refuses_operations_outside_the_allowlist_without_running_aws() {
     ("iam", "create-user"),
     ("sts", "assume-role"),
   ] {
-    let out = run(
-      &["aws_query", service, operation],
+    let out = lmcode(
+      "aws_query",
+      &json!({"service":service,"operation":operation}),
       home.path(),
       aws_opts(stub.path(), home.path()),
     );
     let doc = out.json();
+    assert_eq!(doc["ok"], false, "{service} {operation}: {doc}");
     assert_eq!(
-      doc["error"]["code"], "FORBIDDEN",
+      doc["code"], "AWS_OPERATION_REFUSED",
       "{service} {operation}: {doc}"
     );
-    assert_eq!(doc["error"]["data"]["tool_code"], "AWS_OPERATION_REFUSED");
-    assert_eq!(out.code(), 6);
   }
   assert!(
     !stub.path().join("calls.log").exists(),
@@ -446,8 +456,9 @@ fn aws_query_refuses_operations_outside_the_allowlist_without_running_aws() {
 fn a_missing_aws_cli_is_command_not_found() {
   let empty = tempfile::tempdir().unwrap();
   let home = tempfile::tempdir().unwrap();
-  let out = run(
-    &["aws_query", "sts", "get-caller-identity"],
+  let out = lmcode(
+    "aws_query",
+    &json!({"service":"sts","operation":"get-caller-identity"}),
     home.path(),
     Opts {
       env: vec![
@@ -459,7 +470,6 @@ fn a_missing_aws_cli_is_command_not_found() {
     },
   );
   let doc = out.json();
-  assert_eq!(out.code(), 127, "{doc}");
-  assert_eq!(doc["error"]["code"], "COMMAND_NOT_FOUND");
-  assert_eq!(doc["error"]["data"]["tool_code"], "AWS_CLI_UNAVAILABLE");
+  assert_eq!(doc["ok"], false, "{doc}");
+  assert_eq!(doc["code"], "AWS_CLI_UNAVAILABLE", "{doc}");
 }

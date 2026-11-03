@@ -7,9 +7,9 @@
 //! Re-record from a given binary (only when a legacy change is intended):
 //! `LMPROBE_RECORD_LEGACY_BIN=/path/to/lmprobe cargo test -p lmprobe --test legacy_invariance`
 
-mod lmapi_support;
+mod lmprobe_support;
 
-use lmapi_support::*;
+use lmprobe_support::*;
 use std::fs;
 use std::path::{Path, PathBuf};
 

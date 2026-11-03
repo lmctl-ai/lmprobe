@@ -1,4 +1,4 @@
-//! Shared helpers for the lmapi integration tests: a runner with a hard timeout (no test can
+//! Shared lmprobe integration helpers: a runner with a hard timeout (no test can
 //! hang), and a small deterministic Git fixture with code in Rust and Python.
 
 #![allow(dead_code)]
@@ -71,7 +71,7 @@ pub fn run_bin<S: AsRef<std::ffi::OsStr>>(bin: &Path, args: &[S], cwd: &Path, op
   // Audit logs, patches and history caches go under target/tmp, never the user's cache.
   cmd.env(
     "XDG_CACHE_HOME",
-    Path::new(env!("CARGO_TARGET_TMPDIR")).join("lmapi-xdg-cache"),
+    Path::new(env!("CARGO_TARGET_TMPDIR")).join("lmprobe-lmcode-xdg-cache"),
   );
   for k in &opts.remove_env {
     cmd.env_remove(k);
@@ -131,6 +131,49 @@ pub fn run<S: AsRef<std::ffi::OsStr>>(args: &[S], cwd: &Path, opts: Opts) -> Run
 
 pub fn lm(args: &[&str], cwd: &Path) -> Run {
   run(args, cwd, Opts::default())
+}
+
+pub fn lmcode(op: &str, params: &Value, cwd: &Path, opts: Opts<'_>) -> Run {
+  lmcode_raw(op, &params.to_string(), cwd, opts)
+}
+
+pub fn lmcode_raw(op: &str, params: &str, cwd: &Path, mut opts: Opts<'_>) -> Run {
+  assert!(op
+    .bytes()
+    .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'_'));
+  let scratch = tempfile::tempdir().expect("lmcode test scratch");
+  let script = scratch.path().join("operation.lms");
+  let schema = Path::new(env!("CARGO_MANIFEST_DIR")).join("lmcode/host.schema.json");
+  let schema_literal = serde_json::to_string(&schema.to_string_lossy()).unwrap();
+  let params_literal = serde_json::to_string(params).unwrap();
+  let source = format!(
+    "program = _lmcode_ schema={schema_literal};\n$return = json_parse(probe_{op}({params_literal}));\nend _lmcode_\nr = run_lmcode(program, {{command:[ARGV[0], \"--lmcode\", \"$DSLFILE\"]}});\nprintln(json_stringify(r));\n"
+  );
+  fs::write(&script, source).expect("write lmcode operation test");
+  let compiler = std::env::var_os("LMSCRIPT_BIN").unwrap_or_else(|| "lmscript".into());
+  let host = bin();
+  if let Some((_, path)) = opts.env.iter_mut().find(|(key, _)| *key == "PATH") {
+    let process_path = std::env::var("PATH").unwrap_or_default();
+    let node_dir = std::env::split_paths(&process_path).find(|dir| {
+      dir
+        .join(if cfg!(windows) { "node.exe" } else { "node" })
+        .is_file()
+    });
+    let mut paths: Vec<_> = std::env::split_paths(path).collect();
+    if let Some(node_dir) = node_dir {
+      paths.push(node_dir);
+    }
+    *path = std::env::join_paths(paths)
+      .expect("join test PATH")
+      .to_string_lossy()
+      .into_owned();
+  }
+  run_bin(
+    Path::new(&compiler),
+    &[script.as_os_str(), host.as_os_str()],
+    cwd,
+    opts,
+  )
 }
 
 /// `git` in `dir` with a fixed identity, dates and no user config.

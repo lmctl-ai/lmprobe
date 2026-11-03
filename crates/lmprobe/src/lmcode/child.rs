@@ -1,4 +1,4 @@
-//! Phase 1 execution: the ONLY place lmapi mode spawns a process. An operation runs the
+//! The only place an lmcode operation starts a legacy CLI child. An operation runs the
 //! current executable with the legacy argv in program-JSON mode and reads the
 //! `lmprobe.result.v1` document from a private outfile. Phase 2 (in-process) replaces this
 //! function; it is blocked by the `process::exit` sites in `cli.rs` (`run`, the parse-error
@@ -9,6 +9,10 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicU64, Ordering};
+
+#[cfg(test)]
+#[path = "child_tests.rs"]
+mod tests;
 
 /// What one legacy run produced.
 #[derive(Debug)]
@@ -29,12 +33,12 @@ fn outfile_path() -> PathBuf {
     .map(|d| d.as_nanos())
     .unwrap_or(0);
   std::env::temp_dir().join(format!(
-    "lmprobe-lmapi-{}-{nanos}-{n}.json",
+    "lmprobe-lmcode-{}-{nanos}-{n}.json",
     std::process::id()
   ))
 }
 
-/// The legacy child must not outlive lmapi mode: an agent that kills a hung `lmprobe grep_text`
+/// The legacy child must not outlive its lmcode host: an agent that kills a hung `lmprobe grep_text`
 /// would otherwise leave the worker running. Linux only (`PR_SET_PDEATHSIG`); elsewhere a killed
 /// parent still orphans the child.
 fn die_with_parent(command: &mut Command) {

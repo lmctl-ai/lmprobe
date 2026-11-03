@@ -1,11 +1,11 @@
-//! The hand-maintained lmapi overlay (`crates/lmprobe/lmapi/overlay.toml`): published operation
+//! The hand-maintained operation catalog (`crates/lmprobe/lmcode/overlay.toml`): published operation
 //! names, access, dangerous ops and per-op parameter exclusions. Everything else about an
 //! operation is generated from clap (see `generate.rs`).
 
 use serde::Deserialize;
 
 /// The overlay compiled into the binary.
-pub(crate) const OVERLAY_TOML: &str = include_str!("../../lmapi/overlay.toml");
+pub(crate) const OVERLAY_TOML: &str = include_str!("../../lmcode/overlay.toml");
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -41,13 +41,13 @@ pub(crate) struct StdinParam {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct OverlayOp {
-  /// Published lmapi operation name (snake_case).
+  /// Public lmprobe operation name (snake_case).
   pub name: String,
   /// Clap command path, words separated by spaces (`git status`).
   pub command: String,
   /// Required: a missing access must never default to read-only.
   pub access: OverlayAccess,
-  /// Dangerous ops need `--confirm` (lmapi exit 9 without it).
+  /// Dangerous operations require `confirm: true` in their lmcode JSON parameter object.
   #[serde(default)]
   pub dangerous: bool,
   /// Replaces the clap `about` text.
@@ -72,7 +72,7 @@ fn yes() -> bool {
 
 /// Parse an overlay document.
 pub(crate) fn parse(text: &str) -> Result<Overlay, String> {
-  toml::from_str(text).map_err(|error| format!("invalid lmapi overlay: {error}"))
+  toml::from_str(text).map_err(|error| format!("invalid lmprobe operation catalog: {error}"))
 }
 
 #[cfg(test)]

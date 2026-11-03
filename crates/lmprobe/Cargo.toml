@@ -5,6 +5,8 @@ edition = "2021"
 authors.workspace = true
 
 [dependencies]
+# Native lmcode host. This is the reviewed SDK snapshot vendored by lmcode-rust-sample.
+dslvm = { git = "https://github.com/lmctl-ai/lmcode-rust", rev = "ebca156c0d56efbe95957c2dee232deca4175eff" }
 # Phase 5A workspace split — foundation crates.
 lmprobe-types = { path = "../lmprobe-types", version = "0.1.0" }
 lmprobe-lang-core = { path = "../lmprobe-lang-core", version = "0.1.0" }
@@ -27,8 +29,6 @@ regex = "1.10"
 chrono = { version = "0.4", features = ["serde"] }
 git2 = "0.19"
 rusqlite = { version = "0.32", features = ["bundled"] }
-# lmapi mode (`lmprobe --schema`, published operations): the lmapi Rust SDK.
-lmrust = { git = "https://github.com/lmctl-ai/lmrust", tag = "v0.1.2", default-features = false }
 
 # Phase 4E — GraphQL is the core surface. async-graphql + a
 # minimal current-thread tokio runtime ship in default builds for
@@ -57,5 +57,3 @@ serve = ["dep:async-graphql-axum", "dep:axum", "dep:subtle", "tokio/rt-multi-thr
 
 [dev-dependencies]
 tempfile = "3.10"
-# lmapi tests: validate the published document against lmapi's cli.schema.v1 JSON Schema.
-jsonschema = { version = "0.33", default-features = false }

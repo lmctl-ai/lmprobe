@@ -2,9 +2,9 @@
 //! to the cwd, while the worktree and the captured patch are rooted at the repository top level.
 //! Before the fix, `fix --apply src` produced an empty patch ("No valid patches in input").
 
-mod lmapi_support;
+mod lmprobe_support;
 
-use lmapi_support::*;
+use lmprobe_support::*;
 use std::fs;
 
 #[test]
