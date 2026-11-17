@@ -39,7 +39,7 @@ jobs:
           node-version: 22
       - name: Install lmcode compiler locally
         run: |
-          npm install --prefix "$RUNNER_TEMP/lmctl" --no-save --ignore-scripts @lmctl-ai/lmctl@0.2.456
+          npm install --prefix "$RUNNER_TEMP/lmctl" --no-save --ignore-scripts @lmctl-ai/lmctl@0.2.482
           echo "LMSCRIPT_BIN=$RUNNER_TEMP/lmctl/node_modules/.bin/lmscript" >> "$GITHUB_ENV"
       - name: Format
         run: cargo fmt --all -- --check

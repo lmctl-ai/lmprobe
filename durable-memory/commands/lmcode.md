@@ -14,11 +14,15 @@ parameter metadata are in `operations.json`, generated from the clap tree and
   `LMCODE_RETURN` frame. `--first` and `--last` select the invocation result
   range for multi-program calls.
 
-The host exports 63 functions named `probe_<operation>`. Each accepts a JSON
-string and returns the operation's JSON result as a string. A program can call
-`json_parse` on the result to use it as a structured value. The dry callback
-returns JSON null and does not start an operation child. Dry is controlled by
-the invocation manifest; the legacy `dryrun` parameter is rejected.
+The host exports 63 functions named `probe_<operation>` alongside the built-in
+`lmcode_std_v3` catalog (226 signatures, including standard REST and stateless
+CLI interfaces `RestGet`..`RestOptions`, `RestHandler`, `CliCommand`,
+`CliOption`, `rest_config`, `rest_route`, `rest_serve`, and `rest_cli`). Each
+`probe_<operation>` accepts a JSON string and returns the operation's JSON
+result as a string. A program can call `json_parse` on the result to use it as a
+structured value. The dry callback returns JSON null and does not start an
+operation child. Dry is controlled by the invocation manifest; the legacy
+`dryrun` parameter is rejected.
 
 Operation inputs retain the published parameter names and types in
 `operations.json`. `readonly` is an invocation policy input, `confirm` is

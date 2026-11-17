@@ -20,3 +20,7 @@ println(json_stringify(r));
 The host treats dry mode as invocation metadata. Its dry callback skips the
 operation and supplies the JSON null result; real mode uses the existing
 lmprobe CLI implementation and returns its structured result document.
+Standard `lmcode_std_v3` REST and stateless CLI interfaces (`RestGet`..`RestOptions`,
+`RestHandler`, `CliCommand`, `CliOption`, `rest_config`, `rest_route`, `rest_serve`,
+`rest_cli`) are registered automatically via `dslvm::Registry::new()` and can
+call `probe_<operation>` callbacks inside their handlers.

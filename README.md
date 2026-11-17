@@ -76,10 +76,14 @@ JSON into a structured lmcode value. The parameter catalog is
 [`crates/lmprobe/lmcode/operations.json`](crates/lmprobe/lmcode/operations.json).
 
 Run compiled programs with `lmprobe --lmcode program.bytecode`. Each invocation
-writes a terminal `LMCODE_RETURN` envelope. Invocation dry mode is handled by the
-lmcode runtime before operation callbacks, so dry runs do not launch the legacy
-CLI or touch its resources. Existing CLI commands retain their output and exit
-codes. See [lmcode host notes](crates/lmprobe/lmcode/README.md).
+writes a terminal `LMCODE_RETURN` envelope. The host includes the full
+`lmcode_std_v3` standard library (226 signatures), including standard REST and
+stateless CLI interfaces (`RestGet`..`RestOptions`, `RestHandler`, `CliCommand`,
+`CliOption`, `rest_config`, `rest_route`, `rest_serve`, `rest_cli`), which can
+dispatch directly to `probe_<operation>` callbacks. Invocation dry mode is
+handled by the lmcode runtime before operation callbacks, so dry runs do not
+launch the legacy CLI or touch its resources. Existing CLI commands retain their
+output and exit codes. See [lmcode host notes](crates/lmprobe/lmcode/README.md).
 
 ## Build from source
 

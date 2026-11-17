@@ -6,7 +6,7 @@ authors.workspace = true
 
 [dependencies]
 # Native lmcode host. This is the reviewed SDK snapshot vendored by lmcode-rust-sample.
-dslvm = { git = "https://github.com/lmctl-ai/lmcode-rust", rev = "ebca156c0d56efbe95957c2dee232deca4175eff" }
+dslvm = { git = "https://github.com/lmctl-ai/lmcode-rust", rev = "68521dd3c3f7f369abd2acb16fff2cea796a06cc" }
 # Phase 5A workspace split — foundation crates.
 lmprobe-types = { path = "../lmprobe-types", version = "0.1.0" }
 lmprobe-lang-core = { path = "../lmprobe-lang-core", version = "0.1.0" }

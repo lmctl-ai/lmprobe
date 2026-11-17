@@ -710,7 +710,7 @@ dependencies = [
 [[package]]
 name = "dslvm"
 version = "6.0.0"
-source = "git+https://github.com/lmctl-ai/lmcode-rust?rev=ebca156c0d56efbe95957c2dee232deca4175eff#ebca156c0d56efbe95957c2dee232deca4175eff"
+source = "git+https://github.com/lmctl-ai/lmcode-rust?rev=68521dd3c3f7f369abd2acb16fff2cea796a06cc#68521dd3c3f7f369abd2acb16fff2cea796a06cc"
 
 [[package]]
 name = "dyn-clone"
