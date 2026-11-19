@@ -1,5 +1,7 @@
 # lmprobe
 
+Documentation: [Quick reference](https://www.lmctl.com/tools/lmprobe/) · [LLM skill](https://www.lmctl.com/tools/lmprobe/skill.html) · [Guide](https://www.lmctl.com/tools/lmprobe/guide.html) · [Reference](https://www.lmctl.com/tools/lmprobe/reference.html)
+
 lmprobe is a one-shot, AST-aware structural code-search CLI for developers and
 AI agents that need structured evidence from source trees, built on a fork of
 [ast-grep](https://github.com/ast-grep/ast-grep). It finds definitions and
